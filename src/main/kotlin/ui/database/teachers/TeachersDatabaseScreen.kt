@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package ui.database.teachers
 
 import androidx.compose.foundation.layout.*
@@ -15,21 +17,80 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogState
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
-import common.dialog.LifecycleDialog
-import common.dialog.rememberDialogLifecycleOwner
 import common.extensions.container
-import common.lifecycle.onDestroy
-import common.navigation.destination.Fragment
-import common.navigation.destination.viewModel
 import common.view_model.ViewModel
 import common.view_model.viewModel
+import data.data_source.local.unit.teacher.TeacherLocalDataSource
 import data.repository.TeachersRepository
 import domain.model.Teacher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+
+@Composable
+fun TeachersDatabaseScreen() {
+    val viewModel = viewModel<TeachersViewModel>()
+    val teachers by viewModel.all.collectAsState(emptyList())
+    val dialogState = DialogState(WindowPosition.Aligned(alignment = Alignment.Center))
+    var selectedTeacher: Teacher? by remember { mutableStateOf(null) }
+
+    selectedTeacher?.also { teacher ->
+        DialogTeacher(
+            teacher = teacher,
+            onCloseRequest = { selectedTeacher = null },
+            onUpdate = { println(it) }
+        )
+    }
+
+    Column {
+        LazyColumn(
+            contentPadding = PaddingValues(4.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            teachers.forEach { teacher ->
+                item {
+                    TeacherItem(
+                        teacher = teacher,
+                        onClick = { selectedTeacher = teacher }
+                    )
+                }
+            }
+        }
+        Card(
+            modifier = Modifier.height(56.dp),
+            onClick = {}
+        ) { Text(text = "Add") }
+    }
+
+}
+
+@Composable
+fun TeacherItem(teacher: Teacher, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .height(56.dp)
+            .fillMaxWidth(),
+        elevation = 4.dp,
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.weight(1.0f),
+                text = "${teacher.speciality}\n${teacher.firstName} ${teacher.middleName} ${teacher.lastName}"
+            )
+        }
+
+        Icons.Filled.Edit
+    }
+}
 
 class DialogTeacherViewModel(
     private val teachersRepository: TeachersRepository
@@ -39,7 +100,7 @@ class DialogTeacherViewModel(
 
 }
 
-// TODO: 02.06.2022  
+// TODO: 02.06.2022
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DialogTeacher(teacher: Teacher, onCloseRequest: () -> Unit, onUpdate: (Teacher) -> Unit) {
@@ -49,17 +110,14 @@ fun DialogTeacher(teacher: Teacher, onCloseRequest: () -> Unit, onUpdate: (Teach
     //val state = viewModel.collectAsState().value
 
     //viewModel.collectSideEffect { handleSideEffect(it) }
-    val dialogLifecycleOwner = rememberDialogLifecycleOwner()
     val dialogState = rememberDialogState(
         position = WindowPosition.Aligned(alignment = Alignment.Center),
         width = 400.dp,
         height = 450.dp
     )
-    LifecycleDialog(
-        lifecycleOwner = dialogLifecycleOwner,
+    Dialog(
         onCloseRequest = {
             onCloseRequest()
-            true
         },
         state = dialogState,
         title = "Teacher", // TODO: 30.05.2022 Text
@@ -68,7 +126,6 @@ fun DialogTeacher(teacher: Teacher, onCloseRequest: () -> Unit, onUpdate: (Teach
         onKeyEvent = {
             if (it.type == KeyEventType.KeyUp && it.key == Key.Escape) {
                 onCloseRequest()
-                dialogLifecycleOwner.onDestroy()
                 true
             } else {
                 false
@@ -130,71 +187,17 @@ fun DialogTeacher(teacher: Teacher, onCloseRequest: () -> Unit, onUpdate: (Teach
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-object TeacherScreen : Fragment() {
+class TeachersViewModel(
+    private val teacherLocalDataSource: TeacherLocalDataSource
+) : ViewModel() {
 
-
-    @Composable
-    override fun draw() {
-        val viewModel = viewModel<TeachersViewModel>()
-        val teachers by viewModel.all.collectAsState(emptyList())
-        val dialogState = DialogState(WindowPosition.Aligned(alignment = Alignment.Center))
-        var selectedTeacher: Teacher? by remember { mutableStateOf(null) }
-
-        selectedTeacher?.also { teacher ->
-            DialogTeacher(
-                teacher = teacher,
-                onCloseRequest = { selectedTeacher = null },
-                onUpdate = { println(it) }
+    val all: Flow<List<Teacher>>
+        get() = flowOf(
+            listOf(
+                Teacher(id = 0, firstName = "Иван", middleName = "Иванович", lastName = "Иванов", speciality = "Старший преподаватель"),
+                Teacher(id = 1, firstName = "Алексей", middleName = "Петрович", lastName = "Кус", speciality = "Лаборант"),
+                Teacher(id = 3, firstName = "Юлия", middleName = "Сергеевна", lastName = "Лолина", speciality = "Кандидат математических наук"),
             )
-        }
+        )//teacherLocalDataSource.data
 
-        Column {
-            LazyColumn(
-                contentPadding = PaddingValues(4.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                teachers.forEach { teacher ->
-                    item {
-                        TeacherItem(
-                            teacher = teacher,
-                            onClick = {
-                                selectedTeacher = teacher
-                            }
-                        )
-                    }
-                }
-            }
-            Card(
-                modifier = Modifier.height(56.dp),
-                onClick = {}
-            ) {
-                Text(text = "Add")
-            }
-        }
-
-    }
-
-    @Composable
-    fun TeacherItem(teacher: Teacher, onClick: () -> Unit) {
-        Card(
-            modifier = Modifier
-                .height(56.dp)
-                .fillMaxWidth(),
-            elevation = 4.dp,
-            onClick = onClick
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.weight(1.0f),
-                    text = "${teacher.speciality}\n${teacher.firstName} ${teacher.middleName} ${teacher.lastName}"
-                )
-            }
-
-            Icons.Filled.Edit
-        }
-    }
 }
