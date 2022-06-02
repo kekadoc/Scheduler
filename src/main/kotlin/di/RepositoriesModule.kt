@@ -1,9 +1,6 @@
 package di
 
-import data.repository.SpaceRepository
-import data.repository.SpaceRepositoryImpl
-import data.repository.TeachersRepository
-import data.repository.TeachersRepositoryImpl
+import data.repository.*
 import org.koin.dsl.module
 
 val repositoriesModule = module {
@@ -19,4 +16,11 @@ val repositoriesModule = module {
             localDataSource = get()
         )
     }
+
+    single<StudentGroupRepository> {
+        StudentGroupRepositoryImpl(
+            localDataSource = get()
+        )
+    }
+
 }
