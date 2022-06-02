@@ -9,7 +9,11 @@ open class ViewModel {
 
     val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    fun onCleared() {
+    protected open fun onCleared() {
         viewModelScope.cancel()
+    }
+
+    fun clear() {
+        onCleared()
     }
 }

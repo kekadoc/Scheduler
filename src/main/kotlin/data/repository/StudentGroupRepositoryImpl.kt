@@ -1,7 +1,7 @@
 package data.repository
 
 import common.extensions.flowOf
-import data.data_source.local.student_group.StudentGroupLocalDataSource
+import data.data_source.local.unit.student_group.StudentGroupLocalDataSource
 import domain.model.StudentGroup
 import kotlinx.coroutines.flow.Flow
 

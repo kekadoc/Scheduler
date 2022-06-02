@@ -3,6 +3,8 @@ package di
 import app.ApplicationViewModel
 import org.koin.dsl.module
 import ui.InitialScreenViewModel
+import ui.database.teachers.DialogTeacherViewModel
+import ui.database.teachers.TeachersViewModel
 
 val viewModelsModule = module {
     factory {
@@ -12,5 +14,11 @@ val viewModelsModule = module {
     }
     factory {
         InitialScreenViewModel()
+    }
+    factory {
+        TeachersViewModel(teacherLocalDataSource = get())
+    }
+    factory {
+        DialogTeacherViewModel(teachersRepository = get())
     }
 }

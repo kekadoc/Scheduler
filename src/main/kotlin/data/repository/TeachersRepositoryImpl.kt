@@ -1,10 +1,9 @@
 package data.repository
 
 import common.extensions.flowOf
-import data.data_source.local.teacher.TeacherLocalDataSource
+import data.data_source.local.unit.teacher.TeacherLocalDataSource
 import domain.model.Teacher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class TeachersRepositoryImpl(
     private val localDataSource: TeacherLocalDataSource

@@ -1,6 +1,6 @@
 package data.repository
 
-import data.data_source.local.space.SpaceLocalDataSource
+import data.data_source.local.unit.space.SpaceLocalDataSource
 import domain.model.Space
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

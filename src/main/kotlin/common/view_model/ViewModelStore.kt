@@ -1,7 +1,6 @@
 package common.view_model
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import common.extensions.cast
 import org.koin.core.component.KoinComponent
@@ -25,13 +24,13 @@ class ViewModelStore : KoinComponent {
 
     fun clear(clazz: KClass<*>) {
         viewModels[clazz]?.apply {
-            this.onCleared()
+            clear()
             viewModels.remove(clazz)
         }
     }
 
     fun clear() {
-        viewModels.values.forEach(ViewModel::onCleared)
+        viewModels.values.forEach(ViewModel::clear)
         viewModels.clear()
     }
 

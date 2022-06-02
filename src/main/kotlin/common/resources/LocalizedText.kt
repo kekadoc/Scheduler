@@ -1,7 +1,7 @@
 package common.resources
 
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import common.resources.api.*
 import common.resources.colors.AppColors
 import common.resources.images.AppImages

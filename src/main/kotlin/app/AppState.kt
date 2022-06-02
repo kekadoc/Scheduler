@@ -1,4 +1,3 @@
 package app
 
-class AppState {
-}
+class AppState

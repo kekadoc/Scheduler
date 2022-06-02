@@ -1,14 +1,11 @@
 package ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import common.extensions.flowOf
 import common.resources.R
 import common.resources.api.LocalResourceQualifier
 import common.resources.api.ResourceQualifier
@@ -18,8 +15,8 @@ import common.view_model.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import java.util.*
-import java.util.prefs.Preferences
 
+// TODO: 02.06.2022
 class InitialScreenViewModel : ViewModel() {
     val value = flow<Int> {
         var a = 0

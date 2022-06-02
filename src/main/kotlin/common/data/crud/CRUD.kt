@@ -1,7 +1,5 @@
 package common.data.crud
 
-import data.data_source.local.teacher.dao.TeacherEntity
-
 /**
  * @param Key Ключ данных
  * @param InnerModel Model которая сохраняется
