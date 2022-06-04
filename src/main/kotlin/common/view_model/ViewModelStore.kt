@@ -6,7 +6,7 @@ import common.extensions.cast
 import org.koin.core.component.KoinComponent
 import kotlin.reflect.KClass
 
-val LocalViewModelStore = staticCompositionLocalOf { ViewModelStore() }
+val LocalViewModelStore = staticCompositionLocalOf<ViewModelStore> { throw NotImplementedError() }
 
 @Composable
 inline fun <reified T : ViewModel> viewModel(): T {
@@ -18,6 +18,7 @@ class ViewModelStore : KoinComponent {
     private val viewModels = mutableMapOf<KClass<*>, ViewModel>()
 
     fun <T : ViewModel> getViewModel(clazz: KClass<T>): T {
+        println("$this getViewModel $clazz ")
         val vm = viewModels.getOrPut(clazz) { getKoin().get(clazz) }
         return vm.cast()
     }

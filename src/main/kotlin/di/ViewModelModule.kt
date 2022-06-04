@@ -1,11 +1,14 @@
 package di
 
 import app.ApplicationViewModel
+import app.ui.database.teachers.DialogTeacherViewModel
+import app.ui.database.teachers.TeachersViewModel
+import common.view_model.ViewModelStore
 import org.koin.dsl.module
-import ui.database.teachers.DialogTeacherViewModel
-import ui.database.teachers.TeachersViewModel
 
 val viewModelsModule = module {
+
+    single<ViewModelStore> { ViewModelStore() }
 
     factory {
         ApplicationViewModel(spaceRepository = get())

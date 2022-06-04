@@ -1,4 +1,4 @@
-package app
+package app.model.mvi
 
 import domain.model.Space
 

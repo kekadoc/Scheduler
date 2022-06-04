@@ -1,5 +1,9 @@
+
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import app.Application
 import di.localDataSourceModule
 import di.repositoriesModule
@@ -9,6 +13,7 @@ import org.koin.core.context.startKoin
 
 fun main() = application {
     Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
+
     startKoin {
         printLogger() 
         modules(
@@ -18,7 +23,11 @@ fun main() = application {
         )
     }
     val application = Application()
-    Window(onCloseRequest = ::exitApplication) {
-        application.onCreate()
+    Window(
+        onCloseRequest = ::exitApplication,
+        state = rememberWindowState(size = DpSize(1280.dp, 720.dp))
+    ) {
+        //TestUi()
+         application.onCreate()
     }
 }

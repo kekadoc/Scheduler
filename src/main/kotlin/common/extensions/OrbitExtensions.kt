@@ -12,8 +12,8 @@ import org.orbitmvi.orbit.internal.RealContainer
 import org.orbitmvi.orbit.internal.TestContainerDecorator
 
 // TODO: 02.06.2022
-/*
-@Composable
+
+/*@Composable
 fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectSideEffect(
     lifecycleState: Lifecycle.State = Lifecycle.State.STARTED,
     sideEffect: (suspend (sideEffect: SIDE_EFFECT) -> Unit)
@@ -26,9 +26,9 @@ fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectSi
             sideEffectFlow.collect { sideEffect(it) }
         }
     }
-}
+}*/
 
-@SuppressLint("ComposableNaming")
+/*@SuppressLint("ComposableNaming")
 @Composable
 public fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectState(
     lifecycleState: Lifecycle.State = Lifecycle.State.STARTED,
@@ -42,12 +42,11 @@ public fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.co
             stateFlow.collect { state(it) }
         }
     }
-}
+}*/
 
+/*
 @Composable
-public fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectAsState(
-    lifecycleState: Lifecycle.State = Lifecycle.State.STARTED
-): State<STATE> {
+fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectAsState(): State<STATE> {
     val stateFlow = container.stateFlow
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -61,6 +60,7 @@ public fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.co
     return stateFlowLifecycleAware.collectAsState(initialValue)
 }
 */
+
 
 @Composable
 fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectSideEffect(
