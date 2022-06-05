@@ -1,7 +1,7 @@
 package app.model.mvi
 
 data class AppState(
-    val spaceName: String? = null
+    val spaceName: String? = "Пнипу"
 )
 
 val AppState.isAuthorized: Boolean

@@ -25,7 +25,7 @@ class Application : KoinComponent {
 
     @Composable
     fun onCreate() {
-        var darkTheme by remember { mutableStateOf(false) }
+        var darkTheme by remember { mutableStateOf(true) }
         val state by viewModel.container.stateFlow.collectAsState()
         CompositionLocalProvider(
             LocalViewModelStore provides get()

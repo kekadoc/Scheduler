@@ -37,6 +37,11 @@ private enum class DatabaseItem : SimpleMenuItem {
         override val id: Long = 3L
         override val text: String = "Предметы"
         override val image: ImageVector = Icons.Default.Phone
+    },
+    GROUPS {
+        override val id: Long = 4L
+        override val text: String = "Группы"
+        override val image: ImageVector = Icons.Default.Person
     }
 }
 
@@ -72,6 +77,7 @@ fun DatabaseScreen() {
                 DatabaseItem.TEACHERS -> TeachersDatabaseScreen()
                 DatabaseItem.ROOMS -> Box { Text("ROOMS") }
                 DatabaseItem.ACADEMIC_SUBJECTS -> Box { Text("ACADEMIC_SUBJECTS") }
+                DatabaseItem.GROUPS -> Box { Text("GROUPS") }
             }
         }
     }
