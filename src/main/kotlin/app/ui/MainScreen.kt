@@ -18,7 +18,7 @@ import app.ui.common.ImageThemed
 import app.ui.database.DatabaseScreen
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
-import app.ui.schedule.create.first.ScheduleCreateFirstScreen
+import app.ui.schedule.create.second.ScheduleCreateSecondScreen
 import common.view_model.viewModel
 
 private enum class MainMenuItem : SimpleMenuItem {
@@ -69,7 +69,7 @@ fun MainScreen() {
             currentScreen?.apply {
                 when(this) {
                     MainMenuItem.SCHEDULE -> ScheduleSelectionScreen()
-                    MainMenuItem.SCHEDULE_CREATING -> ScheduleCreateFirstScreen()
+                    MainMenuItem.SCHEDULE_CREATING -> ScheduleCreateSecondScreen()
                     MainMenuItem.DATABASE -> DatabaseScreen()
                 }
             }

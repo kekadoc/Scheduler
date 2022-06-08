@@ -2,6 +2,7 @@ package common.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import common.view_model.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import org.orbitmvi.orbit.Container
@@ -72,6 +73,9 @@ fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectSi
         sideEffectFlow.collect { sideEffect(it) }
     }
 }
+
+@Composable
+fun <STATE : Any, SIDE_EFFECT : Any> ContainerHost<STATE, SIDE_EFFECT>.collectState() = container.stateFlow.collectAsState()
 
 
 fun <STATE : Any, SIDE_EFFECT : Any> ViewModel.container(

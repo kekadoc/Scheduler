@@ -31,7 +31,7 @@ fun <T : Model> DialogChecking(
     getText: (T) -> String,
     isEnabled: (T) -> Boolean = { true },
     onCommit: (Map<T, Boolean>) -> Unit,
-    onItemClick: (Pair<T, Boolean>) -> Unit
+    onItemClick: (Pair<T, Boolean>) -> Unit = {}
 ) {
     val mutableItems = remember { SnapshotStateMap<T, Boolean>().also { it.putAll(list) } }
     var query: String by remember { mutableStateOf(emptyString()) }
