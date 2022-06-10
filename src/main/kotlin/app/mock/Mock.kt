@@ -83,4 +83,13 @@ object Mock {
         )
     }
 
+
+    val lesson: Lesson = Lesson(
+        id = -1,
+        name = "Биология",
+        description = "Description",
+        teacher = Mock.teacher,
+        groups = emptyList()
+    )
+
 }

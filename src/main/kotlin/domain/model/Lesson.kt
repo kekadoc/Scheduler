@@ -1,9 +1,9 @@
 package domain.model
 
-class Lesson(
+data class Lesson(
     override val id: Long,
-    override val description: String,
     override val name: String,
+    override val description: String,
     val teacher: Teacher,
     val groups: List<StudentGroup>,
 ) : Occupation
