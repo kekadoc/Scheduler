@@ -19,11 +19,12 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.mock.Mock
 import app.ui.common.CardColumn
-import app.ui.common.LazyGrid
+import app.ui.common.FixedDimenLazyGrid
 import domain.model.DayOfWeek
 import domain.model.Lesson
 
@@ -47,21 +48,25 @@ fun ScheduleCreateFourScreen() {
         AcademicSubjectsComponent()
         val groups = Mock.studentGroups(10)
         val dayOfWeeks = DayOfWeek.values().toList()
-        LazyGrid(
+        FixedDimenLazyGrid(
             modifier = Modifier.weight(1f),
             columns = groups.size,
             rows = dayOfWeeks.size,
+            cellWidth = 200.dp,
+            cellHeight = 300.dp * 6,
+            cellHeaderColumnHeight = 300.dp,
+            cellHeaderRowWidth = 200.dp,
             buildCell = { row, column ->
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     repeat(6) {
                         PairLessonComponent(
-                            Mock.lesson to Mock.lesson.copy(id = 1)
+                            modifier = Modifier.weight(1f),
+                            lesson = Mock.lesson to Mock.lesson.copy(id = 1)
                         )
                     }
                 }
-                //CardItem(text = "[$row, $column]")
             },
             buildColumnHeader = {
                 CardItem(text = groups[it].name)
@@ -69,7 +74,8 @@ fun ScheduleCreateFourScreen() {
             buildRowHeader = {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth().height((6 * 200).dp).background(Color.Yellow),
+                        .fillMaxWidth()
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -85,34 +91,34 @@ fun ScheduleCreateFourScreen() {
                             letterSpacing = 4.sp
                         )
                     )
-                    Column {
-                        repeat(6) {
-                            Row {
-                                CardItem(modifier = Modifier.width(50.dp).height(200.dp), text = "TXT")
-                                CardItem(modifier = Modifier.width(50.dp).height(200.dp), text = "TXT")
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        repeat(6) { index ->
+                            Row(
+                                modifier = Modifier.weight(1f).fillMaxWidth().background(Color.Gray),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    modifier = Modifier.wrapContentSize().padding(16.dp),
+                                    text = index.toString(),
+                                    fontSize = 28.sp
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .vertical()
+                                        .weight(1f)
+                                        //.rotate(-90f)
+                                        .background(Color.Cyan)
+                                        .padding(16.dp),
+                                    text = "8.30-\n10.00",
+                                    fontSize = 28.sp,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }
-                    /*Text(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .background(Color.Yellow),
-                        textAlign = TextAlign.Center,
-                        text = "This is a big yellow box that should take up most of the space"
-                    )*/
                 }
-               /* Row(
-                    modifier = Modifier.width(100.dp).height((6 * 200).dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.width(300.dp).vertical().rotate(-90f).background(Color.Red),
-                        text = dayOfWeeks[it].name,
-                        fontSize = 30.sp
-                    )
-                }*/
-                //CardItem(text = dayOfWeeks[it].name)
             },
             buildCrossHeader = {
                 CardItem(text = "CROSS")
@@ -120,82 +126,16 @@ fun ScheduleCreateFourScreen() {
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         )
-        /*val verticalScroll = rememberLazyListState()
-        val horizontalScroll = rememberLazyListState()
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.weight(1f),
-                state = verticalScroll
-            ) {
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        state = horizontalScroll
-                    ) {
-                        groups.forEach { group ->
-                            item {
-
-                            }
-                        }
-                    }
-                }
-                DayOfWeek.values().forEach { dayOfWeek ->
-                    item {
-                        println(horizontalScroll.firstVisibleItemIndex)
-                        println(horizontalScroll.firstVisibleItemScrollOffset)
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            state = LazyListState(
-                                firstVisibleItemIndex = horizontalScroll.firstVisibleItemIndex,
-                                firstVisibleItemScrollOffset = horizontalScroll.firstVisibleItemScrollOffset
-                            )
-                        ) {
-                            item {
-                                Card(
-                                    modifier = Modifier.size(100.dp),
-                                    elevation = 6.dp
-                                ) {
-                                    Box(modifier = Modifier.fillMaxSize().background(Color.Red)) {
-                                        Text(
-                                            modifier = Modifier.align(Alignment.Center),
-                                            text = dayOfWeek.name
-                                        )
-                                    }
-                                }
-                            }
-                            groups.forEach { group ->
-                                item {
-                                    Card(
-                                        modifier = Modifier.size(100.dp),
-                                        elevation = 6.dp
-                                    ) {
-                                        Box(modifier = Modifier.fillMaxSize().background(Color.Red)) {
-                                            Text(
-                                                modifier = Modifier.align(Alignment.Center),
-                                                text = "+"
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            HorizontalScrollbar(ScrollbarAdapter(horizontalScroll))
-        }
-        VerticalScrollbar(ScrollbarAdapter(verticalScroll))*/
-
     }
 }
 
 @Composable
-fun PairLessonComponent(lesson: Pair<Lesson?, Lesson?>) {
+fun PairLessonComponent(
+    modifier: Modifier,
+    lesson: Pair<Lesson?, Lesson?>
+) {
     CardColumn(
-        modifier = Modifier.width(150.dp).height(200.dp)
+        modifier = modifier
     ) {
         val (first, second) = lesson
         when {
@@ -230,10 +170,30 @@ fun LessonComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (lesson != null) {
-            Text(text = "Биология", maxLines = 1)
-            Text(text = "Практическая", maxLines = 1)
-            Text(text = "д-р техн.наук, профессор Морозов Е.А.", maxLines = 1)
-            Text(text = "ауд.1", maxLines = 1)
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Биология",
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Практическая",
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "д-р техн.наук, профессор Морозов Е.А.",
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "ауд.1",
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
         }
     }
 }
@@ -244,7 +204,7 @@ fun CardItem(
     text: String
 ) {
     Card(
-        modifier = modifier.size(100.dp),
+        modifier = modifier.fillMaxSize(),
         elevation = 6.dp
     ) {
         Box(modifier = Modifier.fillMaxSize().background(Color.Red)) {

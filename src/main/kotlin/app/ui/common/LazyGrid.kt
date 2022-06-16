@@ -3,15 +3,16 @@ package app.ui.common
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 
 typealias RowIndex = Int
 typealias ColumnIndex = Int
@@ -83,4 +84,73 @@ fun LazyGrid(
         VerticalScrollbar(ScrollbarAdapter(verticalScroll))
     }
 
+}
+
+@Composable
+fun FixedDimenLazyGrid(
+    modifier: Modifier,
+    columns: Int,
+    rows: Int,
+    cellWidth: Dp,
+    cellHeight: Dp,
+    cellHeaderRowWidth: Dp = cellWidth,
+    cellHeaderColumnHeight: Dp = cellHeight,
+    buildCell: @Composable BoxScope.(RowIndex, ColumnIndex) -> Unit,
+    buildColumnHeader: @Composable (BoxScope.(ColumnIndex) -> Unit)? = null,
+    buildRowHeader: @Composable (BoxScope.(RowIndex) -> Unit)? = null,
+    buildCrossHeader: @Composable (BoxScope.() -> Unit)? = null,
+    verticalArrangement: Arrangement.Vertical,
+    horizontalArrangement: Arrangement.Horizontal
+) {
+    LazyGrid(
+        modifier = modifier,
+        columns = columns,
+        rows = rows,
+        buildCell = { row, column ->
+            Box(
+                modifier = Modifier.size(
+                    width = cellWidth,
+                    height = cellHeight
+                ).background(Color.Blue)
+            ) {
+                buildCell(this, row, column)
+            }
+        },
+        buildColumnHeader = buildColumnHeader?.let { builder ->
+            { index ->
+                Box(
+                    modifier = Modifier.size(
+                        width = cellWidth,
+                        height = cellHeaderColumnHeight
+                    ).background(Color.Yellow)
+                ) {
+                    builder(this, index)
+                }
+            }
+        },
+        buildRowHeader = buildRowHeader?.let { builder ->
+            { index ->
+                Box(
+                    modifier = Modifier.size(
+                        width = cellHeaderRowWidth,
+                        height = cellHeight
+                    ).background(Color.Red)
+                ) {
+                    builder(this, index)
+                }
+            }
+        },
+        buildCrossHeader = {
+            Box(
+                modifier = Modifier.size(
+                    width = cellHeaderRowWidth,
+                    height = cellHeaderColumnHeight
+                ).background(Color.Magenta)
+            ) {
+                buildCrossHeader?.invoke(this)
+            }
+        },
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement
+    )
 }
