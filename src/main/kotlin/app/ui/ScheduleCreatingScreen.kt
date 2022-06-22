@@ -26,8 +26,8 @@ import app.mock.Mock
 import app.ui.common.CardBox
 import app.ui.common.dialog.DialogChecking
 import domain.model.AcademicHour
-import domain.model.AcademicSubject
-import domain.model.StudentGroup
+import domain.model.Discipline
+import domain.model.Group
 
 private enum class ItemType {
     GROUP,
@@ -39,13 +39,13 @@ private enum class ItemType {
 @Composable
 fun ScheduleCreatingScreen() {
     var selection: ItemType? by remember { mutableStateOf(null) }
-    var studentGroupInfo: Pair<StudentGroup, Boolean>? by remember { mutableStateOf(null) }
+    var groupInfo: Pair<Group, Boolean>? by remember { mutableStateOf(null) }
 
-    studentGroupInfo?.let { (group, _) ->
+    groupInfo?.let { (group, _) ->
         DialogGroupInfo(
             group = group,
-            availableSubjects = Mock.academicSubjects(20),
-            onClose = { studentGroupInfo = null },
+            availableSubjects = Mock.disciplines(20),
+            onClose = { groupInfo = null },
             selectedSubjects = emptyMap()
         )
     }
@@ -58,7 +58,7 @@ fun ScheduleCreatingScreen() {
                     getText = { it.name },
                     onCommit = {},
                     onItemClick = {
-                        studentGroupInfo = it
+                        groupInfo = it
                     }
                 )
             }
@@ -145,9 +145,9 @@ fun ScheduleCreatingScreen() {
  */
 @Composable
 fun DialogGroupInfo(
-    group: StudentGroup,
-    selectedSubjects: Map<AcademicSubject, AcademicHour> = emptyMap(),
-    availableSubjects: List<AcademicSubject> = emptyList(),
+    group: Group,
+    selectedSubjects: Map<Discipline, AcademicHour> = emptyMap(),
+    availableSubjects: List<Discipline> = emptyList(),
     onClose: () -> Unit
 ) {
 
@@ -159,15 +159,15 @@ fun DialogGroupInfo(
         resizable = false
     ) {
 
-        val subjects: MutableMap<AcademicSubject, Int> = remember<MutableMap<AcademicSubject, Int>> {
-            SnapshotStateMap<AcademicSubject, Int>().apply { this.putAll(selectedSubjects) }
+        val subjects: MutableMap<Discipline, Int> = remember<MutableMap<Discipline, Int>> {
+            SnapshotStateMap<Discipline, Int>().apply { this.putAll(selectedSubjects) }
         }
-        var target: Pair<AcademicSubject?, AcademicHour?>? by remember { mutableStateOf(null) }
+        var target: Pair<Discipline?, AcademicHour?>? by remember { mutableStateOf(null) }
 
         target?.also { (targetSubject, targetHours) ->
             AddingAcademicSubject(
                 availableSubjects = availableSubjects,
-                currentAcademicSubject = targetSubject,
+                currentDiscipline = targetSubject,
                 currentAcademicHours = targetHours,
                 onCommit = { subject, hours -> subjects[subject] = hours; target = null },
                 onCancel = { target = null }
@@ -247,13 +247,13 @@ fun DialogGroupInfo(
  */
 @Composable
 fun AddingAcademicSubject(
-    availableSubjects: List<AcademicSubject>,
-    currentAcademicSubject: AcademicSubject? = null,
+    availableSubjects: List<Discipline>,
+    currentDiscipline: Discipline? = null,
     currentAcademicHours: AcademicHour? = null,
-    onCommit: (AcademicSubject, AcademicHour) -> Unit,
+    onCommit: (Discipline, AcademicHour) -> Unit,
     onCancel: () -> Unit
 ) {
-    var selectedSubject: AcademicSubject? by remember { mutableStateOf(currentAcademicSubject) }
+    var selectedSubject: Discipline? by remember { mutableStateOf(currentDiscipline) }
     var hours: AcademicHour? by remember { mutableStateOf(currentAcademicHours) }
     var selection: Boolean by remember { mutableStateOf(false) }
 

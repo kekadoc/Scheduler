@@ -1,6 +1,6 @@
 package domain.model
 
-data class StudentGroup(
+data class Group(
     override val id: Long,
     val name: String
 ) : Model

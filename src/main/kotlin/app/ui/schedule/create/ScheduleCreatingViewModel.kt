@@ -10,22 +10,22 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 data class ScheduleCreatingState(
-    val availableGroups: Map<StudentGroup, Boolean> = emptyMap(),
+    val availableGroups: Map<Group, Boolean> = emptyMap(),
     val availableTeachers: Map<Teacher, Boolean> = emptyMap(),
-    val availableAcademicSubjects: Map<AcademicSubject, Boolean> = emptyMap(),
-    val availableStudyRooms: Map<StudyRoom, Boolean> = emptyMap(),
+    val availableAcademicSubjects: Map<Discipline, Boolean> = emptyMap(),
+    val availableRooms: Map<Room, Boolean> = emptyMap(),
     val availableDays: Map<DayOfWeek, Boolean> = emptyMap(),
     val availableLessonTimes: Map<LessonTime, Boolean> = emptyMap(),
-    val groupSettings: Map<StudentGroup, GroupSettings> = emptyMap()
+    val groupSettings: Map<Group, GroupSettings> = emptyMap()
 )
 
-val ScheduleCreatingState.studentGroups: List<StudentGroup>
+val ScheduleCreatingState.groups: List<Group>
     get() = availableGroups.filter { it.value }.map { it.key }
 
 val ScheduleCreatingState.teachers: List<Teacher>
     get() = availableTeachers.filter { it.value }.map { it.key }
 
-val ScheduleCreatingState.academicSubjects: List<AcademicSubject>
+val ScheduleCreatingState.disciplines: List<Discipline>
     get() = availableAcademicSubjects.filter { it.value }.map { it.key }
 
 
@@ -42,7 +42,7 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
                     availableGroups = groups,
                     availableTeachers = getAllTeachers().associateWith { true },
                     availableAcademicSubjects = getAllAcademicSubjects().associateWith { true },
-                    availableStudyRooms = getAllStudyRooms().associateWith { true },
+                    availableRooms = getAllStudyRooms().associateWith { true },
                     availableDays = getAllDays().associateWith { true },
                     availableLessonTimes = getAllLessonTimes().associateWith { true },
                     groupSettings = groups.mapValues { (group, _) -> GroupSettings(group) }
@@ -52,17 +52,17 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
     }
 
 
-    fun setGroupLessons(group: StudentGroup, lessons: Map<AcademicSubject, AcademicHour>) = intent {
+    fun setGroupLessons(group: Group, lessons: Map<Discipline, AcademicHour>) = intent {
         val currentGroupSettings = state.groupSettings.toMutableMap()
         val currentGroupSetting = currentGroupSettings[group] ?: GroupSettings(group)
         currentGroupSettings[group] = currentGroupSetting.copy(lessons = lessons)
         reduce { state.copy(groupSettings = currentGroupSettings) }
     }
 
-    fun setGroupLesson(group: StudentGroup, lesson: AcademicSubject, hours: AcademicHour) = intent {
-        val newGroupSettings: MutableMap<StudentGroup, GroupSettings> = state.groupSettings.toMutableMap()
+    fun setGroupLesson(group: Group, lesson: Discipline, hours: AcademicHour) = intent {
+        val newGroupSettings: MutableMap<Group, GroupSettings> = state.groupSettings.toMutableMap()
         val currentGroupSetting: GroupSettings = newGroupSettings[group] ?: GroupSettings(group)
-        val newGroupLessons: MutableMap<AcademicSubject, AcademicHour> = currentGroupSetting.lessons.toMutableMap().apply {
+        val newGroupLessons: MutableMap<Discipline, AcademicHour> = currentGroupSetting.lessons.toMutableMap().apply {
             put(lesson, hours)
         }
         val newGroupSetting = currentGroupSetting.copy(lessons = newGroupLessons)
@@ -72,15 +72,15 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
     }
 
 
-    private fun getAllGroups(): List<StudentGroup> = Mock.studentGroups(20)
+    private fun getAllGroups(): List<Group> = Mock.studentGroups(20)
     private fun getAllTeachers(): List<Teacher> = Mock.teachers(20)
-    private fun getAllAcademicSubjects(): List<AcademicSubject> = Mock.academicSubjects(20)
-    private fun getAllStudyRooms(): List<StudyRoom> = Mock.studyRooms(20)
+    private fun getAllAcademicSubjects(): List<Discipline> = Mock.disciplines(20)
+    private fun getAllStudyRooms(): List<Room> = Mock.studyRooms(20)
     private fun getAllDays(): List<DayOfWeek> = Mock.dayOfWeeks(6)
     private fun getAllLessonTimes(): List<LessonTime> = Mock.lessonTimes()
 
 
-    fun setAvailableGroups(availableGroups: Map<StudentGroup, Boolean>) = intent {
+    fun setAvailableGroups(availableGroups: Map<Group, Boolean>) = intent {
         reduce {
             state.copy(
                 availableGroups = availableGroups,
@@ -93,12 +93,12 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
         reduce { state.copy(availableTeachers = availableTeachers) }
     }
 
-    fun setAvailableAcademicSubjects(availableAcademicSubjects: Map<AcademicSubject, Boolean>) = intent {
+    fun setAvailableAcademicSubjects(availableAcademicSubjects: Map<Discipline, Boolean>) = intent {
         reduce { state.copy(availableAcademicSubjects = availableAcademicSubjects) }
     }
 
-    fun setAvailableStudyRooms(availableStudyRooms: Map<StudyRoom, Boolean>) = intent {
-        reduce { state.copy(availableStudyRooms = availableStudyRooms) }
+    fun setAvailableStudyRooms(availableRooms: Map<Room, Boolean>) = intent {
+        reduce { state.copy(availableRooms = availableRooms) }
     }
 
     fun setAvailableDays(availableDays: Map<DayOfWeek, Boolean>) = intent {

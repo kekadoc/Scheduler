@@ -12,7 +12,7 @@ import androidx.compose.ui.window.Dialog
 import app.ui.common.dialog.DialogSelection
 import app.ui.common.dialog.DialogStyle
 import app.ui.common.dialog.Long
-import domain.model.StudyRoom
+import domain.model.Room
 import domain.model.Teacher
 import domain.model.fullName
 
@@ -80,13 +80,13 @@ private enum class AcademicSubjectDepends {
 fun DialogAcademicSubjectInfo(
     currentTeachers: List<Teacher>,
     availableTeachers: List<Teacher>,
-    currentStudyRoom: List<StudyRoom>,
-    availableStudyRoom: List<StudyRoom>,
-    onCommit: (List<Teacher>, List<StudyRoom>) -> Unit
+    currentRoom: List<Room>,
+    availableRoom: List<Room>,
+    onCommit: (List<Teacher>, List<Room>) -> Unit
 ) {
 
     val nowTeachers = remember { mutableStateListOf(currentTeachers) }
-    val nowRooms = remember { mutableStateListOf(currentStudyRoom) }
+    val nowRooms = remember { mutableStateListOf(currentRoom) }
 
     val items = mapOf(
         AcademicSubjectDepends.TEACHER to nowTeachers.size,
@@ -108,7 +108,7 @@ fun DialogAcademicSubjectInfo(
     if (roomSelection) {
         DialogSelection(
             title = "Выбор помещения",
-            list = availableStudyRoom,
+            list = availableRoom,
             getText = { it.name },
             onSelect = { nowRooms.add(it); roomSelection = false },
             onCancel = { roomSelection = false }

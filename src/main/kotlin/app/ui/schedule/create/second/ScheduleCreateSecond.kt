@@ -30,8 +30,8 @@ import app.ui.schedule.create.ScheduleCreatingViewModel
 import common.extensions.collectState
 import common.view_model.viewModel
 import domain.model.AcademicHour
-import domain.model.AcademicSubject
-import domain.model.StudentGroup
+import domain.model.Discipline
+import domain.model.Group
 import domain.model.schedule.GroupSettings
 
 @Composable
@@ -90,7 +90,7 @@ fun ScheduleCreateSecondScreen() {
     if (roomsSelection) {
         DialogChecking(
             title = "Кабинеты",
-            list = state.availableStudyRooms,
+            list = state.availableRooms,
             getText = { it.name },
             onCommit = { result ->
                 viewModel.setAvailableStudyRooms(result)
@@ -153,7 +153,7 @@ fun ScheduleCreateSecondScreen() {
         ) {
             RoomCounterComponent(
                 modifier = Modifier.weight(1f),
-                count = state.availableStudyRooms.filter { it.value }.count(),
+                count = state.availableRooms.filter { it.value }.count(),
                 onAction = { roomsSelection = true }
             )
             DayOfWeekCounterComponent(
@@ -369,7 +369,7 @@ fun GroupSettingsComponent(
  */
 @Composable
 fun DialogGroupInfo(
-    group: StudentGroup,
+    group: Group,
     onClose: () -> Unit
 ) {
     val viewModel: ScheduleCreatingViewModel = viewModel()
@@ -384,12 +384,12 @@ fun DialogGroupInfo(
         onCloseRequest = onClose,
     ) {
 
-        var target: Pair<AcademicSubject?, AcademicHour?>? by remember { mutableStateOf(null) }
+        var target: Pair<Discipline?, AcademicHour?>? by remember { mutableStateOf(null) }
 
         target?.also { (targetSubject, targetHours) ->
             AddingAcademicSubject(
                 availableSubjects = state.availableAcademicSubjects.filter { it.value }.map { it.key },
-                currentAcademicSubject = targetSubject,
+                currentDiscipline = targetSubject,
                 currentAcademicHours = targetHours,
                 onCommit = { subject, hours -> viewModel.setGroupLesson(group, subject, hours); target = null },
                 onCancel = { target = null }
@@ -471,13 +471,13 @@ fun DialogGroupInfo(
  */
 @Composable
 fun AddingAcademicSubject(
-    availableSubjects: List<AcademicSubject>,
-    currentAcademicSubject: AcademicSubject? = null,
+    availableSubjects: List<Discipline>,
+    currentDiscipline: Discipline? = null,
     currentAcademicHours: AcademicHour? = null,
-    onCommit: (AcademicSubject, AcademicHour) -> Unit,
+    onCommit: (Discipline, AcademicHour) -> Unit,
     onCancel: () -> Unit
 ) {
-    var selectedSubject: AcademicSubject? by remember { mutableStateOf(currentAcademicSubject) }
+    var selectedSubject: Discipline? by remember { mutableStateOf(currentDiscipline) }
     var hours: AcademicHour? by remember { mutableStateOf(currentAcademicHours) }
     var selection: Boolean by remember { mutableStateOf(false) }
 

@@ -63,7 +63,7 @@ fun ScheduleCreateFourScreen() {
                     repeat(6) {
                         PairLessonComponent(
                             modifier = Modifier.weight(1f),
-                            lesson = Mock.lesson to Mock.lesson.copy(id = 1)
+                            lesson = Mock.LESSON to Mock.LESSON.copy(id = 1)
                         )
                     }
                 }

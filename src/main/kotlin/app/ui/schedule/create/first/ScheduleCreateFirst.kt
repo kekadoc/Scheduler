@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.WindowState
 import app.ui.common.CardBox
 import app.ui.common.dialog.DialogChecking
 import app.ui.schedule.create.ScheduleCreatingViewModel
@@ -67,7 +66,7 @@ fun ScheduleCreateFirstScreen() {
     if (roomsSelection) {
         DialogChecking(
             title = "Кабинеты",
-            list = state.availableStudyRooms,
+            list = state.availableRooms,
             getText = { it.name },
             onCommit = { result ->
                 viewModel.setAvailableStudyRooms(result)
@@ -130,7 +129,7 @@ fun ScheduleCreateFirstScreen() {
         ) {
             RoomCounterComponent(
                 modifier = Modifier.weight(1f),
-                count = state.availableStudyRooms.filter { it.value }.count(),
+                count = state.availableRooms.filter { it.value }.count(),
                 onAction = { roomsSelection = true }
             )
             DayOfWeekCounterComponent(

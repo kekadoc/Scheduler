@@ -3,7 +3,7 @@ package domain.model
 /**
  * Академический предмет
  */
-data class AcademicSubject(
+data class Discipline(
     override val id: Long,
     val name: String,
     val description: String

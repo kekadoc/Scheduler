@@ -3,5 +3,5 @@ package domain.model
 import java.time.DayOfWeek
 
 data class Schedule(
-    val days: Map<DayOfWeek, Map<StudentGroup, Map<Int, AcademicSubject>>>
+    val days: Map<DayOfWeek, Map<Group, Map<Int, Discipline>>>
 )

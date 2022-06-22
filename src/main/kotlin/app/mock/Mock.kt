@@ -4,15 +4,15 @@ import domain.model.*
 
 object Mock {
 
-    val academicSubject: AcademicSubject = AcademicSubject(
+    val DISCIPLINE: Discipline = Discipline(
         id = -1L,
         name = "AcademicSubject name",
         description = "AcademicSubject description"
     )
 
-    fun academicSubjects(count: Int): List<AcademicSubject> {
+    fun disciplines(count: Int): List<Discipline> {
         return List(count) { index ->
-            AcademicSubject(
+            Discipline(
                 id = index.toLong(),
                 name = "AcademicSubject #$index",
                 description = "AcademicSubject Description #$index"
@@ -21,17 +21,17 @@ object Mock {
     }
 
 
-    val studentGroup: StudentGroup = StudentGroup(
+    val GROUP: Group = Group(
         id = -1L,
         name = "StudentGroup"
     )
 
-    fun studentGroups(count: Int): List<StudentGroup> {
-        return List(count) { index -> StudentGroup(index.toLong(), "StudentGroup #$index") }
+    fun studentGroups(count: Int): List<Group> {
+        return List(count) { index -> Group(index.toLong(), "StudentGroup #$index") }
     }
 
 
-    val teacher: Teacher = Teacher(
+    val TEACHER: Teacher = Teacher(
         id = -1L,
         firstName = "Иванов",
         middleName = "Иванович",
@@ -52,15 +52,15 @@ object Mock {
     }
 
 
-    val studyRoom: StudyRoom = StudyRoom(
+    val ROOM: Room = Room(
         id = -1L,
         name = "StudyRoom",
         description = "StudyRoom Desc"
     )
 
-    fun studyRooms(count: Int): List<StudyRoom> {
+    fun studyRooms(count: Int): List<Room> {
         return List(count) { index ->
-            StudyRoom(
+            Room(
                 id = index.toLong(),
                 name = "StudyRoom $index",
                 description = "StudyRoom Desc $index"
@@ -84,12 +84,12 @@ object Mock {
     }
 
 
-    val lesson: Lesson = Lesson(
+    val LESSON: Lesson = Lesson(
         id = -1,
         name = "Биология",
         description = "Description",
-        teacher = Mock.teacher,
-        groups = emptyList()
+        teacher = TEACHER,
+        room = ROOM
     )
 
 }
