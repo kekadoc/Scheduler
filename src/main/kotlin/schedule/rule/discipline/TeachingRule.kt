@@ -1,8 +1,8 @@
 package schedule.rule.discipline
 
 import common.extensions.requireNotNull
-import domain.model.*
-import schedule.plan.AcademicPlan
+import domain.model.PlanFillingType
+import domain.model.Teaching
 
 class TeachingRule {
 
@@ -19,15 +19,7 @@ class TeachingRule {
 
     data class Option(
         var order: Int = 0,
-        var planFillingType: PlanFillingType = PlanFillingType.Evenly,
-        var room: Room,
-        var teacher: Teacher
+        var planFillingType: PlanFillingType = PlanFillingType.Evenly
     )
 
-}
-
-fun AcademicPlan.addPlan(group: Group, weekCount: Int, block: AcademicPlan.GroupPlan.() -> Unit) {
-    val plan = AcademicPlan.GroupPlan(weekCount)
-    block(plan)
-    set(group, plan)
 }

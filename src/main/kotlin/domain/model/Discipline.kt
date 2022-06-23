@@ -9,8 +9,8 @@ data class Discipline(
     override val id: Long,
     val name: String,
     val description: String = emptyString(),
-    val targetTeacher: Teacher? = null,
-    val targetRoom: Room? = null
+    val targetTeacher: Teacher = Teacher.Empty,
+    val targetRoom: Room = Room.Empty
 ) : Model {
 
     companion object {

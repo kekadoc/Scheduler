@@ -5,6 +5,7 @@ data class Teaching(
     val discipline: Discipline,
     val type: Type = Type.UNSPECIFIED
 ) : Model {
+
     enum class Type(val text: String) {
         PRACTICE("Практическая"),
         LABORATORY("Лабораторная"),

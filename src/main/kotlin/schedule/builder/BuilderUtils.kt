@@ -1,6 +1,5 @@
 package schedule.builder
 
-import common.extensions.requireNotNull
 import common.extensions.same
 import domain.model.*
 import schedule.plan.AcademicPlan
@@ -19,8 +18,8 @@ object BuilderUtils {
         plan.getAll().forEach { (group, groupPlan) ->
             groupPlan.getAll().forEach { (teaching, hours) ->
                 val teachingOption = rules.teachingRule.get(teaching)
-                val requireRoom = teachingOption.room.requireNotNull()
-                val requireTeacher = teachingOption.teacher.requireNotNull()
+                val requireRoom = teaching.discipline.targetRoom
+                val requireTeacher = teaching.discipline.targetTeacher
                 println("HOURS=$hours")
                 val hoursInCycle = when (val filling = teachingOption.planFillingType) {
                     is PlanFillingType.Evenly -> (hours.toFloat() / groupPlan.weekCount.toFloat()).coerceAtLeast(1f)
