@@ -92,4 +92,18 @@ object Mock {
         room = ROOM
     )
 
+
+    val TEACHING: Teaching = Teaching(
+        id = -1,
+        discipline = DISCIPLINE
+    )
+
+    fun teachings(count: Int): List<Teaching> {
+        return List(count) { index ->
+            Teaching(
+                id = index.toLong(),
+                discipline = DISCIPLINE.copy(name = "Discipline #$index")
+            )
+        }
+    }
 }

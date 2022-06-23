@@ -136,3 +136,66 @@ fun CardColumn(
         )
     }
 }
+
+
+@Composable
+fun CardRow(
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.medium,
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    contentColor: Color = contentColorFor(backgroundColor),
+    border: BorderStroke? = null,
+    elevation: Dp = 1.dp,
+    content: @Composable RowScope.() -> Unit
+) {
+    Card(
+        modifier = modifier,
+        shape = shape,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        border = border,
+        elevation = elevation
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            content = content
+        )
+    }
+}
+
+
+@Composable
+fun CardRow(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    columnModifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    shape: Shape = MaterialTheme.shapes.medium,
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    contentColor: Color = contentColorFor(backgroundColor),
+    border: BorderStroke? = null,
+    elevation: Dp = 1.dp,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
+    content: @Composable RowScope.() -> Unit
+) {
+    Card(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        shape = shape,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        border = border,
+        elevation = elevation,
+        interactionSource = interactionSource
+    ) {
+        Row(
+            modifier = columnModifier.fillMaxSize(),
+            verticalAlignment = verticalAlignment,
+            horizontalArrangement = horizontalArrangement,
+            content = content
+        )
+    }
+}

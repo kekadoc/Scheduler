@@ -1,4 +1,4 @@
-package app.ui.schedule.create.second
+package app.trash.second
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollbarAdapter

@@ -194,55 +194,57 @@ fun DialogTeacher(teacher: Teacher, onCloseRequest: () -> Unit, onUpdate: (Teach
         }
     ) {
         var mutatedTeacher: Teacher? by remember { mutableStateOf(null) }
-        Box(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
+        Surface {
+            Box(
+                modifier = Modifier.fillMaxSize().padding(16.dp)
             ) {
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = (mutatedTeacher ?: teacher).lastName,
-                    label = { Text("Фамилия") },
-                    onValueChange = { text ->
-                        mutatedTeacher = (mutatedTeacher ?: teacher).copy(lastName = text)
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = (mutatedTeacher ?: teacher).firstName,
-                    label = { Text("Имя") },
-                    onValueChange = { text ->
-                        mutatedTeacher = (mutatedTeacher ?: teacher).copy(firstName = text)
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = (mutatedTeacher ?: teacher).middleName,
-                    label = { Text("Отчество") },
-                    onValueChange = { text ->
-                        mutatedTeacher = (mutatedTeacher ?: teacher).copy(middleName = text)
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = (mutatedTeacher ?: teacher).speciality,
-                    label = { Text("Должность") },
-                    onValueChange = { text ->
-                        mutatedTeacher = (mutatedTeacher ?: teacher).copy(speciality = text)
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            Button(
-                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                onClick = { mutatedTeacher?.apply(onUpdate) },
-                enabled = mutatedTeacher != null && mutatedTeacher != teacher
-            ) {
-                Text("Сохранить")
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = (mutatedTeacher ?: teacher).lastName,
+                        label = { Text("Фамилия") },
+                        onValueChange = { text ->
+                            mutatedTeacher = (mutatedTeacher ?: teacher).copy(lastName = text)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = (mutatedTeacher ?: teacher).firstName,
+                        label = { Text("Имя") },
+                        onValueChange = { text ->
+                            mutatedTeacher = (mutatedTeacher ?: teacher).copy(firstName = text)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = (mutatedTeacher ?: teacher).middleName,
+                        label = { Text("Отчество") },
+                        onValueChange = { text ->
+                            mutatedTeacher = (mutatedTeacher ?: teacher).copy(middleName = text)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = (mutatedTeacher ?: teacher).speciality,
+                        label = { Text("Должность") },
+                        onValueChange = { text ->
+                            mutatedTeacher = (mutatedTeacher ?: teacher).copy(speciality = text)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                Button(
+                    modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                    onClick = { mutatedTeacher?.apply(onUpdate) },
+                    enabled = mutatedTeacher != null && mutatedTeacher != teacher
+                ) {
+                    Text("Сохранить")
+                }
             }
         }
     }

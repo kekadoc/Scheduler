@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.ApplicationViewModel
 import app.ui.common.ImageThemed
+import app.ui.database.discipline.DisciplinesDatabaseScreen
 import app.ui.database.teachers.TeachersDatabaseScreen
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
@@ -33,7 +34,7 @@ private enum class DatabaseItem : SimpleMenuItem {
         override val text: String = "Кабинеты"
         override val image: ImageVector = Icons.Default.Place
     },
-    ACADEMIC_SUBJECTS {
+    DISCIPLINES {
         override val id: Long = 3L
         override val text: String = "Предметы"
         override val image: ImageVector = Icons.Default.Phone
@@ -50,7 +51,7 @@ fun DatabaseScreen() {
 
     val viewModel = viewModel<ApplicationViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
-    var currentScreen: DatabaseItem by remember { mutableStateOf(DatabaseItem.ROOMS) }
+    var currentScreen: DatabaseItem by remember { mutableStateOf(DatabaseItem.DISCIPLINES) }
 
     Row(modifier = Modifier.fillMaxSize()) {
         Card {
@@ -76,7 +77,7 @@ fun DatabaseScreen() {
             when (currentScreen) {
                 DatabaseItem.TEACHERS -> TeachersDatabaseScreen()
                 DatabaseItem.ROOMS -> Box { Text("ROOMS") }
-                DatabaseItem.ACADEMIC_SUBJECTS -> Box { Text("ACADEMIC_SUBJECTS") }
+                DatabaseItem.DISCIPLINES -> DisciplinesDatabaseScreen()
                 DatabaseItem.GROUPS -> Box { Text("GROUPS") }
             }
         }

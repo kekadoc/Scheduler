@@ -1,7 +1,7 @@
 package di
 
-import data.data_source.local.unit.academic_subject.AcademicSubjectLocalDataSource
-import data.data_source.local.unit.academic_subject.AcademicSubjectLocalDataSourceImpl
+import data.data_source.local.unit.discipline.DisciplineLocalDataSource
+import data.data_source.local.unit.discipline.DisciplinesLocalDataSourceImpl
 import data.data_source.local.unit.space.SpaceLocalDataSource
 import data.data_source.local.unit.space.SpaceLocalDataSourceImpl
 import data.data_source.local.unit.space.preferences.SpacePreferences
@@ -30,8 +30,8 @@ val localDataSourceModule = module {
         TeacherLocalDataSourceImpl()
     }
 
-    single<AcademicSubjectLocalDataSource> {
-        AcademicSubjectLocalDataSourceImpl()
+    single<DisciplineLocalDataSource> {
+        DisciplinesLocalDataSourceImpl()
     }
 
     single<StudentGroupLocalDataSource> {

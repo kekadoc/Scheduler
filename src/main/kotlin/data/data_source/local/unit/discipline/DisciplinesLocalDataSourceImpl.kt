@@ -1,14 +1,14 @@
-package data.data_source.local.unit.academic_subject
+package data.data_source.local.unit.discipline
 
-import data.data_source.local.unit.academic_subject.dao.AcademicSubjectEntity
-import data.data_source.local.unit.academic_subject.dao.AcademicSubjectsTable
 import data.data_source.local.common.builder.tableLongIdDatabase
+import data.data_source.local.unit.discipline.dao.DisciplineEntity
+import data.data_source.local.unit.discipline.dao.DisciplinesTable
 import domain.model.Discipline
 import kotlinx.coroutines.flow.Flow
 
-class AcademicSubjectLocalDataSourceImpl : AcademicSubjectLocalDataSource {
+class DisciplinesLocalDataSourceImpl : DisciplineLocalDataSource {
 
-    private val tableDatabase = tableLongIdDatabase(AcademicSubjectsTable, AcademicSubjectEntity) { entity ->
+    private val tableDatabase = tableLongIdDatabase(DisciplinesTable, DisciplineEntity) { entity ->
         Discipline(
             id = entity.id.value,
             name = entity.name,
@@ -20,7 +20,7 @@ class AcademicSubjectLocalDataSourceImpl : AcademicSubjectLocalDataSource {
     override val data: Flow<List<Discipline>>
         get() = tableDatabase.all
 
-    override suspend fun create(creator: AcademicSubjectEntity.() -> Unit): Result<Discipline> {
+    override suspend fun create(creator: DisciplineEntity.() -> Unit): Result<Discipline> {
        return tableDatabase.create(creator)
     }
 
@@ -28,7 +28,7 @@ class AcademicSubjectLocalDataSourceImpl : AcademicSubjectLocalDataSource {
         return tableDatabase.read(key)
     }
 
-    override suspend fun update(key: Long, updater: AcademicSubjectEntity.() -> Unit): Result<Discipline> {
+    override suspend fun update(key: Long, updater: DisciplineEntity.() -> Unit): Result<Discipline> {
         return tableDatabase.update(key, updater)
     }
 

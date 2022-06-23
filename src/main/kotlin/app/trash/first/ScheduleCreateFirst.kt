@@ -1,4 +1,4 @@
-package app.ui.schedule.create.first
+package app.trash.first
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package app.ui.schedule.create.four
+package app.trash.four
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -18,7 +18,7 @@ import app.ui.common.ImageThemed
 import app.ui.database.DatabaseScreen
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
-import app.ui.schedule.create.four.ScheduleCreateFourScreen
+import app.ui.schedule.create.ScheduleCreatingScreen
 import common.view_model.viewModel
 
 private enum class MainMenuItem : SimpleMenuItem {
@@ -55,7 +55,7 @@ fun MainScreen() {
                 SimpleMenuItemLayout(
                     modifier = Modifier.width(300.dp).fillMaxHeight(),
                     items = MainMenuItem.values().toList(),
-                    selected = MainMenuItem.SCHEDULE_CREATING,
+                    selected = MainMenuItem.DATABASE,
                     header = {},
                     onItemSelect = { currentScreen = it },
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -69,7 +69,7 @@ fun MainScreen() {
             currentScreen?.apply {
                 when(this) {
                     MainMenuItem.SCHEDULE -> ScheduleSelectionScreen()
-                    MainMenuItem.SCHEDULE_CREATING -> ScheduleCreateFourScreen()
+                    MainMenuItem.SCHEDULE_CREATING -> ScheduleCreatingScreen()
                     MainMenuItem.DATABASE -> DatabaseScreen()
                 }
             }
