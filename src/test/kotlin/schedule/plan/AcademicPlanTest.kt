@@ -4,7 +4,6 @@ import domain.model.*
 import schedule.builder.BuilderUtils
 import schedule.builder.ScheduleBuilder
 import schedule.rule.Rules
-import schedule.rule.discipline.TeachingRule
 import schedule.rule.room.RoomRule
 import schedule.rule.student.StudentGroupRule
 import schedule.rule.teacher.TeacherRule
@@ -63,37 +62,37 @@ class AcademicPlanTest {
     }
 
     private object Disciplines {
-        val russian = Discipline(id = 0, name = "Русский", description = "Русский")
-        val biology = Discipline(id = 1, name = "Биология", description = "Биология")
-        val math = Discipline(id = 2, name = "Математика", description = "Математика")
-        val mathBig = Discipline(id = 3, name = "Высшая математика", description = "Высшая математика")
-        val physic = Discipline(id = 4, name = "Физика", description = "Физика")
-        val english = Discipline(id = 5, name = "Английский", description = "Английский")
-        val sport_1 = Discipline(id = 6, name = "Физкультура", description = "Физкультура")
-        val sport_2 = Discipline(id = 6, name = "Физкультура", description = "Физкультура")
+        val russian = Discipline(id = 0, name = "Русский")
+        val biology = Discipline(id = 1, name = "Биология")
+        val math = Discipline(id = 2, name = "Математика")
+        val mathBig = Discipline(id = 3, name = "Высшая математика")
+        val physic = Discipline(id = 4, name = "Физика")
+        val english = Discipline(id = 5, name = "Английский")
+        val sport_1 = Discipline(id = 6, name = "Физкультура")
+        val sport_2 = Discipline(id = 6, name = "Физкультура")
     }
 
     private object Teachings {
-        val russian_le = Teaching(id = 1, discipline = Disciplines.russian, type = "лекция")
-        val russian_la = Teaching(id = 2, discipline = Disciplines.russian, type = "лабораторная")
-        val russian_pr = Teaching(id = 3, discipline = Disciplines.russian, type = "практика")
-        val biology_le = Teaching(id = 4, discipline = Disciplines.biology, type = "лекция")
-        val biology_la = Teaching(id = 5, discipline = Disciplines.biology, type = "лабораторная")
-        val biology_pr = Teaching(id = 6, discipline = Disciplines.biology, type = "практика")
-        val math_le = Teaching(id = 7, discipline = Disciplines.math, type = "лекция")
-        val math_la = Teaching(id = 8, discipline = Disciplines.math, type = "лабораторная")
-        val math_pr = Teaching(id = 9, discipline = Disciplines.math, type = "практика")
-        val mathBig_le = Teaching(id = 10, discipline = Disciplines.mathBig, type = "лекция")
-        val mathBig_la = Teaching(id = 11, discipline = Disciplines.mathBig, type = "лабораторная")
-        val mathBig_pr = Teaching(id = 12, discipline = Disciplines.mathBig, type = "практика")
-        val physic_le = Teaching(id = 13, discipline = Disciplines.physic, type = "лекция")
-        val physic_la = Teaching(id = 14, discipline = Disciplines.physic, type = "лабораторная")
-        val physic_pr = Teaching(id = 15, discipline = Disciplines.physic, type = "практика")
-        val english_le = Teaching(id = 16, discipline = Disciplines.english, type = "лекция")
-        val english_la = Teaching(id = 17, discipline = Disciplines.english, type = "лабораторная")
-        val english_pr = Teaching(id = 18, discipline = Disciplines.english, type = "практика")
-        val sport_1 = Teaching(id = 19, discipline = Disciplines.sport_1, type = "практика")
-        val sport_2 = Teaching(id = 20, discipline = Disciplines.sport_2, type = "практика")
+        val russian_le = Teaching(id = 1, discipline = Disciplines.russian, type = WorkType.LECTURE, teacher = Teacher.Empty, room = Room.Empty)
+        val russian_la = Teaching(id = 2, discipline = Disciplines.russian, type = WorkType.LABORATORY, teacher = Teacher.Empty, room = Room.Empty)
+        val russian_pr = Teaching(id = 3, discipline = Disciplines.russian, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val biology_le = Teaching(id = 4, discipline = Disciplines.biology, type = WorkType.LECTURE, teacher = Teacher.Empty, room = Room.Empty)
+        val biology_la = Teaching(id = 5, discipline = Disciplines.biology, type = WorkType.LABORATORY, teacher = Teacher.Empty, room = Room.Empty)
+        val biology_pr = Teaching(id = 6, discipline = Disciplines.biology, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val math_le = Teaching(id = 7, discipline = Disciplines.math, type = WorkType.LECTURE, teacher = Teacher.Empty, room = Room.Empty)
+        val math_la = Teaching(id = 8, discipline = Disciplines.math, type = WorkType.LABORATORY, teacher = Teacher.Empty, room = Room.Empty)
+        val math_pr = Teaching(id = 9, discipline = Disciplines.math, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val mathBig_le = Teaching(id = 10, discipline = Disciplines.mathBig, type = WorkType.LECTURE, teacher = Teacher.Empty, room = Room.Empty)
+        val mathBig_la = Teaching(id = 11, discipline = Disciplines.mathBig, type = WorkType.LABORATORY, teacher = Teacher.Empty, room = Room.Empty)
+        val mathBig_pr = Teaching(id = 12, discipline = Disciplines.mathBig, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val physic_le = Teaching(id = 13, discipline = Disciplines.physic, type = WorkType.LECTURE, teacher = Teacher.Empty, room = Room.Empty)
+        val physic_la = Teaching(id = 14, discipline = Disciplines.physic, type = WorkType.LABORATORY, teacher = Teacher.Empty, room = Room.Empty)
+        val physic_pr = Teaching(id = 15, discipline = Disciplines.physic, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val english_le = Teaching(id = 16, discipline = Disciplines.english, type = WorkType.LECTURE, teacher = Teacher.Empty, room = Room.Empty)
+        val english_la = Teaching(id = 17, discipline = Disciplines.english, type = WorkType.LABORATORY, teacher = Teacher.Empty, room = Room.Empty)
+        val english_pr = Teaching(id = 18, discipline = Disciplines.english, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val sport_1 = Teaching(id = 19, discipline = Disciplines.sport_1, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
+        val sport_2 = Teaching(id = 20, discipline = Disciplines.sport_2, type = WorkType.PRACTICE, teacher = Teacher.Empty, room = Room.Empty)
     }
 
     private object Rooms {
@@ -105,6 +104,10 @@ class AcademicPlanTest {
     }
 
     private val weeksCount = 18
+
+    private fun GroupPlan.set(teaching: Teaching, hours: AcademicHour) {
+        set(teaching.discipline, teaching.type, hours)
+    }
 
     private val plan = AcademicPlan().apply {
         addPlan(Groups.ASU_19, weeksCount) {
@@ -191,7 +194,7 @@ class AcademicPlanTest {
         get(Rooms.k_4)
         get(Rooms.k_5)
     }
-    private val teachingRule = TeachingRule().apply {
+    /*private val teachingRule = TeachingRule().apply {
         add(Teachings.russian_le, TeachingRule.Option(room = Rooms.k_1, teacher = Teachers.teacher_1))
         add(Teachings.russian_la, TeachingRule.Option(room = Rooms.k_1, teacher = Teachers.teacher_1))
         add(Teachings.russian_pr, TeachingRule.Option(room = Rooms.k_1, teacher = Teachers.teacher_1))
@@ -218,7 +221,7 @@ class AcademicPlanTest {
 
         add(Teachings.sport_1, TeachingRule.Option(room = Rooms.k_5, teacher = Teachers.teacher_5))
         add(Teachings.sport_2, TeachingRule.Option(room = Rooms.k_5, teacher = Teachers.teacher_5))
-    }
+    }*/
     private val teacherRule = TeacherRule().apply {
 
     }
@@ -228,7 +231,7 @@ class AcademicPlanTest {
         teacherRule = teacherRule,
         groupRule = groupRule,
         roomRule = roomRule,
-        teachingRule = teachingRule
+        //teachingRule = teachingRule
     )
 
     @Test

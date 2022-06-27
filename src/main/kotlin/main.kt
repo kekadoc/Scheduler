@@ -5,6 +5,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.Application
+import di.dataConverterModule
 import di.localDataSourceModule
 import di.repositoriesModule
 import di.viewModelsModule
@@ -19,6 +20,7 @@ fun main() = application {
         modules(
             localDataSourceModule,
             repositoriesModule,
+            dataConverterModule,
             viewModelsModule
         )
     }

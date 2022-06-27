@@ -1,6 +1,5 @@
 package schedule.rule.discipline
 
-import common.extensions.requireNotNull
 import domain.model.PlanFillingType
 import domain.model.Teaching
 
@@ -14,7 +13,7 @@ class TeachingRule {
     }
 
     fun get(teaching: Teaching): Option {
-        return options[teaching].requireNotNull()
+        return options.getOrPut(teaching) { Option() }
     }
 
     data class Option(

@@ -1,15 +1,20 @@
 package schedule.plan
 
 import common.extensions.requireNotNull
-import domain.model.AcademicHour
 import domain.model.Discipline
 import domain.model.Group
-import domain.model.Teaching
 
-class AcademicPlan {
+class AcademicPlan(
+    plan: Map<Group, GroupPlan> = emptyMap()
+) {
 
-    private val groups = mutableMapOf<Group, GroupPlan>()
+    private val groups = mutableMapOf<Group, GroupPlan>().apply { putAll(plan) }
 
+    fun set(data: Map<Group, GroupPlan>) {
+        data.forEach { (group, plan) ->
+            set(group, plan)
+        }
+    }
 
     fun getAll(): Map<Group, GroupPlan> {
         return groups
@@ -24,57 +29,29 @@ class AcademicPlan {
     }
 
 
-    class GroupPlan(
-        val weekCount: Int
-    ) {
+    companion object {
 
-        private val items = mutableMapOf<Teaching, AcademicHour>()
-
-
-        fun getAll(): Map<Teaching, AcademicHour> {
-            return items
+        fun AcademicPlan.addPlan(group: Group, weekCount: Int, block: GroupPlan.() -> Unit) {
+            val plan = GroupPlan(group, weekCount)
+            block(plan)
+            set(group, plan)
         }
 
-        fun get(teaching: Teaching): AcademicHour {
-            return items[teaching] ?: 0
+        fun AcademicPlan.getAllDisciplines(): Set<Discipline> {
+            return getAll().map { it.value.getAll() }.map { it.keys }.flatten().toSet()
         }
 
-        fun set(teaching: Teaching, hours: AcademicHour) {
-            if (hours <= 0) {
-                items.remove(teaching)
-            } else {
-                items[teaching] = hours
+        fun AcademicPlan.getDisciplineToGroups(): Map<Discipline, Set<Group>> {
+            val sames: Map<Discipline, MutableSet<Group>> = getAllDisciplines().associateWith { mutableSetOf() }
+            getAll().forEach { (group, plan) ->
+                plan.getAll().forEach { (academicSubject, _) ->
+                    sames[academicSubject].requireNotNull().add(group)
+                }
             }
-        }
-
-    }
-
-}
-
-fun AcademicPlan.addPlan(group: Group, weekCount: Int, block: AcademicPlan.GroupPlan.() -> Unit) {
-    val plan = AcademicPlan.GroupPlan(weekCount)
-    block(plan)
-    set(group, plan)
-}
-
-fun AcademicPlan.getAllDisciplines(): Set<Discipline> {
-    return getAllTeachings().map { it.discipline }.toSet()
-}
-
-fun AcademicPlan.getAllTeachings(): Set<Teaching> {
-    return getAll().map { it.value.getAll() }.map { it.keys }.flatten().toSet()
-}
-
-fun AcademicPlan.getDisciplineToGroups(): Map<Teaching, Set<Group>> {
-    val sames: Map<Teaching, MutableSet<Group>> = getAllTeachings().associateWith { mutableSetOf() }
-    getAll().forEach { (group, plan) ->
-        plan.getAll().forEach { (academicSubject, _) ->
-            sames[academicSubject].requireNotNull().add(group)
+            return sames
         }
     }
-    return sames
+
 }
 
-fun AcademicPlan.getSameTeachingForGroups(): Map<Teaching, Set<Group>> {
-    return getDisciplineToGroups().filter { it.value.size > 1 }
-}
+

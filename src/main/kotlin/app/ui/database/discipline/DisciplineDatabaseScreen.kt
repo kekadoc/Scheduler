@@ -31,7 +31,7 @@ import common.extensions.emptyString
 import common.view_model.ViewModel
 import common.view_model.viewModel
 import data.data_source.local.unit.discipline.DisciplineLocalDataSource
-import data.repository.TeachersRepository
+import data.repository.teacher.TeachersRepository
 import domain.model.Discipline
 import domain.model.Room
 import domain.model.Teacher
@@ -46,9 +46,9 @@ class DisciplinesViewModel(
 ) : ViewModel() {
 
     val disciplines = listOf(
-        Discipline(id = 0, name = "Биология", description = "", targetTeacher = Mock.TEACHER, targetRoom = Mock.ROOM),
-        Discipline(id = 1, name = "Физика", description = ""),
-        Discipline(id = 2, name = "Химия", description = ""),
+        Discipline(id = 0, name = "Биология", teachers = listOf(Mock.TEACHER), rooms = listOf(Mock.ROOM)),
+        Discipline(id = 1, name = "Физика", teachers = listOf(Mock.TEACHER), rooms = listOf(Mock.ROOM)),
+        Discipline(id = 2, name = "Химия", teachers = listOf(Mock.TEACHER), rooms = listOf(Mock.ROOM)),
     )
 
     private val disciplinesFlow = MutableStateFlow(disciplines)
@@ -111,7 +111,8 @@ fun DisciplinesDatabaseScreen() {
                 selectedDiscipline = Discipline(
                     id = disciplines.maxOfOrNull { it.id }?.inc() ?: 0L,
                     name = emptyString(),
-                    description = emptyString()
+                    teachers = emptyList(),
+                    rooms = emptyList()
                 )
             }
         ) {
@@ -194,8 +195,8 @@ fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdat
         },
     ) {
         var mutatedDiscipline: Discipline? by remember { mutableStateOf(null) }
-        val targetTeacher = (mutatedDiscipline ?: discipline).targetTeacher
-        val targetRoom = (mutatedDiscipline ?: discipline).targetRoom
+        val targetTeacher = (mutatedDiscipline ?: discipline).teachers.firstOrNull() // TODO: 27.06.2022   List
+        val targetRoom = (mutatedDiscipline ?: discipline).rooms.firstOrNull()
         var selectionTeacher: Boolean by remember { mutableStateOf(false) }
         var selectionRoom: Boolean by remember { mutableStateOf(false) }
         if (selectionTeacher) {
@@ -204,7 +205,7 @@ fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdat
                 list = Mock.teachers(20),
                 getText = { it.fullName },
                 onSelect = { newTeacher ->
-                    mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(targetTeacher = newTeacher)
+                    mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(teachers = listOf(newTeacher)) // TODO: 27.06.2022 List
                     selectionTeacher = false
                 },
                 onCancel = { selectionTeacher = false }
@@ -213,10 +214,10 @@ fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdat
         if (selectionRoom) {
             DialogSelection(
                 title = "Выбор кабинета",
-                list = Mock.studyRooms(20),
+                list = Mock.rooms(20),
                 getText = { it.name },
                 onSelect = { newRoom ->
-                    mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(targetRoom = newRoom)
+                    mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(rooms = listOf(newRoom)) // TODO: 27.06.2022 List
                     selectionRoom = false
                 },
                 onCancel = { selectionRoom = false }
@@ -238,25 +239,16 @@ fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdat
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = (mutatedDiscipline ?: discipline).description,
-                        label = { Text("Описание") },
-                        onValueChange = { text ->
-                            mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(description = text)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
                     TeacherCard(
                         teacher = targetTeacher,
                         onClick = { selectionTeacher = true  },
-                        onDelete = { mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(targetTeacher = Teacher.Empty) }
+                        onDelete = { mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(teachers = emptyList()) } // TODO: 27.06.2022 List
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     RoomCard(
                         room = targetRoom,
                         onClick = { selectionRoom = true },
-                        onDelete = { mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(targetRoom = Room.Empty ) }
+                        onDelete = { mutatedDiscipline = (mutatedDiscipline ?: discipline).copy(rooms = emptyList()) } // TODO: 27.06.2022 List
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -283,7 +275,7 @@ private fun TeacherCard(
     if (teacher == null) {
         SimpleItemComponent(
             modifier = Modifier,
-            title = "Выбрать преподавателя",
+            label = "Выбрать преподавателя",
             onClick = onClick
         )
     } else {
@@ -291,8 +283,8 @@ private fun TeacherCard(
             modifier = Modifier,
             onRightImageClick = onDelete,
             rightImage = Icons.Default.Delete,
-            title = teacher.fullName,
-            subtitle = teacher.speciality,
+            label = teacher.fullName,
+            title = teacher.speciality,
             onClick = onClick
         )
     }
@@ -307,7 +299,7 @@ private fun RoomCard(
     if (room == null) {
         SimpleItemComponent(
             modifier = Modifier,
-            title = "Выбрать кабинет",
+            label = "Выбрать кабинет",
             onClick = onClick
         )
     } else {
@@ -315,7 +307,7 @@ private fun RoomCard(
             modifier = Modifier,
             onRightImageClick = onDelete,
             rightImage = Icons.Default.Delete,
-            title = room.name,
+            label = room.name,
             onClick = onClick
         )
     }

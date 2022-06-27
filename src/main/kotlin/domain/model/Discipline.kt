@@ -1,6 +1,7 @@
 package domain.model
 
 import common.extensions.emptyString
+import domain.model.ModelProvider.Companion.EMPTY_ID
 
 /**
  * Академический предмет
@@ -8,12 +9,17 @@ import common.extensions.emptyString
 data class Discipline(
     override val id: Long,
     val name: String,
-    val description: String = emptyString(),
-    val targetTeacher: Teacher = Teacher.Empty,
-    val targetRoom: Room = Room.Empty
+    val teachers: List<Teacher>,
+    val rooms: List<Room>
 ) : Model {
 
-    companion object {
-        val Empty = Discipline(id = -1L, name = emptyString())
+    companion object : ModelProvider<Discipline> {
+
+        override val Empty = Discipline(
+            id = EMPTY_ID,
+            name = emptyString(),
+            teachers = listOf(Teacher.Empty),
+            rooms = listOf(Room.Empty)
+        )
     }
 }

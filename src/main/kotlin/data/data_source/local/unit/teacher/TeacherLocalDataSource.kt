@@ -1,21 +1,16 @@
 package data.data_source.local.unit.teacher
 
-import common.data.DataFlow
-import common.data.crud.CRUD
+import common.data.DataSource
 import data.data_source.local.unit.teacher.dao.TeacherEntity
-import domain.model.Teacher
-import kotlinx.coroutines.flow.Flow
 
-interface TeacherLocalDataSource : CRUD<Long, TeacherEntity, Teacher>, DataFlow<List<Teacher>> {
+interface TeacherLocalDataSource : DataSource<Long, TeacherEntity> {
 
-    override val data: Flow<List<Teacher>>
+    suspend fun add(lastName: String, firstName: String, middleName: String, speciality: String): Result<TeacherEntity>
 
+    suspend fun get(id: Long): Result<TeacherEntity>
 
-    override suspend fun create(creator: TeacherEntity.() -> Unit): Result<Teacher>
+    suspend fun update(id: Long, updater: TeacherEntity.() -> Unit): Result<TeacherEntity>
 
-    override suspend fun read(key: Long): Result<Teacher>
+    suspend fun delete(key: Long): Result<TeacherEntity>
 
-    override suspend fun update(key: Long, updater: TeacherEntity.() -> Unit): Result<Teacher>
-
-    override suspend fun delete(key: Long): Result<Teacher>
 }

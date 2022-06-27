@@ -4,7 +4,6 @@ import common.extensions.same
 import domain.model.*
 import schedule.plan.AcademicPlan
 import schedule.rule.Rules
-import kotlin.math.floor
 import kotlin.random.Random
 
 object BuilderUtils {
@@ -14,51 +13,43 @@ object BuilderUtils {
         builder: ScheduleBuilder,
         rules: Rules
     ) {
-        println("build plan=${plan.getAll().size}")
+        // TODO: 27.06.2022 Сортировка групп по приоритету
         plan.getAll().forEach { (group, groupPlan) ->
-            groupPlan.getAll().forEach { (teaching, hours) ->
-                val teachingOption = rules.teachingRule.get(teaching)
-                val requireRoom = teaching.discipline.targetRoom
-                val requireTeacher = teaching.discipline.targetTeacher
-                println("HOURS=$hours")
-                val hoursInCycle = when (val filling = teachingOption.planFillingType) {
-                    is PlanFillingType.Evenly -> (hours.toFloat() / groupPlan.weekCount.toFloat()).coerceAtLeast(1f)
-                    is PlanFillingType.Limitation -> filling.limitInCycle.toFloat()
-                }
+            groupPlan.getAll().forEach { (discipline, disciplinePlan) ->
+                val room = disciplinePlan.room
+                val teacher = disciplinePlan.teacher
+                val hours = disciplinePlan.works.forEach { (work, hours) ->
 
-                val hoursInFirstWeek = floor(hoursInCycle / 2f).toInt()
-                val hoursInSecondWeek = (hoursInCycle - hoursInFirstWeek).toInt()
-                println("h=$hoursInFirstWeek hh=$hoursInSecondWeek ${hoursInCycle}")
-                repeat(hoursInFirstWeek) {
-                    val availablePoints = listOf(
-                        builder.getAvailableTimePoints(requireRoom, WeekType.FIRST),
-                        builder.getAvailableTimePoints(requireTeacher, WeekType.FIRST),
-                        builder.getAvailableTimePoints(group, WeekType.FIRST)
-                    ).same()
-                    val first = availablePoints.firstOrNull() ?: throw IllegalStateException("Point not found for group=$group")
-                    val lesson = Lesson(
-                        id = Random.nextLong(),
-                        teaching,
-                        requireTeacher,
-                        requireRoom
-                    )
-                    builder.getGroup(group).getWeek(WeekType.FIRST).getDay(first.dayOfWeek).set(first.lessonNumber, lesson)
-                }
+                    if (hours <= 0) throw IllegalStateException("Hours in empty")
 
-                repeat(hoursInSecondWeek) {
-                    val availablePoints = listOf(
-                        builder.getAvailableTimePoints(requireRoom, WeekType.SECOND),
-                        builder.getAvailableTimePoints(requireTeacher, WeekType.SECOND),
-                        builder.getAvailableTimePoints(group, WeekType.SECOND)
-                    ).same()
-                    val first = availablePoints.firstOrNull() ?: throw IllegalStateException("Point not found for group=$group")
-                    val lesson = Lesson(
-                        id = Random.nextLong(),
-                        teaching,
-                        requireTeacher,
-                        requireRoom
-                    )
-                    builder.getGroup(group).getWeek(WeekType.SECOND).getDay(first.dayOfWeek).set(first.lessonNumber, lesson)
+                    val availableTimeRoom = builder.getAvailableTimePoints(room)
+                    val availableTimeTeacher = builder.getAvailableTimePoints(teacher)
+                    val availableTime = listOf(availableTimeRoom, availableTimeTeacher).same().toMutableList()
+
+                    if (availableTime.isEmpty()) throw IllegalStateException("Time is not found")
+
+                    val hoursInCycle = when (val filling = disciplinePlan.fillingType) {
+                        is PlanFillingType.Evenly -> (hours.toFloat() / groupPlan.weekCount.toFloat()).coerceAtLeast(minimumValue = 1f)
+                        is PlanFillingType.Limitation -> filling.limitInCycle.toFloat()
+                    }
+                    var hoursCounter = hoursInCycle
+                    while (hoursCounter > 0) {
+                        hoursCounter -= 2f
+                        val timeIndex = (0..availableTime.count()).random()
+                        val time = availableTime[timeIndex]
+                        availableTime.removeAt(timeIndex)
+                        val lesson = Lesson(
+                            id = Random.nextLong(),
+                            teaching = Teaching(
+                                id = Random.nextLong(),
+                                discipline = discipline,
+                                teacher = teacher,
+                                room = room, type = work),
+                            teacher = teacher,
+                            room = room
+                        )
+                        builder.getGroup(group).getWeek(time.weekType).getDay(time.dayOfWeek).set(time.lessonNumber, lesson)
+                    }
                 }
             }
         }

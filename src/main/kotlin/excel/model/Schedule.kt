@@ -1,6 +1,8 @@
 package excel.model
 
 import common.extensions.requireNotNull
+import domain.model.WeekType
+import schedule.builder.ScheduleBuilder
 
 typealias DayOfWeek = String
 
@@ -12,15 +14,63 @@ data class Schedule(
     val groups: Set<Group>
 )
 
-/*fun Schedule.fromDayOfWeek(dayOfWeek: DayOfWeek): Map<Group, List<LessonCell>> {
-    return groups.mapValues { (_, days) ->
-        days[dayOfWeek].requireNotNull()
-    }
-}
+fun ScheduleBuilder.buildExcelModel(): Schedule {
+    val dayOfWeeks2: List<domain.model.DayOfWeek> = listOf(
+        domain.model.DayOfWeek.MONDAY,
+        domain.model.DayOfWeek.WEDNESDAY,
+        domain.model.DayOfWeek.THURSDAY,
+        domain.model.DayOfWeek.FRIDAY,
+        domain.model.DayOfWeek.SATURDAY
+    )
 
-fun Schedule.dayOfWeeks(): List<DayOfWeek> {
-    return groups.values.first().keys.toList()
-}*/
+    val lessonsTime: List<LessonTime> = listOf(
+        "8:30-10:00",
+        "10:10-11:30",
+        "12:00-13:30",
+        "13:45-15:15",
+        "15:25-16:65",
+        "17:05-18:30"
+    )
+    val groups: Set<Group> = this.groups.map { Group(it.name) }.toSet()
+    val lessons: Map<DayOfWeek, List<Map<Group, LessonCell>>> = dayOfWeeks2.associateWith { dayOfWeek ->
+        val groupSchedules: Map<domain.model.Group, ScheduleBuilder.GroupSchedule> = this.groups.associateWith { getGroup(it) }
+        List(maxLessonsInDay) { lessonNumber ->
+            groupSchedules.mapValues { (_, groupSchedule) ->
+                val first: domain.model.Lesson? = groupSchedule.getWeek(WeekType.FIRST).getDay(dayOfWeek).get(lessonNumber)
+                val second: domain.model.Lesson? = groupSchedule.getWeek(WeekType.SECOND).getDay(dayOfWeek).get(lessonNumber)
+                LessonCell(
+                    lessonsTime[lessonNumber],
+                    first?.let {
+                        Lesson(
+                            name = it.name,
+                            type = it.type,
+                            teacherAbout = it.teacher.lastName,
+                            teacherName = it.teacher.speciality,
+                            room = it.room.name
+                        )
+                    },
+                    second?.let {
+                        Lesson(
+                            name = it.name,
+                            type = it.type,
+                            teacherAbout = it.teacher.lastName,
+                            teacherName = it.teacher.speciality,
+                            room = it.room.name
+                        )
+                    },
+                )
+            }.mapKeys { Group(it.key.name) }
+        }
+    }.mapKeys { it.key.name }
+    val dayOfWeeks: List<DayOfWeek> = lessons.keys.toList()
+
+    return Schedule(
+        dayOfWeeks = dayOfWeeks,
+        lessonsTime = lessonsTime,
+        groups = groups,
+        lessons = lessons
+    )
+}
 
 fun Schedule.iterate(dayOfWeek: DayOfWeek, block: (LessonIndex, LessonTime, List<Pair<Group, LessonCell>>) -> Unit) {
     lessons[dayOfWeek].requireNotNull().forEachIndexed { index, groups: Map<Group, LessonCell> ->

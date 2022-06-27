@@ -20,12 +20,12 @@ fun BaseItemComponent(
     modifier: Modifier = Modifier,
     leftContent: (@Composable RowScope.() -> Unit)? = null,
     rightContent: (@Composable RowScope.() -> Unit)? = null,
+    label: String? = null,
+    labelStyle: TextStyle = MaterialTheme.typography.caption,
+    labelAlignment: Alignment.Horizontal = Alignment.Start,
     title: String? = null,
     titleStyle: TextStyle = MaterialTheme.typography.h6,
     titleAlignment: Alignment.Horizontal = Alignment.Start,
-    subtitle: String? = null,
-    subtitleStyle: TextStyle = MaterialTheme.typography.subtitle1,
-    subtitleAlignment: Alignment.Horizontal = Alignment.Start,
     caption: String? = null,
     captionStyle: TextStyle = MaterialTheme.typography.caption,
     captionAlignment: Alignment.Horizontal = Alignment.Start,
@@ -45,18 +45,18 @@ fun BaseItemComponent(
                 verticalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.CenterVertically),
                 horizontalAlignment = Alignment.Start,
             ) {
+                if (label != null) {
+                    Text(
+                        modifier = Modifier.align(labelAlignment),
+                        text = label,
+                        style = labelStyle
+                    )
+                }
                 if (title != null) {
                     Text(
                         modifier = Modifier.align(titleAlignment),
                         text = title,
                         style = titleStyle
-                    )
-                }
-                if (subtitle != null) {
-                    Text(
-                        modifier = Modifier.align(subtitleAlignment),
-                        text = subtitle,
-                        style = subtitleStyle
                     )
                 }
                 if (caption != null) {
@@ -79,12 +79,12 @@ fun SimpleItemComponent(
     onLeftImageClick: (() -> Unit)? = null,
     rightImage: ImageVector? = null,
     onRightImageClick: (() -> Unit)? = null,
+    label: String? = null,
+    labelStyle: TextStyle = MaterialTheme.typography.caption,
+    labelAlignment: Alignment.Horizontal = Alignment.Start,
     title: String? = null,
-    titleStyle: TextStyle = MaterialTheme.typography.subtitle1,
+    titleStyle: TextStyle = MaterialTheme.typography.h6,
     titleAlignment: Alignment.Horizontal = Alignment.Start,
-    subtitle: String? = null,
-    subtitleStyle: TextStyle = MaterialTheme.typography.caption,
-    subtitleAlignment: Alignment.Horizontal = Alignment.Start,
     caption: String? = null,
     captionStyle: TextStyle = MaterialTheme.typography.caption,
     captionAlignment: Alignment.Horizontal = Alignment.Start,
@@ -141,12 +141,12 @@ fun SimpleItemComponent(
                 }
             }
         },
+        label = label,
+        labelStyle = labelStyle,
+        labelAlignment = labelAlignment,
         title = title,
         titleStyle = titleStyle,
         titleAlignment = titleAlignment,
-        subtitle = subtitle,
-        subtitleStyle = subtitleStyle,
-        subtitleAlignment = subtitleAlignment,
         caption = caption,
         captionStyle = captionStyle,
         captionAlignment = captionAlignment,

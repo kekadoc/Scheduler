@@ -1,25 +1,10 @@
 package app.mock
 
 import domain.model.*
+import schedule.plan.DisciplinePlan
+import schedule.plan.GroupPlan
 
 object Mock {
-
-    val DISCIPLINE: Discipline = Discipline(
-        id = -1L,
-        name = "AcademicSubject name",
-        description = "AcademicSubject description"
-    )
-
-    fun disciplines(count: Int): List<Discipline> {
-        return List(count) { index ->
-            Discipline(
-                id = index.toLong(),
-                name = "AcademicSubject #$index",
-                description = "AcademicSubject Description #$index"
-            )
-        }
-    }
-
 
     val GROUP: Group = Group(
         id = -1L,
@@ -58,7 +43,7 @@ object Mock {
         description = "StudyRoom Desc"
     )
 
-    fun studyRooms(count: Int): List<Room> {
+    fun rooms(count: Int): List<Room> {
         return List(count) { index ->
             Room(
                 id = index.toLong(),
@@ -84,26 +69,89 @@ object Mock {
     }
 
 
-    val LESSON: Lesson = Lesson(
-        id = -1,
-        name = "Биология",
-        description = "Description",
-        teacher = TEACHER,
-        room = ROOM
+    val DISCIPLINE: Discipline = Discipline(
+        id = -1L,
+        name = "AcademicSubject name",
+        teachers = listOf(TEACHER),
+        rooms = listOf(ROOM)
     )
+
+    fun disciplines(count: Int): List<Discipline> {
+        return List(count) { index ->
+            Discipline(
+                id = index.toLong(),
+                name = "AcademicSubject #$index",
+                teachers = listOf(TEACHER),
+                rooms = listOf(ROOM)
+            )
+        }
+    }
 
 
     val TEACHING: Teaching = Teaching(
         id = -1,
-        discipline = DISCIPLINE
+        discipline = DISCIPLINE,
+        teacher = TEACHER,
+        room = ROOM
+    )
+
+    val LESSON: Lesson = Lesson(
+        id = -1,
+        teaching = TEACHING,
+        teacher = TEACHER,
+        room = ROOM
     )
 
     fun teachings(count: Int): List<Teaching> {
         return List(count) { index ->
             Teaching(
                 id = index.toLong(),
-                discipline = DISCIPLINE.copy(name = "Discipline #$index")
+                discipline = DISCIPLINE.copy(name = "Discipline #$index"),
+                teacher = TEACHER,
+                room = ROOM
             )
         }
     }
+
+
+    val DISCIPLINE_PLAN = DisciplinePlan(
+        discipline = DISCIPLINE,
+        works = mapOf(
+            WorkType.LECTURE to 8,
+            WorkType.PRACTICE to 16,
+        )
+    )
+
+
+    fun groupPlans(count: Int): List<GroupPlan> {
+        val groups = studentGroups(count)
+        return List(count) {
+            GroupPlan(
+                group = groups[it],
+                weekCount = 18,
+                items = disciplinePlans((3..5).random())
+            )
+        }
+    }
+
+    fun disciplinePlans(count: Int): List<DisciplinePlan> {
+        val disciplines = disciplines(count)
+        return List(count) { index ->
+            DisciplinePlan(
+                disciplines[index],
+                works = List((0..WorkType.values().count()).random()) {
+                    WorkType.values().random() to (0..30).random()
+                }.toMap()
+            )
+        }
+    }
+
+    val GROUP_PLAN = GroupPlan(
+        group = GROUP,
+        weekCount = 18,
+        items = mutableListOf(
+            DISCIPLINE_PLAN
+        )
+    )
+
 }

@@ -7,13 +7,21 @@ import org.jetbrains.exposed.dao.id.LongIdTable
 
 object DisciplinesTable : LongIdTable() {
     val name = varchar("name", 50)
-    val description = varchar("description", 50)
+    val teachers = varchar("teachers", Int.MAX_VALUE)
+    val rooms = varchar("rooms", Int.MAX_VALUE)
 }
 
 class DisciplineEntity(id: EntityID<Long>) : LongEntity(id) {
 
     var name by DisciplinesTable.name
-    var description by DisciplinesTable.description
+    var teachers by DisciplinesTable.teachers.transform(
+        toColumn = { list -> list.joinToString("; ") },
+        toReal = { column -> column.split("; ").mapNotNull { it.toLongOrNull() } }
+    )
+    var rooms by DisciplinesTable.rooms.transform(
+        toColumn = { list -> list.joinToString("; ") },
+        toReal = { column -> column.split("; ").mapNotNull { it.toLongOrNull() } }
+    )
 
     companion object : LongEntityClass<DisciplineEntity>(DisciplinesTable)
 }

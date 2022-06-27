@@ -5,9 +5,19 @@ import common.extensions.container
 import common.view_model.ViewModel
 import domain.model.*
 import domain.model.schedule.GroupSettings
+import excel.CreateScheduleXLSX
+import excel.model.buildExcelModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
+import schedule.builder.BuilderUtils
+import schedule.builder.ScheduleBuilder
+import schedule.plan.AcademicPlan
+import schedule.plan.GroupPlan
+import schedule.rule.Rules
+import schedule.rule.room.RoomRule
+import schedule.rule.student.StudentGroupRule
+import schedule.rule.teacher.TeacherRule
 
 data class ScheduleCreatingState(
     val availableGroups: Map<Group, Boolean> = emptyMap(),
@@ -51,6 +61,22 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
         }
     }
 
+    fun buildSchedule(plan: Map<Group, GroupPlan>, availableGroups: Set<Group>) = intent {
+        val maxLessonsInDay = 6 // TODO: 24.06.2022 Mock
+        val scheduleBuilder = ScheduleBuilder(maxLessonsInDay, availableGroups)
+        val academicPlan = AcademicPlan(plan)
+        val rules = Rules(
+             teacherRule = TeacherRule(),
+            groupRule = StudentGroupRule(),
+            roomRule = RoomRule(),
+           // teachingRule = TeachingRule()
+        )
+        BuilderUtils.build(academicPlan, scheduleBuilder, rules)
+        val scheduleExcel = scheduleBuilder.buildExcelModel()
+        println(scheduleExcel)
+        CreateScheduleXLSX.create(scheduleExcel)
+    }
+
 
     fun setGroupLessons(group: Group, lessons: Map<Discipline, AcademicHour>) = intent {
         val currentGroupSettings = state.groupSettings.toMutableMap()
@@ -75,7 +101,7 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
     private fun getAllGroups(): List<Group> = Mock.studentGroups(20)
     private fun getAllTeachers(): List<Teacher> = Mock.teachers(20)
     private fun getAllAcademicSubjects(): List<Discipline> = Mock.disciplines(20)
-    private fun getAllStudyRooms(): List<Room> = Mock.studyRooms(20)
+    private fun getAllStudyRooms(): List<Room> = Mock.rooms(20)
     private fun getAllDays(): List<DayOfWeek> = Mock.dayOfWeeks(6)
     private fun getAllLessonTimes(): List<LessonTime> = Mock.lessonTimes()
 

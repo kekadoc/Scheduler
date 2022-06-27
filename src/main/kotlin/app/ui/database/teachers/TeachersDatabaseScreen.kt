@@ -28,7 +28,7 @@ import common.extensions.emptyString
 import common.view_model.ViewModel
 import common.view_model.viewModel
 import data.data_source.local.unit.teacher.TeacherLocalDataSource
-import data.repository.TeachersRepository
+import data.repository.teacher.TeachersRepository
 import domain.model.Teacher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

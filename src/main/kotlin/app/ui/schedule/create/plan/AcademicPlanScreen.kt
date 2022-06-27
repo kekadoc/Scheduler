@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,15 +21,20 @@ import app.ui.common.SimpleItemComponent
 import app.ui.common.dialog.AppDialog
 import app.ui.common.dialog.DialogSelection
 import common.extensions.container
+import common.extensions.orElse
 import common.view_model.ViewModel
 import common.view_model.viewModel
-import domain.model.*
-import domain.model.plan.GroupPlan
+import domain.model.Discipline
+import domain.model.Group
+import domain.model.WorkType
+import domain.model.fullName
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
+import schedule.plan.DisciplinePlan
+import schedule.plan.GroupPlan
 
-private val GroupPlanLocal = compositionLocalOf { emptyList<GroupPlan>() }
+private val GroupPlansLocal = compositionLocalOf { emptyList<GroupPlan>() }
 
 data class AcademicPlanState(
     val plan: List<GroupPlan> = emptyList()
@@ -53,9 +59,7 @@ class AcademicPlanViewModel : ViewModel(), ContainerHost<AcademicPlanState, Unit
 
     companion object {
 
-        private val mockGroupPlans: List<GroupPlan> = Mock.studentGroups(5)
-            .map { group -> group to Mock.teachings(5).map { it to 10 } }
-            .map { GroupPlan(it.first, it.second) }
+        private val mockGroupPlans: List<GroupPlan> = Mock.groupPlans(5)
     }
 
 }
@@ -68,11 +72,11 @@ fun ScheduleCreatingAcademicPlanScreen() {
     val viewModel = viewModel<AcademicPlanViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
 
-    //Диалог измененеия конкретного экрана
+    //Диалог измененеия учебного плана группы
     var dialogGroupPlanEditor: GroupPlan? by remember { mutableStateOf(null) }
 
     dialogGroupPlanEditor?.also { plan ->
-        CompositionLocalProvider(GroupPlanLocal provides state.plan) {
+        CompositionLocalProvider(GroupPlansLocal provides state.plan) {
             val index = state.plan.indexOf(plan)
             DialogGroupPlanEditor(
                 groupPlan = plan,
@@ -98,9 +102,9 @@ fun ScheduleCreatingAcademicPlanScreen() {
             state.plan.forEach { plan ->
                 item(key = plan.group.id) {
                     SimpleItemComponent(
-                        title = plan.group.name,
-                        titleStyle = MaterialTheme.typography.h6,
-                        subtitle = "${plan.plan.size} предмета, ${plan.plan.sumOf { it.second }} часов",
+                        label = plan.group.name,
+                        labelStyle = MaterialTheme.typography.h6,
+                        title = "${plan.getAll().size} предмета, ${plan.getAll().values.sumOf { it.works.values.sum() }} часов",
                         rightImage = Icons.Default.Delete,
                         onRightImageClick = { viewModel.deletePlan(plan) },
                         onClick = { dialogGroupPlanEditor = plan }
@@ -111,7 +115,7 @@ fun ScheduleCreatingAcademicPlanScreen() {
         Button(
             modifier = Modifier.fillMaxWidth(0.5f).align(Alignment.CenterHorizontally),
             onClick = {
-                dialogGroupPlanEditor = GroupPlan(Group.Empty)
+                dialogGroupPlanEditor = GroupPlan(Group.Empty) // TODO: 27.06.2022 Прокидывать кол-во недель
             }
         ) {
             Text(text = "Add group")
@@ -129,41 +133,41 @@ private fun DialogGroupPlanEditor(
     onCommit: (GroupPlan) -> Unit
 ) {
     val viewModel = viewModel<AcademicPlanViewModel>()
-    val isPlanCreating = groupPlan.group == Group.Empty
-    var mutablePlan: GroupPlan by remember { mutableStateOf(groupPlan.copy()) }
-    val group = mutablePlan.group
-    val plan = mutablePlan.plan
+    val isPlanCreating: Boolean = remember { groupPlan.group == Group.Empty }
+    var group: Group by remember { mutableStateOf(groupPlan.group) }
+    val plans: MutableMap<Discipline, DisciplinePlan> = remember {
+        SnapshotStateMap<Discipline, DisciplinePlan>().apply { putAll(groupPlan.items) }
+    }
+
     var groupSelection: Boolean by remember { mutableStateOf(false) }
-    var teachingEditing: Triple<Teaching, AcademicHour, Int?>? by remember { mutableStateOf(null) }
+    var teachingEditing: DisciplinePlan? by remember { mutableStateOf(null) }
+
     if (groupSelection) {
-        val groups = viewModel.availableGroups.toMutableList().apply { removeAll(GroupPlanLocal.current.map { it.group }) }
+        val groups = viewModel.availableGroups.toMutableList().apply { removeAll(GroupPlansLocal.current.map { it.group }) }
         DialogSelection(
             title = "Выбор группы",
             list = groups,
             getText = { it.name },
-            onSelect = { mutablePlan = mutablePlan.copy(group = it); groupSelection = false },
+            onSelect = { group = it; groupSelection = false },
             onCancel = { groupSelection = false }
         )
     }
-    teachingEditing?.also { (t, h, index) ->
-        DialogTeachingEditor(
-            teaching = t,
-            hours = h,
-            onCommit = { teaching, hours ->
-                val newPlan = mutablePlan.plan.toMutableList()
-                if (index == null) {
-                    newPlan.add(teaching to hours)
-                } else {
-                    newPlan[index] = teaching to hours
-                }
-                mutablePlan = mutablePlan.copy(plan = newPlan)
-                teachingEditing = null
-            },
-            onCancel = { teachingEditing = null })
+    teachingEditing?.also { plan ->
+        DialogDisciplinePlanEditor(
+            plan = plan,
+            onCommit = { newPlan -> plans[newPlan.discipline] = newPlan; teachingEditing = null },
+            onCancel = { teachingEditing = null }
+        )
     }
 
     AppDialog(
-        onCloseRequest = { if (isPlanCreating) onCancel() else onCommit(mutablePlan) },
+        onCloseRequest = {
+            if (isPlanCreating) {
+                onCancel()
+            } else {
+                onCommit(groupPlan.copy(group = group, items = plans))
+            }
+        },
         state = rememberDialogState(width = 400.dp, height = 600.dp),
         contentModifier = Modifier.padding(8.dp),
         title = "План группы"
@@ -172,15 +176,15 @@ private fun DialogGroupPlanEditor(
             SimpleItemComponent(
                 modifier = Modifier.sizeIn(minHeight = 44.dp),
                 onClick = { groupSelection = true },
-                title = "Выбрать группу",
-                titleStyle = MaterialTheme.typography.h5,
-                titleAlignment = Alignment.CenterHorizontally
+                label = "Выбрать группу",
+                labelStyle = MaterialTheme.typography.h5,
+                labelAlignment = Alignment.CenterHorizontally
             )
         } else {
             SimpleItemComponent(
-                title = group.name,
-                titleStyle = MaterialTheme.typography.h6,
-                subtitle = "${mutablePlan.plan.size} предмета, ${mutablePlan.plan.sumOf { it.second }} часов",
+                label = group.name,
+                labelStyle = MaterialTheme.typography.h6,
+                title = "${plans.size} предмета, ${plans.values.sumOf { it.works.values.sum() }} часов",
                 onClick = if (isPlanCreating) {
                     { groupSelection = true }
                 } else {
@@ -193,19 +197,18 @@ private fun DialogGroupPlanEditor(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp)
         ) {
-            plan.forEachIndexed { index, (teaching, hours) ->
+            plans.values.forEachIndexed { index, plan ->
                 item {
                     SimpleItemComponent(
-                        title = teaching.discipline.name,
-                        subtitle = teaching.type.text,
-                        caption = hours.toString(),
+                        label = plan.discipline.name,
+                        title = plan.works.values.sum().toString(),
                         rightImage = Icons.Default.Delete,
                         onRightImageClick = {
-                            mutablePlan = mutablePlan.copy(
-                                plan = mutablePlan.plan.toMutableList().apply { removeAt(index) }
-                            )
+                            plans.remove(plan.discipline)
                         },
-                        onClick = { teachingEditing = Triple(teaching, hours, index) }
+                        onClick = {
+                            teachingEditing = plan
+                        }
                     )
                 }
             }
@@ -213,7 +216,7 @@ private fun DialogGroupPlanEditor(
         if (group != Group.Empty) {
             Button(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                onClick = { teachingEditing = Triple(Teaching.Empty, 0, null) }
+                onClick = { teachingEditing = DisciplinePlan(Discipline.Empty) }
             ) {
                 Text(text = "Добавить предмет")
             }
@@ -221,8 +224,8 @@ private fun DialogGroupPlanEditor(
         if (isPlanCreating) {
             Button(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                enabled = mutablePlan != groupPlan && mutablePlan.plan.isNotEmpty(),
-                onClick = { onCommit(mutablePlan) }
+                enabled = plans != groupPlan.items && plans.isNotEmpty(),
+                onClick = { onCommit(groupPlan.copy(group = group, items = plans)) }
             ) {
                 Text(text = "Сохранить")
             }
@@ -231,86 +234,149 @@ private fun DialogGroupPlanEditor(
 }
 
 /**
- * Диалог для добавления/изменения предмета и часов
+ * Диалог для добавления/изменения плана дисциплины
  */
 @Composable
-fun DialogTeachingEditor(
-    teaching: Teaching,
-    hours: AcademicHour,
-    onCommit: (Teaching, AcademicHour) -> Unit,
+fun DialogDisciplinePlanEditor(
+    plan: DisciplinePlan,
+    onCommit: (DisciplinePlan) -> Unit,
     onCancel: () -> Unit
 ) {
+    val isCreating = remember { plan.discipline == Discipline.Empty }
+    var mutablePlan: DisciplinePlan by remember { mutableStateOf(plan.copy()) }
 
-    var mutableTeaching: Teaching by remember { mutableStateOf(teaching.copy()) }
-    val (_, discipline, type) = mutableTeaching
-    var mutableHours: AcademicHour by remember { mutableStateOf(hours) }
+    val (discipline, teacher, room, works, fillingType) = mutablePlan
 
-    var selectionType: Boolean by remember { mutableStateOf(false) }
     var selectionDiscipline: Boolean by remember { mutableStateOf(false) }
+    var selectionTeacher: Boolean by remember { mutableStateOf(false) }
+    var selectionRoom: Boolean by remember { mutableStateOf(false) }
 
-    if (selectionType) {
-        DialogSelection(
-            "Выбор типа",
-            list = Teaching.Type.values()
-                .toList().filter { it != Teaching.Type.UNSPECIFIED }
-                .mapIndexed { index, item -> SubModel(id = index.toLong(), item = item) },
-            getText = { it.item.text },
-            onSelect = { mutableTeaching = mutableTeaching.copy(type = it.item); selectionType = false },
-            onCancel = { selectionType = false }
-        )
-    }
+
     if (selectionDiscipline) {
         DialogSelection(
             title = "Выбор предмета",
             list = Mock.disciplines(20),
             getText = { it.name },
-            onSelect = { mutableTeaching = mutableTeaching.copy(discipline = it); selectionDiscipline = false },
+            onSelect = { mutablePlan = mutablePlan.copy(discipline = it); selectionDiscipline = false },
             onCancel = { selectionDiscipline = false }
+        )
+    }
+    if (selectionTeacher) {
+        DialogSelection(
+            title = "Выбор предмета",
+            list = Mock.teachers(20), // TODO: 28.06.2022  Mock
+            getText = { it.fullName },
+            onSelect = { mutablePlan = mutablePlan.copy(teacher = it); selectionTeacher = false },
+            onCancel = { selectionTeacher = false }
+        )
+    }
+    if (selectionRoom) {
+        DialogSelection(
+            title = "Выбор предмета",
+            list = Mock.rooms(20), // TODO: 28.06.2022  Mock
+            getText = { it.name },
+            onSelect = { mutablePlan = mutablePlan.copy(room = it); selectionRoom = false },
+            onCancel = { selectionRoom = false }
         )
     }
 
     AppDialog(
         onCloseRequest = onCancel,
-        state = rememberDialogState(width = 300.dp, height = 400.dp),
-        contentModifier = Modifier.padding(8.dp)
+        state = rememberDialogState(width = 350.dp, height = 500.dp),
+        contentModifier = Modifier.padding(8.dp),
+        title = if (isCreating) "Создание" else "Редактирование"
     ) {
-        Column(
-            modifier = Modifier.weight(1f)
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(vertical = 8.dp)
         ) {
             if (discipline == Discipline.Empty) {
-                SimpleItemComponent(
-                    title = "Выбрать предмет",
-                    onClick = {
-                        selectionDiscipline = true
-                    }
-                )
+                item {
+                    SimpleItemComponent(
+                        modifier = Modifier.height(56.dp),
+                        title = "Выбрать предмет",
+                        onClick = {
+                            selectionDiscipline = true
+                        }
+                    )
+                }
             } else {
-                SimpleItemComponent(
-                    title = discipline.name,
-                    subtitle = type.text,
-                    onClick = {
-                        selectionDiscipline = true
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                SimpleItemComponent(
-                    modifier = Modifier.height(44.dp),
-                    title = "Изменить тип",
-                    onClick = { selectionType = true }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = mutableHours.toString(),
-                    onValueChange = { mutableHours = it.toIntOrNull() ?: mutableHours },
-                    label = { Text(text = "Кол-во часов") }
-                )
+                //Spacer(modifier = Modifier.height(8.dp))
+                //todo Возможно выбирать предмет можно только при создании плана, а не редактивровании
+                item {
+                    SimpleItemComponent(
+                        modifier = Modifier.height(56.dp),
+                        title = discipline.name
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                item {
+                    SimpleItemComponent(
+                        modifier = Modifier,
+                        label = "Преподаватель:",
+                        title = teacher.fullName,
+                        onClick = {
+                            selectionTeacher = true
+                        }
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(4.dp)) }
+                item {
+                    SimpleItemComponent(
+                        modifier = Modifier,
+                        label = "Помещение:",
+                        title = room.name,
+                        onClick = {
+                            selectionRoom = true
+                        }
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(4.dp)) }
+                item {
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = works[WorkType.LECTURE].orElse { 0 }.toString(),
+                        onValueChange = { value ->
+                            val hours = value.toIntOrNull() ?: return@OutlinedTextField
+                            val newWorks = mutablePlan.works.toMutableMap().apply { put(WorkType.LECTURE, hours) }
+                            mutablePlan = mutablePlan.copy(works = newWorks)
+                        },
+                        label = { Text(text = "Лекционных часов") }
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(4.dp)) }
+                item {
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = works[WorkType.LABORATORY].orElse { 0 }.toString(),
+                        onValueChange = { value ->
+                            val hours = value.toIntOrNull() ?: return@OutlinedTextField
+                            val newWorks = mutablePlan.works.toMutableMap().apply { put(WorkType.LABORATORY, hours) }
+                            mutablePlan = mutablePlan.copy(works = newWorks)
+                        },
+                        label = { Text(text = "Лабораторных часов") }
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(4.dp)) }
+                item {
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = works[WorkType.PRACTICE].orElse { 0 }.toString(),
+                        onValueChange = { value ->
+                            val hours = value.toIntOrNull() ?: return@OutlinedTextField
+                            val newWorks = mutablePlan.works.toMutableMap().apply { put(WorkType.PRACTICE, hours) }
+                            mutablePlan = mutablePlan.copy(works = newWorks)
+                        },
+                        label = { Text(text = "Практических часов") }
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
+
         Button(
             modifier = Modifier.fillMaxWidth(),
-            enabled = (teaching != mutableTeaching || hours != mutableHours) && mutableHours > 0 && type != Teaching.Type.UNSPECIFIED,
-            onClick = { onCommit(mutableTeaching, mutableHours) }
+            enabled = (plan != mutablePlan) && mutablePlan.works.values.sum() > 0,
+            onClick = { onCommit(mutablePlan) }
         ) {
             Text("Сохранить")
         }

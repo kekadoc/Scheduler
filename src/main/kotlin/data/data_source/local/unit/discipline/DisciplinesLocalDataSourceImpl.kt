@@ -1,39 +1,37 @@
 package data.data_source.local.unit.discipline
 
+import common.data.AbstractDataSource
 import data.data_source.local.common.builder.tableLongIdDatabase
 import data.data_source.local.unit.discipline.dao.DisciplineEntity
 import data.data_source.local.unit.discipline.dao.DisciplinesTable
-import domain.model.Discipline
-import kotlinx.coroutines.flow.Flow
 
-class DisciplinesLocalDataSourceImpl : DisciplineLocalDataSource {
+class DisciplinesLocalDataSourceImpl : AbstractDataSource<Long, DisciplineEntity>(), DisciplineLocalDataSource {
 
-    private val tableDatabase = tableLongIdDatabase(DisciplinesTable, DisciplineEntity) { entity ->
-        Discipline(
-            id = entity.id.value,
-            name = entity.name,
-            description = entity.description,
-        )
+    private val tableDatabase = tableLongIdDatabase(DisciplinesTable, DisciplineEntity)
+
+
+    override suspend fun getAll(): Result<List<DisciplineEntity>> {
+        return tableDatabase.all()
     }
 
-
-    override val data: Flow<List<Discipline>>
-        get() = tableDatabase.all
-
-    override suspend fun create(creator: DisciplineEntity.() -> Unit): Result<Discipline> {
-       return tableDatabase.create(creator)
+    override suspend fun add(name: String, teachers: List<Long>, rooms: List<Long>): Result<DisciplineEntity> {
+        return tableDatabase.create {
+            this.name = name
+            this.teachers = teachers
+            this.rooms = rooms
+        }.onSuccess { onCreate(it.id.value, it) }
     }
 
-    override suspend fun read(key: Long): Result<Discipline> {
-        return tableDatabase.read(key)
+    override suspend fun get(id: Long): Result<DisciplineEntity> {
+        return tableDatabase.read(id)
     }
 
-    override suspend fun update(key: Long, updater: DisciplineEntity.() -> Unit): Result<Discipline> {
-        return tableDatabase.update(key, updater)
+    override suspend fun update(id: Long, updater: DisciplineEntity.() -> Unit): Result<DisciplineEntity> {
+        return tableDatabase.update(id, updater).onSuccess { onCreate(it.id.value, it) }
     }
 
-    override suspend fun delete(key: Long): Result<Discipline> {
-        return tableDatabase.delete(key)
+    override suspend fun delete(key: Long): Result<DisciplineEntity> {
+        return tableDatabase.delete(key).onSuccess { onCreate(it.id.value, it) }
     }
 
 }
