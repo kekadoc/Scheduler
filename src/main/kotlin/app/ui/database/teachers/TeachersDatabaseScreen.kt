@@ -23,60 +23,119 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
+import common.extensions.collectState
 import common.extensions.container
 import common.extensions.emptyString
+import common.logger.Logger
 import common.view_model.ViewModel
 import common.view_model.viewModel
-import data.data_source.local.unit.teacher.TeacherLocalDataSource
 import data.repository.teacher.TeachersRepository
 import domain.model.Teacher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import domain.model.isEmpty
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.reduce
 
-class TeachersViewModel(
-    private val teacherLocalDataSource: TeacherLocalDataSource
-) : ViewModel() {
+data class TeachersDatabaseState(
+    val teachers: List<Teacher> = emptyList(),
+    val isLoading: Boolean = false
+)
 
-    val teachers = listOf(
+class TeachersDatabaseViewModel(
+    private val teachersRepository: TeachersRepository
+) : ViewModel(), ContainerHost<TeachersDatabaseState, Unit> {
+
+    override val container = container<TeachersDatabaseState, Unit>(TeachersDatabaseState())
+
+    /*val teachers = listOf(
         Teacher(id = 0, firstName = "Иван", middleName = "Иванович", lastName = "Иванов", speciality = "Старший преподаватель"),
         Teacher(id = 1, firstName = "Алексей", middleName = "Петрович", lastName = "Кус", speciality = "Лаборант"),
         Teacher(id = 3, firstName = "Юлия", middleName = "Сергеевна", lastName = "Лолина", speciality = "Кандидат математических наук"),
-    )
+    )*/
 
-    private val teachersFlow = MutableStateFlow(teachers)
-
-    val all: Flow<List<Teacher>>
-        get() = teachersFlow
-
-    fun update(teacher: Teacher) {
-        teachersFlow.value = teachersFlow.value.toMutableList().apply {
-            removeIf { it.id == teacher.id }
-            add(teacher)
+    init {
+        viewModelScope.launch {
+            combine(
+                teachersRepository.allTeachers.map { it.getOrNull() }.filterNotNull(),
+                flowOf(Unit)
+            ) { teachers, _ -> TeachersDatabaseState(teachers) }
+                .flowOn(Dispatchers.IO)
+                .onEach { newState -> intent { reduce { newState } } }
+                .launchIn(viewModelScope)
         }
     }
 
-    fun delete(teacher: Teacher) {
-        teachersFlow.value = teachersFlow.value.toMutableList().apply {
-            removeIf { it.id == teacher.id }
-        }
+    fun create(lastName: String, firstName: String, middleName: String, speciality: String) = intent {
+        teachersRepository.addTeacher(
+            lastName = lastName,
+            firstName = firstName,
+            middleName = middleName,
+            speciality = speciality
+        )
+            .flowOn(Dispatchers.IO)
+            .first()
+            .onSuccess { teacher ->
+                Logger.log("create successfully $teacher")
+            }
+            .onFailure { error ->
+                Logger.log("create failed $error")
+            }
+
+    }
+
+    fun update(teacher: Teacher) = intent {
+        teachersRepository.updateTeacher(teacher)
+            .flowOn(Dispatchers.IO)
+            .first()
+            .onSuccess {
+                Logger.log("update successfully $teacher")
+            }
+            .onFailure { error ->
+                Logger.log("update failed", error)
+            }
+    }
+
+    fun delete(teacher: Teacher) = intent {
+        teachersRepository.deleteTeacher(teacher.id)
+            .flowOn(Dispatchers.IO)
+            .first()
+            .onSuccess {
+                Logger.log("delete successfully $teacher")
+            }
+            .onFailure { error ->
+                Logger.log("delete failed", error)
+            }
     }
 
 }
 
 @Composable
 fun TeachersDatabaseScreen() {
-    val viewModel = viewModel<TeachersViewModel>()
-    val teachers by viewModel.all.collectAsState(emptyList())
+    val viewModel = viewModel<TeachersDatabaseViewModel>()
+    val state by viewModel.collectState()
+    val (teachers, isLoading) = state
+
     var selectedTeacher: Teacher? by remember { mutableStateOf(null) }
 
     selectedTeacher?.also { teacher ->
         DialogTeacher(
             teacher = teacher,
             onCloseRequest = { selectedTeacher = null },
-            onUpdate = {
-                viewModel.update(it)
+            onUpdate = { newTeacher ->
+                if (teacher.isEmpty) {
+                    viewModel.create(
+                        lastName = newTeacher.lastName,
+                        firstName = newTeacher.firstName,
+                        middleName = newTeacher.middleName,
+                        speciality = newTeacher.speciality
+                    )
+                } else {
+                    viewModel.update(newTeacher)
+                }
                 selectedTeacher = null
             }
         )
@@ -102,13 +161,7 @@ fun TeachersDatabaseScreen() {
         Card(
             modifier = Modifier.height(56.dp).fillMaxWidth(),
             onClick = {
-                selectedTeacher = Teacher(
-                    id = teachers.maxOfOrNull { it.id }?.inc() ?: 0L,
-                    firstName = emptyString(),
-                    middleName = emptyString(),
-                    lastName = emptyString(),
-                    speciality = emptyString()
-                )
+                selectedTeacher = Teacher.Empty
             }
         ) {
             Row(

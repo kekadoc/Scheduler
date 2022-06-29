@@ -23,3 +23,6 @@ data class Teacher(
 
 val Teacher.fullName: String
     get() = "$lastName $firstName $middleName"
+
+val Teacher.isEmpty: Boolean
+    get() = this == Teacher.Empty

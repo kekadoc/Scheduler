@@ -3,7 +3,7 @@ package di
 import app.ApplicationViewModel
 import app.ui.database.discipline.DisciplinesViewModel
 import app.ui.database.teachers.DialogTeacherViewModel
-import app.ui.database.teachers.TeachersViewModel
+import app.ui.database.teachers.TeachersDatabaseViewModel
 import app.ui.schedule.create.ScheduleCreatingViewModel
 import app.ui.schedule.create.plan.AcademicPlanViewModel
 import common.view_model.ViewModelStore
@@ -18,7 +18,7 @@ val viewModelsModule = module {
     }
 
     factory {
-        TeachersViewModel(teacherLocalDataSource = get())
+        TeachersDatabaseViewModel(teachersRepository = get())
     }
 
     factory {

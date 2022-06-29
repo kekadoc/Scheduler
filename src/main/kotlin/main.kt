@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.Database
 import org.koin.core.context.startKoin
 
 fun main() = application {
+    //org.jetbrains.exposed.sql.SchemaUtils.createDatabase()
     Database.connect("jdbc:sqlite:data.db", "org.sqlite.JDBC")
 
     startKoin {
