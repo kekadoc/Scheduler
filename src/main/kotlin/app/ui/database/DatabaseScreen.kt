@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import app.ApplicationViewModel
 import app.ui.common.ImageThemed
 import app.ui.database.discipline.DisciplinesDatabaseScreen
+import app.ui.database.group.GroupsDatabaseScreen
 import app.ui.database.rooms.RoomsDatabaseScreen
 import app.ui.database.teachers.TeachersDatabaseScreen
 import app.ui.menu.SimpleMenuItem
@@ -79,7 +80,7 @@ fun DatabaseScreen() {
                 DatabaseItem.TEACHERS -> TeachersDatabaseScreen()
                 DatabaseItem.ROOMS -> RoomsDatabaseScreen()
                 DatabaseItem.DISCIPLINES -> DisciplinesDatabaseScreen()
-                DatabaseItem.GROUPS -> Box { Text("GROUPS") }
+                DatabaseItem.GROUPS -> GroupsDatabaseScreen()
             }
         }
     }

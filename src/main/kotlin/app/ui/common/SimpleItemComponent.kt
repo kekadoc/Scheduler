@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun BaseItemComponent(
     modifier: Modifier = Modifier,
@@ -37,11 +36,18 @@ fun BaseItemComponent(
         enabled = onClick != null
     ) {
         Row(
-            modifier = modifier.fillMaxWidth().wrapContentHeight().padding(8.dp)
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(8.dp)
         ) {
             leftContent?.invoke(this)
             Column(
-                modifier = Modifier.wrapContentHeight().weight(1f).padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .weight(1f)
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.CenterVertically),
                 horizontalAlignment = Alignment.Start,
             ) {

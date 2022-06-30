@@ -10,3 +10,6 @@ data class Group(
         val Empty = Group(id = -1, name = emptyString())
     }
 }
+
+val Group.isEmpty: Boolean
+    get() = this == Group.Empty
