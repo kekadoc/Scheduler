@@ -1,8 +1,9 @@
 package di
 
 import app.ApplicationViewModel
+import app.ui.database.discipline.DialogTeacherViewModel
 import app.ui.database.discipline.DisciplinesViewModel
-import app.ui.database.teachers.DialogTeacherViewModel
+import app.ui.database.rooms.RoomsDatabaseViewModel
 import app.ui.database.teachers.TeachersDatabaseViewModel
 import app.ui.schedule.create.ScheduleCreatingViewModel
 import app.ui.schedule.create.plan.AcademicPlanViewModel
@@ -17,13 +18,17 @@ val viewModelsModule = module {
         ApplicationViewModel(spaceRepository = get())
     }
 
+    //Database ViewModels
     factory {
         TeachersDatabaseViewModel(teachersRepository = get())
     }
-
+    factory {
+        RoomsDatabaseViewModel(roomRepository = get())
+    }
     factory {
         DisciplinesViewModel(localDataSource = get())
     }
+
 
     factory {
         DialogTeacherViewModel(teachersRepository = get())

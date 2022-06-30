@@ -15,3 +15,6 @@ data class Room(
         )
     }
 }
+
+val Room.isEmpty: Boolean
+    get() = this == Room.Empty

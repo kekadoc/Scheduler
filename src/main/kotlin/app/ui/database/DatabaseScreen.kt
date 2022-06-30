@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import app.ApplicationViewModel
 import app.ui.common.ImageThemed
 import app.ui.database.discipline.DisciplinesDatabaseScreen
+import app.ui.database.rooms.RoomsDatabaseScreen
 import app.ui.database.teachers.TeachersDatabaseScreen
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
@@ -76,7 +77,7 @@ fun DatabaseScreen() {
         ) {
             when (currentScreen) {
                 DatabaseItem.TEACHERS -> TeachersDatabaseScreen()
-                DatabaseItem.ROOMS -> Box { Text("ROOMS") }
+                DatabaseItem.ROOMS -> RoomsDatabaseScreen()
                 DatabaseItem.DISCIPLINES -> DisciplinesDatabaseScreen()
                 DatabaseItem.GROUPS -> Box { Text("GROUPS") }
             }

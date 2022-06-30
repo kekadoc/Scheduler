@@ -26,3 +26,6 @@ val Teacher.fullName: String
 
 val Teacher.isEmpty: Boolean
     get() = this == Teacher.Empty
+
+val Teacher.isAllFieldsDeclared: Boolean
+    get() = lastName.isNotEmpty() && firstName.isNotEmpty() && middleName.isNotEmpty() && speciality.isNotEmpty()

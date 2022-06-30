@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 
-package app.ui.database.teachers
+package app.ui.database.rooms
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -15,37 +15,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.ui.common.SimpleItemComponent
-import app.ui.database.teachers.dialog.DialogTeacher
+import app.ui.database.rooms.dialog.DialogRooms
 import common.extensions.collectState
 import common.view_model.viewModel
-import domain.model.Teacher
-import domain.model.fullName
+import domain.model.Room
 import domain.model.isEmpty
 
 @Composable
-fun TeachersDatabaseScreen() {
-    val viewModel = viewModel<TeachersDatabaseViewModel>()
+fun RoomsDatabaseScreen() {
+    val viewModel = viewModel<RoomsDatabaseViewModel>()
     val state by viewModel.collectState()
-    val (teachers, isLoading) = state
+    val (rooms, isLoading) = state
 
-    var selectedTeacher: Teacher? by remember { mutableStateOf(null) }
+    var selectedRoom: Room? by remember { mutableStateOf(null) }
 
-    selectedTeacher?.also { teacher ->
-        DialogTeacher(
-            teacher = teacher,
-            onCloseRequest = { selectedTeacher = null },
-            onUpdate = { newTeacher ->
-                if (teacher.isEmpty) {
-                    viewModel.create(
-                        lastName = newTeacher.lastName,
-                        firstName = newTeacher.firstName,
-                        middleName = newTeacher.middleName,
-                        speciality = newTeacher.speciality
-                    )
+    selectedRoom?.also { room ->
+        DialogRooms(
+            room = room,
+            onCloseRequest = { selectedRoom = null },
+            onUpdate = { newRoom ->
+                if (room.isEmpty) {
+                    viewModel.create(name = newRoom.name)
                 } else {
-                    viewModel.update(newTeacher)
+                    viewModel.update(newRoom)
                 }
-                selectedTeacher = null
+                selectedRoom = null
             }
         )
     }
@@ -57,14 +51,13 @@ fun TeachersDatabaseScreen() {
             contentPadding = PaddingValues(4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            teachers.forEach { teacher ->
+            rooms.forEach { room ->
                 item {
                     SimpleItemComponent(
-                        title = teacher.fullName,
-                        caption = teacher.speciality,
+                        title = room.name,
                         rightImage = Icons.Default.Delete,
-                        onRightImageClick = { viewModel.delete(teacher) },
-                        onClick = { selectedTeacher = teacher }
+                        onRightImageClick = { viewModel.delete(room) },
+                        onClick = { selectedRoom = room }
                     )
                 }
             }
@@ -72,7 +65,7 @@ fun TeachersDatabaseScreen() {
         Card(
             modifier = Modifier.height(56.dp).fillMaxWidth(),
             onClick = {
-                selectedTeacher = Teacher.Empty
+                selectedRoom = Room.Empty
             }
         ) {
             Row(
@@ -80,7 +73,7 @@ fun TeachersDatabaseScreen() {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Add")
+                Text(text = "Добавить")
             }
         }
     }
