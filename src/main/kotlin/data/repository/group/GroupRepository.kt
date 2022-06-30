@@ -15,4 +15,6 @@ interface GroupRepository {
     fun deleteGroup(id: Long): Flow<Result<Group>>
 
     fun updateGroup(group: Group): Flow<Result<Group>>
+
+    fun clear(): Flow<Result<Unit>>
 }

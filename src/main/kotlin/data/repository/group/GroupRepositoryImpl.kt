@@ -49,6 +49,10 @@ class GroupRepositoryImpl(
         }
     }
 
+    override fun clear(): Flow<Result<Unit>> {
+        return flowOf { localDataSource.clear() }
+    }
+
 
     private suspend fun GroupEntity.convert(): Result<Group> {
         return converter.run {

@@ -35,4 +35,8 @@ class TeacherLocalDataSourceImpl : AbstractDataSource<Long, TeacherEntity>(), Te
         return tableDatabase.delete(key).onSuccess { onCreate(it.id.value, it) }
     }
 
+    override suspend fun clear(): Result<Unit> {
+        return tableDatabase.clear()
+    }
+
 }

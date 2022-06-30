@@ -1,5 +1,7 @@
 package di
 
+import data.repository.discipline.DisciplineRepository
+import data.repository.discipline.DisciplineRepositoryImpl
 import data.repository.group.GroupRepository
 import data.repository.group.GroupRepositoryImpl
 import data.repository.room.RoomRepository
@@ -36,6 +38,15 @@ val repositoriesModule = module {
         RoomRepositoryImpl(
             localDataSource = get(),
             converter = get()
+        )
+    }
+
+    single<DisciplineRepository> {
+        DisciplineRepositoryImpl(
+            localDataSource = get(),
+            converter = get(),
+            teacherLocalDataSource = get(),
+            roomsLocalDataSource = get()
         )
     }
 

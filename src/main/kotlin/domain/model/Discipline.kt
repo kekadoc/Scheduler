@@ -18,8 +18,11 @@ data class Discipline(
         override val Empty = Discipline(
             id = EMPTY_ID,
             name = emptyString(),
-            teachers = listOf(Teacher.Empty),
-            rooms = listOf(Room.Empty)
+            teachers = listOf(),
+            rooms = listOf()
         )
+
+        val Discipline.isEmpty: Boolean
+            get() = this == Empty
     }
 }

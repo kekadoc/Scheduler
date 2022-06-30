@@ -60,6 +60,10 @@ class TeachersRepositoryImpl(
         }
     }
 
+    override fun clear(): Flow<Result<Unit>> {
+        return flowOf { localDataSource.clear() }
+    }
+
 
     private suspend fun TeacherEntity.convert(): Result<Teacher> {
         return converter.run {

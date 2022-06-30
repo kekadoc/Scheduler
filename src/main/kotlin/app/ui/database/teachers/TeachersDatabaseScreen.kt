@@ -51,9 +51,10 @@ fun TeachersDatabaseScreen() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         LazyColumn(
+            modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

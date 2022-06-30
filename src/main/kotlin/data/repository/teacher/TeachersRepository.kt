@@ -15,4 +15,6 @@ interface TeachersRepository {
     fun deleteTeacher(id: Long): Flow<Result<Teacher>>
 
     fun updateTeacher(teacher: Teacher): Flow<Result<Teacher>>
+
+    fun clear(): Flow<Result<Unit>>
 }

@@ -34,4 +34,7 @@ class DisciplinesLocalDataSourceImpl : AbstractDataSource<Long, DisciplineEntity
         return tableDatabase.delete(key).onSuccess { onCreate(it.id.value, it) }
     }
 
+    override suspend fun clear(): Result<Unit> {
+        return tableDatabase.clear()
+    }
 }

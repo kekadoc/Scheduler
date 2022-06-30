@@ -13,4 +13,5 @@ interface TeacherLocalDataSource : DataSource<Long, TeacherEntity> {
 
     suspend fun delete(key: Long): Result<TeacherEntity>
 
+    suspend fun clear(): Result<Unit>
 }

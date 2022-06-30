@@ -15,4 +15,6 @@ interface RoomRepository {
     fun deleteRoom(id: Long): Flow<Result<Room>>
 
     fun updateRoom(room: Room): Flow<Result<Room>>
+
+    fun clear(): Flow<Result<Unit>>
 }

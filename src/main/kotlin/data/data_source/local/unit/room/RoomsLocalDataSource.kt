@@ -13,4 +13,5 @@ interface RoomsLocalDataSource : DataSource<Long, RoomEntity> {
 
     suspend fun delete(key: Long): Result<RoomEntity>
 
+    suspend fun clear(): Result<Unit>
 }

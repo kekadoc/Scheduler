@@ -21,7 +21,7 @@ class Inject(
     private var teachingId = 1L
 
 
-    suspend fun injectRooms() {
+    suspend fun injectRooms(): Unit {
         with(roomRepository) {
             addRoom("ауд. 1").await()
             addRoom("ауд. 2").await()
@@ -39,7 +39,7 @@ class Inject(
             addRoom("спортзал").await()
         }
     }
-    suspend fun injectTeachers() = with(teachersRepository) {
+    suspend fun injectTeachers(): Unit = with(teachersRepository) {
         addTeacher(lastName = "Морозов", firstName = "Е.", middleName = "А.", speciality = "д-р техн.наук, профессор").await()
         addTeacher(lastName = "Морзова", firstName = "А.", middleName = "Р.", speciality = "канд.техн.наук, доцент").await()
         addTeacher(lastName = "Сметанина", firstName = "Е.", middleName = "В.", speciality = "старший преподаватель").await()
@@ -59,7 +59,7 @@ class Inject(
         addTeacher(lastName = "Красильников", firstName = "С.", middleName = "М.", speciality = "канд.техн.наук, доцент").await()
         addTeacher(lastName = "Горюшков", firstName = "Г.", middleName = "А.", speciality = "старший преподаватель").await()
     }
-    suspend fun injectDisciplines() {
+    suspend fun injectDisciplines(): Unit {
         disciplineRepository.addDiscipline(
             name = "ФИЗИКА",
             teachers = teachersRepository.findByLastName("Морозов"),
@@ -338,7 +338,7 @@ class Inject(
             rooms = roomRepository.findByName("ауд. 1")
         ).await()
     }
-    suspend fun injectGroups() = with(groupRepository) {
+    suspend fun injectGroups(): Unit = with(groupRepository) {
         addGroup("АСУ-21-1б-ЧФ").await()
         addGroup("АТПП-21-1б-ЧФ").await()
         addGroup("ПГС-21-1б-ЧФ").await()
@@ -354,7 +354,7 @@ class Inject(
         addGroup("ЭС-18-1б-ЧФ").await()
     }
 
-    suspend fun injectPlan() {
+    suspend fun injectPlan(): Unit {
 
         addToAcademicPlan(
             groupName = "АСУ-21-1б-ЧФ",

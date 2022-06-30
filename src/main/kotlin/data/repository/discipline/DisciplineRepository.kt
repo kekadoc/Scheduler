@@ -21,4 +21,6 @@ interface DisciplineRepository {
     fun deleteDiscipline(id: Long): Flow<Result<Discipline>>
 
     fun updateDiscipline(discipline: Discipline): Flow<Result<Discipline>>
+
+    fun clear(): Flow<Result<Unit>>
 }

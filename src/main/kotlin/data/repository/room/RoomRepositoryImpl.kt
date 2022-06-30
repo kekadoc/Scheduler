@@ -49,6 +49,10 @@ class RoomRepositoryImpl(
         }
     }
 
+    override fun clear(): Flow<Result<Unit>> {
+        return flowOf { localDataSource.clear() }
+    }
+
 
     private suspend fun RoomEntity.convert(): Result<Room> {
         return converter.run {

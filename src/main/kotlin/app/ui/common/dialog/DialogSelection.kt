@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.rememberDialogState
 import app.ui.common.OutlinedTextField
 import common.extensions.emptyString
@@ -34,58 +33,53 @@ fun <T : Model> DialogSelection(
     onCancel: () -> Unit
 ) {
     var query: String by remember { mutableStateOf(emptyString()) }
-    Dialog(
+    AppDialog(
         state = rememberDialogState(width = 300.dp, height = 400.dp),
         title = title,
         icon = icon,
         resizable = false,
-        onCloseRequest = onCancel
+        onCloseRequest = onCancel,
+        contentModifier = Modifier.padding(8.dp)
     ) {
-        Surface {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(4.dp)
+        OutlinedTextField(
+            label = { Text("Поиск") },
+            modifier = Modifier.fillMaxWidth().height(48.dp),
+            value = query,
+            onValueChange = { query = it },
+            singleLine = true,
+            contentPaddingValues = PaddingValues(8.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row {
+            val state = rememberLazyListState()
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                state = state,
+                contentPadding = PaddingValues(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                OutlinedTextField(
-                    label = { Text("Поиск") },
-                    modifier = Modifier.fillMaxWidth().height(48.dp),
-                    value = query,
-                    onValueChange = { query = it },
-                    singleLine = true,
-                    contentPaddingValues = PaddingValues(8.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row {
-                    val state = rememberLazyListState()
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        state = state,
-                        contentPadding = PaddingValues(4.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        list
-                            .filter { query.isEmpty() || getText(it).contains(query) }
-                            .onEmpty {
-                                item {
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text =  "Ничего не найдено",
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            }
-                            .forEach { item ->
-                                item(item.id) {
-                                    SelectionItem(
-                                        text = getText(item),
-                                        isEnabled = isEnabled(item),
-                                        onClick = { onSelect(item) }
-                                    )
-                                }
-                            }
+                list
+                    .filter { query.isEmpty() || getText(it).contains(query) }
+                    .onEmpty {
+                        item {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text =  "Ничего не найдено",
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
-                    VerticalScrollbar(ScrollbarAdapter(state))
-                }
+                    .forEach { item ->
+                        item(item.id) {
+                            SelectionItem(
+                                text = getText(item),
+                                isEnabled = isEnabled(item),
+                                onClick = { onSelect(item) }
+                            )
+                        }
+                    }
             }
+            VerticalScrollbar(ScrollbarAdapter(state))
         }
     }
 }

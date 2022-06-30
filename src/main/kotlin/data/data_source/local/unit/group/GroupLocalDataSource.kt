@@ -13,4 +13,5 @@ interface GroupLocalDataSource : DataSource<Long, GroupEntity> {
 
     suspend fun delete(key: Long): Result<GroupEntity>
 
+    suspend fun clear(): Result<Unit>
 }

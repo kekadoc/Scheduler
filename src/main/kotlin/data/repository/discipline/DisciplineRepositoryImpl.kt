@@ -58,6 +58,10 @@ class DisciplineRepositoryImpl(
         }
     }
 
+    override fun clear(): Flow<Result<Unit>> {
+        return flowOf { localDataSource.clear() }
+    }
+
 
     private suspend fun DisciplineEntity.convert(): Result<Discipline> {
         return converter.run {

@@ -2,7 +2,9 @@ package data.data_source.local.common
 
 import common.data.CRUD
 import common.extensions.requireNotNull
+import common.logger.Logger
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.dao.Entity as DaoEntity
@@ -71,6 +73,18 @@ constructor(
                     .requireNotNull()
                     .apply { delete() }
             }
+        }
+    }
+
+    override suspend fun clear(): Result<Unit> {
+        return runCatching<Unit> {
+            newSuspendedTransaction {
+                table.deleteAll()
+            }
+        }.onSuccess {
+            Logger.log("CLEAR success")
+        }.onFailure {
+            Logger.log("CLEAR fail $it")
         }
     }
 

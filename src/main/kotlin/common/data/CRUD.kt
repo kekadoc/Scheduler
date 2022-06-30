@@ -15,4 +15,6 @@ interface CRUD<Key, Data> {
     suspend fun update(key: Key, updater: Data.() -> Unit): Result<Data>
 
     suspend fun delete(key: Key): Result<Data>
+
+    suspend fun clear(): Result<Unit>
 }
