@@ -6,7 +6,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
 
 object DisciplinesTable : LongIdTable() {
-    val name = varchar("name", 50)
+    val name = varchar("name", Int.MAX_VALUE)
     val teachers = varchar("teachers", Int.MAX_VALUE)
     val rooms = varchar("rooms", Int.MAX_VALUE)
 }

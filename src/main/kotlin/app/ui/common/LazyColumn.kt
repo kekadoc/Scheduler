@@ -48,9 +48,11 @@ fun LazyColumnWithScrollbar(
             userScrollEnabled = userScrollEnabled,
             content = content
         )
-        if (state.layoutInfo.visibleItemsInfo.size < state.layoutInfo.totalItemsCount) {
+        /*if (state.layoutInfo.visibleItemsInfo.size < state.layoutInfo.totalItemsCount) {
             VerticalScrollbar(ScrollbarAdapter(state), reverseLayout = reverseLayout, style = scrollbarStyle, interactionSource = scrollbarInteractionSource)
-        }
+        }*/
+        VerticalScrollbar(ScrollbarAdapter(state), reverseLayout = reverseLayout, style = scrollbarStyle, interactionSource = scrollbarInteractionSource)
+
     }
 
 }

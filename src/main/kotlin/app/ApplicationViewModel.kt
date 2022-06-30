@@ -9,7 +9,6 @@ import data.repository.room.RoomRepository
 import data.repository.space.SpaceRepository
 import data.repository.teacher.TeachersRepository
 import injector.Inject
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -32,14 +31,14 @@ class ApplicationViewModel(
 
     init {
         viewModelScope.launch {
-            teachersRepository.clear().collect()
-            groupRepository.clear().collect()
-            roomRepository.clear().collect()
-            disciplineRepository.clear().collect()
-            //injector.injectTeachers()
-            //injector.injectRooms()
-            //injector.injectDisciplines()
-            //injector.injectGroups()
+            //teachersRepository.clear().collect()
+            //groupRepository.clear().collect()
+            //roomRepository.clear().collect()
+            //disciplineRepository.clear().collect()
+            injector.injectTeachers()
+            injector.injectRooms()
+            injector.injectDisciplines()
+            injector.injectGroups()
         }
     }
 

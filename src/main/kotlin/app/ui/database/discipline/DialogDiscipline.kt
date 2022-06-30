@@ -79,69 +79,69 @@ fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdat
             )
         }
 
-        Column(
-            modifier = Modifier.fillMaxSize()
+        LazyColumnWithScrollbar(
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(8.dp)
         ) {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = mutatedDiscipline.name,
-                label = { Text("Имя") },
-                onValueChange = { text -> mutatedDiscipline = mutatedDiscipline.copy(name = text) }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            LazyColumnWithScrollbar(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight()
-            ) {
-                val teachers = mutatedDiscipline.teachers
-                teachers.forEachIndexed { index, teacher ->
-                    item(index to teacher) {
-                        SimpleItemComponent(
-                            title = teacher.fullName,
-                            caption = teacher.speciality,
-                            rightImage = Icons.Default.Delete,
-                            onRightImageClick = {
-                                val newTeachers = teachers.toMutableList().apply { removeAt(index) }
-                                mutatedDiscipline = mutatedDiscipline.copy(teachers = newTeachers)
-                            }
-                        )
-                    }
-                }
-                item("AddTeacher") {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { selectionTeacher = true }
-                    ) {
-                        Text("Добавить преподавателя")
-                    }
+            item("NameInput") {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = mutatedDiscipline.name,
+                    label = { Text("Имя") },
+                    onValueChange = { text -> mutatedDiscipline = mutatedDiscipline.copy(name = text) }
+                )
+            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+
+            val teachers = mutatedDiscipline.teachers
+            teachers.forEachIndexed { index, teacher ->
+                item(index to teacher) {
+                    SimpleItemComponent(
+                        title = teacher.fullName,
+                        caption = teacher.speciality,
+                        rightImage = Icons.Default.Delete,
+                        onRightImageClick = {
+                            val newTeachers = teachers.toMutableList().apply { removeAt(index) }
+                            mutatedDiscipline = mutatedDiscipline.copy(teachers = newTeachers)
+                        }
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumnWithScrollbar(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight()
-            ) {
-                val rooms = mutatedDiscipline.rooms
-                rooms.forEachIndexed { index, room ->
-                    item(index to room) {
-                        SimpleItemComponent(
-                            title = room.name,
-                            rightImage = Icons.Default.Delete,
-                            onRightImageClick = {
-                                val newTeachers = rooms.toMutableList().apply { removeAt(index) }
-                                mutatedDiscipline = mutatedDiscipline.copy(rooms = newTeachers)
-                            }
-                        )
-                    }
-                }
-                item("AddRoom") {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { selectionRoom = true }
-                    ) {
-                        Text("Добавить помещение")
-                    }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item("AddTeacher") {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { selectionTeacher = true }
+                ) {
+                    Text("Добавить преподавателя")
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            item {  Spacer(modifier = Modifier.height(24.dp)) }
+
+            val rooms = mutatedDiscipline.rooms
+            rooms.forEachIndexed { index, room ->
+                item(index to room) {
+                    SimpleItemComponent(
+                        title = room.name,
+                        rightImage = Icons.Default.Delete,
+                        onRightImageClick = {
+                            val newTeachers = rooms.toMutableList().apply { removeAt(index) }
+                            mutatedDiscipline = mutatedDiscipline.copy(rooms = newTeachers)
+                        }
+                    )
+                }
+            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item("AddRoom") {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { selectionRoom = true }
+                ) {
+                    Text("Добавить помещение")
+                }
+            }
+
+            item { Spacer(modifier = Modifier.height(8.dp)) }
         }
 
         Button(
