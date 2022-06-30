@@ -19,10 +19,7 @@ fun ScheduleCreatingResultScreen() {
     Box {
         Button(
             onClick = {
-                viewModel.buildSchedule(
-                    plan = state.plan.associateBy { it.group },
-                    availableGroups = planViewModel.availableGroups
-                )
+                viewModel.buildSchedule(plan = state.plan.associateBy { it.group })
             }
         ) {
             Text("Построить расписание")

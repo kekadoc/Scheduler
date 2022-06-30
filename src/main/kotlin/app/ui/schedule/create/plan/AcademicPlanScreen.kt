@@ -15,50 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
-import app.mock.Mock
 import app.ui.common.SimpleItemComponent
 import app.ui.common.dialog.AppDialog
 import app.ui.common.dialog.DialogSelection
-import common.extensions.container
-import common.view_model.ViewModel
+import common.extensions.collectState
 import common.view_model.viewModel
 import domain.model.Discipline
 import domain.model.Group
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.reduce
 import schedule.plan.DisciplinePlan
 import schedule.plan.GroupPlan
 
 private val GroupPlansLocal = compositionLocalOf { emptyList<GroupPlan>() }
-
-data class AcademicPlanState(
-    val plan: List<GroupPlan> = emptyList()
-)
-
-class AcademicPlanViewModel : ViewModel(), ContainerHost<AcademicPlanState, Unit> {
-
-    override val container = container<AcademicPlanState, Unit>(AcademicPlanState(mockGroupPlans))
-
-    val availableGroups: Set<Group> = Mock.studentGroups(20).toSet() // TODO: 24.06.2022 Mock
-
-    fun setPlan(plan: GroupPlan, index: Int) = intent {
-        reduce { state.copy(plan = state.plan.toMutableList().apply { set(index, plan) }) }
-    }
-    fun addPlan(plan: GroupPlan) = intent {
-        reduce { state.copy(plan = state.plan.toMutableList().apply { add(plan) }) }
-    }
-
-    fun deletePlan(plan: GroupPlan) = intent {
-        reduce { state.copy(plan = state.plan.toMutableList().apply { remove(plan) }) }
-    }
-
-    companion object {
-
-        private val mockGroupPlans: List<GroupPlan> = Mock.groupPlans(5)
-    }
-
-}
 
 /**
  * Экран формирования учебного плана для каждой группы
@@ -129,8 +96,13 @@ private fun DialogGroupPlanEditor(
     onCommit: (GroupPlan) -> Unit
 ) {
     val viewModel = viewModel<AcademicPlanViewModel>()
+    val state by viewModel.collectState()
+    val (availableGroups, planList) = state
+
     val isPlanCreating: Boolean = remember { groupPlan.group == Group.Empty }
+
     var group: Group by remember { mutableStateOf(groupPlan.group) }
+
     val plans: MutableMap<Discipline, DisciplinePlan> = remember {
         SnapshotStateMap<Discipline, DisciplinePlan>().apply { putAll(groupPlan.items) }
     }
@@ -139,7 +111,7 @@ private fun DialogGroupPlanEditor(
     var teachingEditing: DisciplinePlan? by remember { mutableStateOf(null) }
 
     if (groupSelection) {
-        val groups = viewModel.availableGroups.toMutableList().apply { removeAll(GroupPlansLocal.current.map { it.group }) }
+        val groups = availableGroups.toMutableList().apply { removeAll(GroupPlansLocal.current.map { it.group }) }
         DialogSelection(
             title = "Выбор группы",
             list = groups,

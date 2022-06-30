@@ -61,7 +61,7 @@ val viewModelsModule = module {
     }
 
     factory {
-        AcademicPlanViewModel()
+        AcademicPlanViewModel(groupRepository = get(), academicPlan = get())
     }
 
 }

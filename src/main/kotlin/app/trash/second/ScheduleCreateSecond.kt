@@ -1,38 +1,6 @@
 package app.trash.second
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollbarAdapter
-import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.rememberDialogState
-import app.ui.common.CardBox
-import app.ui.common.CardColumn
-import app.ui.common.LazyColumnWithScrollbar
-import app.ui.common.dialog.DialogChecking
-import app.ui.common.dialog.DialogStyle
-import app.ui.common.dialog.Long
-import app.ui.schedule.create.ScheduleCreatingViewModel
-import common.extensions.collectState
-import common.view_model.viewModel
-import domain.model.AcademicHour
-import domain.model.Discipline
-import domain.model.Group
-import domain.model.schedule.GroupSettings
+/*
 
 @Composable
 fun ScheduleCreateSecondScreen() {
@@ -52,7 +20,8 @@ fun ScheduleCreateSecondScreen() {
             items = state.groupSettings.values.toList(),
             onCLose = { groupsSelection = false }
         )
-        /*DialogChecking(
+        */
+/*DialogChecking(
             title = "Группы",
             list = state.availableGroups,
             getText = { it.name },
@@ -60,7 +29,8 @@ fun ScheduleCreateSecondScreen() {
                 viewModel.setAvailableGroups(result)
                 groupsSelection = false
             },
-        )*/
+        )*//*
+
     }
 
     if (teachersSelection) {
@@ -364,9 +334,11 @@ fun GroupSettingsComponent(
 }
 
 
+*/
 /**
  * Диалог информации об группе. Можно указать ученые предметы для указанной группе
- */
+ *//*
+
 @Composable
 fun DialogGroupInfo(
     group: Group,
@@ -466,9 +438,11 @@ fun DialogGroupInfo(
     }
 }
 
+*/
 /**
  * Диалог для добавления предмета и указание кол-ва часов
- */
+ *//*
+
 @Composable
 fun AddingAcademicSubject(
     availableSubjects: List<Discipline>,
@@ -543,4 +517,4 @@ fun AddingAcademicSubject(
         }
     }
 
-}
+}*/

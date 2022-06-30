@@ -18,9 +18,10 @@ object BuilderUtils {
             groupPlan.getAll().forEach { (discipline, disciplinePlan) ->
                 val room = disciplinePlan.room
                 val teacher = disciplinePlan.teacher
-                val hours = disciplinePlan.works.forEach { (work, hours) ->
-
-                    if (hours <= 0) throw IllegalStateException("Hours in empty")
+                if (disciplinePlan.works.values.sum() <= 0) {
+                    throw IllegalStateException("Hours in empty $group $discipline")
+                }
+                disciplinePlan.works.filter { it.value > 0 }.forEach { (work, hours) ->
 
                     val availableTimeRoom = builder.getAvailableTimePoints(room)
                     val availableTimeTeacher = builder.getAvailableTimePoints(teacher)
@@ -35,7 +36,7 @@ object BuilderUtils {
                     var hoursCounter = hoursInCycle
                     while (hoursCounter > 0) {
                         hoursCounter -= 2f
-                        val timeIndex = (0..availableTime.count()).random()
+                        val timeIndex = (0..availableTime.count()).random() - 1
                         val time = availableTime[timeIndex]
                         availableTime.removeAt(timeIndex)
                         val lesson = Lesson(

@@ -2,32 +2,9 @@
 
 package app.trash.four
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import app.mock.Mock
-import app.ui.common.CardColumn
-import app.ui.common.FixedDimenLazyGrid
-import domain.model.DayOfWeek
-import domain.model.Lesson
 
+/*
 fun Modifier.vertical() = layout { measurable, constraints ->
     val placeable = measurable.measure(constraints)
     println(placeable.height)
@@ -266,4 +243,4 @@ fun AcademicSubjectComponent() {
             }
         }
     }
-}
+}*/

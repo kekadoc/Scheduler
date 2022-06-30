@@ -1,6 +1,7 @@
 package schedule.builder
 
 import common.extensions.requireNotNull
+import common.logger.Logger
 import domain.model.*
 
 class ScheduleBuilder(
@@ -11,6 +12,7 @@ class ScheduleBuilder(
     private val schedules: Map<Group, GroupSchedule> = groups.associateWith { GroupSchedule() }
 
     fun getGroup(group: Group): GroupSchedule {
+        Logger.log("group=$group; groups=${schedules.keys}")
         return schedules[group].requireNotNull()
     }
 

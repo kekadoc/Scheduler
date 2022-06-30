@@ -1,6 +1,7 @@
 package injector
 
 import common.extensions.await
+import common.logger.Logger
 import data.repository.discipline.DisciplineRepository
 import data.repository.group.GroupRepository
 import data.repository.room.RoomRepository
@@ -288,7 +289,7 @@ class Inject(
             rooms = roomRepository.findByName("ауд. 211")
         ).await()
         disciplineRepository.addDiscipline(
-            name = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКА РАБОТА",
+            name = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
             teachers = teachersRepository.findByLastName("Горяева", "Русских"),
             rooms = roomRepository.findByName("ауд. 7")
         ).await()
@@ -548,6 +549,7 @@ class Inject(
             WorkType.PRACTICE to practice,
             WorkType.LABORATORY to laboratory,
         )
+        Logger.log(disciplineName)
         val discipline = disciplineRepository.findByName(disciplineName)
         return discipline to works
     }

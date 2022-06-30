@@ -1,20 +1,6 @@
 package app.trash.first
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import app.ui.common.CardBox
-import app.ui.common.dialog.DialogChecking
-import app.ui.schedule.create.ScheduleCreatingViewModel
-import common.view_model.viewModel
-
+/*
 @Composable
 fun ScheduleCreateFirstScreen() {
 
@@ -274,4 +260,4 @@ private fun CounterComponent(
             }
         }
     }
-}
+}*/
