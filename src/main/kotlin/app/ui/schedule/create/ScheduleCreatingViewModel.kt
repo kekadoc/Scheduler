@@ -2,6 +2,7 @@ package app.ui.schedule.create
 
 import common.extensions.container
 import common.view_model.ViewModel
+import domain.model.DayOfWeek
 import domain.model.Group
 import excel.CreateScheduleXLSX
 import excel.model.buildExcelModel
@@ -31,6 +32,7 @@ class ScheduleCreatingViewModel : ViewModel(), ContainerHost<ScheduleCreatingSta
             teacherRule = TeacherRule(),
             groupRule = StudentGroupRule(),
             roomRule = RoomRule(),
+            availableDays = DayOfWeek.values().take(6).toSet()
             // teachingRule = TeachingRule()
         )
         BuilderUtils.build(academicPlan, scheduleBuilder, rules)

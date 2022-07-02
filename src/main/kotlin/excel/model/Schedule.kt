@@ -15,13 +15,7 @@ data class Schedule(
 )
 
 fun ScheduleBuilder.buildExcelModel(): Schedule {
-    val dayOfWeeks2: List<domain.model.DayOfWeek> = listOf(
-        domain.model.DayOfWeek.MONDAY,
-        domain.model.DayOfWeek.WEDNESDAY,
-        domain.model.DayOfWeek.THURSDAY,
-        domain.model.DayOfWeek.FRIDAY,
-        domain.model.DayOfWeek.SATURDAY
-    )
+    val dayOfWeeks2: List<domain.model.DayOfWeek> = domain.model.DayOfWeek.values().toList()
 
     val lessonsTime: List<LessonTime> = listOf(
         "8:30-10:00",
@@ -61,7 +55,7 @@ fun ScheduleBuilder.buildExcelModel(): Schedule {
                 )
             }.mapKeys { Group(it.key.name) }
         }
-    }.mapKeys { it.key.name }
+    }.mapKeys { it.key.text }
     val dayOfWeeks: List<DayOfWeek> = lessons.keys.toList()
 
     return Schedule(

@@ -2,14 +2,13 @@
 
 package app
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.model.mvi.isAuthorized
 import app.ui.AuthorizationScreen
@@ -36,16 +35,16 @@ class Application : KoinComponent {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Box(
+                    Row(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         if (!state.isAuthorized) {
                             AuthorizationScreen(onEnter = { space -> viewModel.setSpaceName(space) })
                         } else {
-                            MainScreen()
+                            MainScreen(Modifier.weight(1f))
                         }
                         Switch(
-                            modifier = Modifier.align(alignment = Alignment.TopEnd),
+                            modifier = Modifier,
                             checked = darkTheme,
                             onCheckedChange = { darkTheme = it },
                         )

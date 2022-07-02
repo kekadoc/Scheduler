@@ -13,7 +13,6 @@ object BuilderUtils {
         builder: ScheduleBuilder,
         rules: Rules
     ) {
-        // TODO: 27.06.2022 Сортировка групп по приоритету
         plan.getAll().forEach { (group, groupPlan) ->
             groupPlan.getAll().forEach { (discipline, disciplinePlan) ->
                 val room = disciplinePlan.room
@@ -25,7 +24,10 @@ object BuilderUtils {
 
                     val availableTimeRoom = builder.getAvailableTimePoints(room)
                     val availableTimeTeacher = builder.getAvailableTimePoints(teacher)
-                    val availableTime = listOf(availableTimeRoom, availableTimeTeacher).same().toMutableList()
+                    val availableTime = listOf(availableTimeRoom, availableTimeTeacher)
+                        .same()
+                        .filter { rules.availableDays.contains(it.dayOfWeek) }
+                        .toMutableList()
 
                     if (availableTime.isEmpty()) throw IllegalStateException("Time is not found")
 
@@ -36,7 +38,7 @@ object BuilderUtils {
                     var hoursCounter = hoursInCycle
                     while (hoursCounter > 0) {
                         hoursCounter -= 2f
-                        val timeIndex = (0..availableTime.count()).random() - 1
+                        val timeIndex = (0 until availableTime.count()).random()
                         val time = availableTime[timeIndex]
                         availableTime.removeAt(timeIndex)
                         val lesson = Lesson(

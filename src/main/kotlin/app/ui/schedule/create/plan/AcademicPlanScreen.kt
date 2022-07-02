@@ -19,6 +19,7 @@ import app.ui.common.SimpleItemComponent
 import app.ui.common.dialog.AppDialog
 import app.ui.common.dialog.DialogSelection
 import common.extensions.collectState
+import common.logger.Logger
 import common.view_model.viewModel
 import domain.model.Discipline
 import domain.model.Group
@@ -98,7 +99,7 @@ private fun DialogGroupPlanEditor(
     val viewModel = viewModel<AcademicPlanViewModel>()
     val state by viewModel.collectState()
     val (availableGroups, planList) = state
-
+    Logger.log(availableGroups.toString())
     val isPlanCreating: Boolean = remember { groupPlan.group == Group.Empty }
 
     var group: Group by remember { mutableStateOf(groupPlan.group) }

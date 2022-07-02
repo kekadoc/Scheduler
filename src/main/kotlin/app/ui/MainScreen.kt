@@ -19,6 +19,7 @@ import app.ui.database.DatabaseScreen
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
 import app.ui.schedule.create.ScheduleCreatingScreen
+import common.logger.Logger
 import common.view_model.viewModel
 
 private enum class MainMenuItem : SimpleMenuItem {
@@ -40,12 +41,12 @@ private enum class MainMenuItem : SimpleMenuItem {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(modifier: Modifier) {
     val viewModel = viewModel<ApplicationViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
-    var currentScreen: MainMenuItem? by remember { mutableStateOf(null) }
-
-    Row(modifier = Modifier.fillMaxSize()) {
+    var currentScreen: MainMenuItem by remember { mutableStateOf(MainMenuItem.DATABASE) }
+    Logger.log("MainScreen $currentScreen")
+    Row(modifier = modifier.fillMaxSize()) {
         Card {
             Column {
                 MenuHeader(
@@ -55,7 +56,7 @@ fun MainScreen() {
                 SimpleMenuItemLayout(
                     modifier = Modifier.width(300.dp).fillMaxHeight(),
                     items = MainMenuItem.values().toList(),
-                    selected = MainMenuItem.DATABASE,
+                    selected = currentScreen,
                     header = {},
                     onItemSelect = { currentScreen = it },
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -66,7 +67,7 @@ fun MainScreen() {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            currentScreen?.apply {
+            currentScreen.apply {
                 when(this) {
                     MainMenuItem.SCHEDULE -> ScheduleSelectionScreen()
                     MainMenuItem.SCHEDULE_CREATING -> ScheduleCreatingScreen()
