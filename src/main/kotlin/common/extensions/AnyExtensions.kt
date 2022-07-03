@@ -8,7 +8,7 @@ fun <T> T?.requireNotNull(lazyMessage: () -> Any): T {
     return requireNotNull(value = this, lazyMessage = lazyMessage)
 }
 
-fun <T> T?.orElse(block: () -> T): T {
+inline fun <T> T?.orElse(block: () -> T): T {
     return this ?: block()
 }
 

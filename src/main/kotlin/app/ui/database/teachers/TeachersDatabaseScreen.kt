@@ -18,9 +18,9 @@ import app.ui.common.SimpleItemComponent
 import app.ui.database.teachers.dialog.DialogTeacher
 import common.extensions.collectState
 import common.view_model.viewModel
-import domain.model.Teacher
-import domain.model.fullName
-import domain.model.isEmpty
+import app.domain.model.Teacher
+import app.domain.model.fullName
+import app.domain.model.isEmpty
 
 @Composable
 fun TeachersDatabaseScreen() {

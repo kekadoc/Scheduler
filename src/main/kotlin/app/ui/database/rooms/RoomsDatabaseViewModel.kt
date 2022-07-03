@@ -3,8 +3,8 @@ package app.ui.database.rooms
 import common.extensions.container
 import common.logger.Logger
 import common.view_model.ViewModel
-import data.repository.room.RoomRepository
-import domain.model.Room
+import app.data.repository.room.RoomsRepository
+import app.domain.model.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 class RoomsDatabaseViewModel(
-    private val roomRepository: RoomRepository
+    private val roomsRepository: RoomsRepository
 ) : ViewModel(), ContainerHost<RoomsDatabaseState, Unit> {
 
     override val container = container<RoomsDatabaseState, Unit>(RoomsDatabaseState())
@@ -21,7 +21,7 @@ class RoomsDatabaseViewModel(
     init {
         viewModelScope.launch {
             combine(
-                roomRepository.allRooms.map { it.getOrNull() }.filterNotNull(),
+                roomsRepository.allRooms.map { it.getOrNull() }.filterNotNull(),
                 flowOf(Unit)
             ) { rooms, _ -> RoomsDatabaseState(rooms) }
                 .flowOn(Dispatchers.IO)
@@ -31,7 +31,7 @@ class RoomsDatabaseViewModel(
     }
 
     fun create(name: String) = intent {
-        roomRepository.addRoom(name = name)
+        roomsRepository.addRoom(name = name)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { teacher ->
@@ -44,7 +44,7 @@ class RoomsDatabaseViewModel(
     }
 
     fun update(room: Room) = intent {
-        roomRepository.updateRoom(room)
+        roomsRepository.updateRoom(room)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { newRoom ->
@@ -56,7 +56,7 @@ class RoomsDatabaseViewModel(
     }
 
     fun delete(room: Room) = intent {
-        roomRepository.deleteRoom(room.id)
+        roomsRepository.deleteRoom(room.id)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { deletedRoom ->

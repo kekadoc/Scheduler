@@ -25,9 +25,9 @@ import androidx.compose.ui.window.rememberDialogState
 import app.mock.Mock
 import app.ui.common.CardBox
 import app.ui.common.dialog.DialogChecking
-import domain.model.AcademicHour
-import domain.model.Discipline
-import domain.model.Group
+import app.domain.model.AcademicHour
+import app.domain.model.Discipline
+import app.domain.model.Group
 
 private enum class ItemType {
     GROUP,

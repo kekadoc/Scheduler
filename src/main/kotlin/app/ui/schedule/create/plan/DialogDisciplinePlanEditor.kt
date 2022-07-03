@@ -16,10 +16,10 @@ import app.ui.common.SimpleItemComponent
 import app.ui.common.dialog.AppDialog
 import app.ui.common.dialog.DialogSelection
 import common.extensions.orElse
-import domain.model.Discipline
-import domain.model.WorkType
-import domain.model.fullName
-import schedule.plan.DisciplinePlan
+import app.domain.model.Discipline
+import app.domain.model.WorkType
+import app.domain.model.fullName
+import app.schedule.plan.DisciplinePlan
 
 /**
  * Диалог для добавления/изменения плана дисциплины

@@ -4,10 +4,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.21"
-    id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
+    kotlin("plugin.serialization") version "1.6.21"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev731"
 }
 
-group = "com.pnipu.schedule"
+group = "com.pnipu.app.schedule"
 version = "0.1"
 
 repositories {
@@ -31,6 +32,7 @@ dependencies {
 
     implementation("org.orbit-mvi:orbit-core:4.3.2")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
     //implementation("org.apache.poi:poi:5.0.0")
     implementation("org.apache.poi:poi-ooxml:5.2.2")

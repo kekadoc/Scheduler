@@ -12,9 +12,9 @@ import androidx.compose.ui.window.Dialog
 import app.ui.common.dialog.DialogSelection
 import app.ui.common.dialog.DialogStyle
 import app.ui.common.dialog.Long
-import domain.model.Room
-import domain.model.Teacher
-import domain.model.fullName
+import app.domain.model.Room
+import app.domain.model.Teacher
+import app.domain.model.fullName
 
 @Composable
 fun <Type> BaseDependsCompositionComponent(

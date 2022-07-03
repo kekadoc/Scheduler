@@ -1,8 +1,11 @@
 package app.ui.schedule.create.plan
 
+import app.data.repository.group.GroupsRepository
+import app.data.repository.plan.AcademicPlanRepository
+import app.schedule.plan.GroupPlan
 import common.extensions.container
+import common.logger.Logger
 import common.view_model.ViewModel
-import data.repository.group.GroupRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
@@ -11,18 +14,17 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
-import schedule.plan.AcademicPlan
-import schedule.plan.GroupPlan
 
 class AcademicPlanViewModel(
-    private val groupRepository: GroupRepository,
-    private val academicPlan: AcademicPlan
+    private val groupsRepository: GroupsRepository,
+    private val academicPlanRepository: AcademicPlanRepository
 ) : ViewModel(), ContainerHost<AcademicPlanState, Unit> {
 
-    override val container = container<AcademicPlanState, Unit>(AcademicPlanState(plan = academicPlan.getAll().values.toList()))
+    override val container = container<AcademicPlanState, Unit>(AcademicPlanState(plan = academicPlanRepository.plan.getAll().values.toList()))
 
     init {
-        groupRepository.allGroups.mapNotNull { it.getOrNull() }.onEach { groups ->
+        Logger.log("AcademicPlanViewModel $academicPlanRepository ${academicPlanRepository.plan} ${academicPlanRepository.plan.getAll()}")
+        groupsRepository.allGroups.mapNotNull { it.getOrNull() }.onEach { groups ->
             intent { reduce { state.copy(availableGroups = groups) } }
         }
             .flowOn(Dispatchers.IO)

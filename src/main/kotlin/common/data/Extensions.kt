@@ -20,8 +20,10 @@ val <Key, Data> DataSource<Key, Data>.all: Flow<List<Data>>
             }
         })
         return flow.onEach { data ->
+            //Logger.log("DS $data")
              if (data.isEmpty() && !initialized) {
                  getAll().onSuccess { allData ->
+                     //Logger.log("DS all $allData")
                      flow.value = allData
                      initialized = true
                  }

@@ -1,8 +1,13 @@
 package app.model.mvi
 
+import app.domain.model.Space
+import app.domain.model.Space.Companion.isEmpty
+
 data class AppState(
-    val spaceName: String? = "Пнипу"
+    val space: Space = Space.Empty,
+    val isAuthorizationProcess: Boolean = false,
+    val isLoading: Boolean = false
 )
 
 val AppState.isAuthorized: Boolean
-    get() = !spaceName.isNullOrEmpty()
+    get() = !space.isEmpty

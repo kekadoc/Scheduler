@@ -18,8 +18,8 @@ import app.ui.common.SimpleItemComponent
 import app.ui.database.rooms.dialog.DialogRooms
 import common.extensions.collectState
 import common.view_model.viewModel
-import domain.model.Room
-import domain.model.isEmpty
+import app.domain.model.Room
+import app.domain.model.isEmpty
 
 @Composable
 fun RoomsDatabaseScreen() {

@@ -16,8 +16,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
 import app.ui.common.onEscape
-import domain.model.Teacher
-import domain.model.isAllFieldsDeclared
+import app.domain.model.Teacher
+import app.domain.model.isAllFieldsDeclared
 
 @Composable
 fun DialogTeacher(

@@ -19,7 +19,7 @@ object CreateScheduleXLSX {
         val workbook = XSSFWorkbook().apply {
             build(schedule)
         }
-        val file = File("files/schedule.xlsx")
+        val file = File("files/app.schedule.xlsx")
         file.parentFile.mkdirs()
 
         val outFile = FileOutputStream(file)

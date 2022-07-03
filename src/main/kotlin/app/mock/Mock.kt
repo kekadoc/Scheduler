@@ -1,8 +1,8 @@
 package app.mock
 
-import domain.model.*
-import schedule.plan.DisciplinePlan
-import schedule.plan.GroupPlan
+import app.domain.model.*
+import app.schedule.plan.DisciplinePlan
+import app.schedule.plan.GroupPlan
 
 object Mock {
 

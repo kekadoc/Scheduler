@@ -3,8 +3,8 @@ package app.ui.database.group
 import common.extensions.container
 import common.logger.Logger
 import common.view_model.ViewModel
-import data.repository.group.GroupRepository
-import domain.model.Group
+import app.data.repository.group.GroupsRepository
+import app.domain.model.Group
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 class GroupsDatabaseViewModel(
-    private val groupRepository: GroupRepository
+    private val groupsRepository: GroupsRepository
 ) : ViewModel(), ContainerHost<GroupsDatabaseState, Unit> {
 
     override val container = container<GroupsDatabaseState, Unit>(GroupsDatabaseState())
@@ -21,7 +21,7 @@ class GroupsDatabaseViewModel(
     init {
         viewModelScope.launch {
             combine(
-                groupRepository.allGroups.map { it.getOrNull() }.filterNotNull(),
+                groupsRepository.allGroups.map { it.getOrNull() }.filterNotNull(),
                 flowOf(Unit)
             ) { groups, _ -> GroupsDatabaseState(groups) }
                 .flowOn(Dispatchers.IO)
@@ -31,7 +31,7 @@ class GroupsDatabaseViewModel(
     }
 
     fun create(name: String) = intent {
-        groupRepository.addGroup(name = name)
+        groupsRepository.addGroup(name = name)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { teacher ->
@@ -44,7 +44,7 @@ class GroupsDatabaseViewModel(
     }
 
     fun update(group: Group) = intent {
-        groupRepository.updateGroup(group)
+        groupsRepository.updateGroup(group)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { newRoom ->
@@ -56,7 +56,7 @@ class GroupsDatabaseViewModel(
     }
 
     fun delete(group: Group) = intent {
-        groupRepository.deleteGroup(group.id)
+        groupsRepository.deleteGroup(group.id)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { deletedRoom ->

@@ -21,8 +21,8 @@ import app.ui.common.dialog.DialogSelection
 import app.ui.common.onEscape
 import common.extensions.collectState
 import common.view_model.viewModel
-import domain.model.Discipline
-import domain.model.fullName
+import app.domain.model.Discipline
+import app.domain.model.fullName
 
 @Composable
 fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdate: (Discipline) -> Unit) {

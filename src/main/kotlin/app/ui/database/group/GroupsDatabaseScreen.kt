@@ -18,8 +18,8 @@ import app.ui.common.SimpleItemComponent
 import app.ui.database.group.dialog.DialogGroup
 import common.extensions.collectState
 import common.view_model.viewModel
-import domain.model.Group
-import domain.model.isEmpty
+import app.domain.model.Group
+import app.domain.model.isEmpty
 
 @Composable
 fun GroupsDatabaseScreen() {

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import app.ui.common.ImageThemed
 
 @Composable
-fun AuthorizationScreen(onEnter: (String) -> Unit) {
+fun AuthorizationScreen(onEnter: (String) -> Unit, isAuthLoading: Boolean) {
     var spaceName by remember { mutableStateOf("ПНИПУ") }
     Row(
         modifier = Modifier.fillMaxSize(),

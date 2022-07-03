@@ -1,6 +1,6 @@
 package app.ui.database.rooms
 
-import domain.model.Room
+import app.domain.model.Room
 
 data class RoomsDatabaseState(
     val rooms: List<Room> = emptyList(),

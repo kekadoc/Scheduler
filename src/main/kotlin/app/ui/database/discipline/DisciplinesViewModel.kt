@@ -3,12 +3,12 @@ package app.ui.database.discipline
 import common.extensions.container
 import common.logger.Logger
 import common.view_model.ViewModel
-import data.repository.discipline.DisciplineRepository
-import data.repository.room.RoomRepository
-import data.repository.teacher.TeachersRepository
-import domain.model.Discipline
-import domain.model.Room
-import domain.model.Teacher
+import app.data.repository.discipline.DisciplinesRepository
+import app.data.repository.room.RoomsRepository
+import app.data.repository.teacher.TeachersRepository
+import app.domain.model.Discipline
+import app.domain.model.Room
+import app.domain.model.Teacher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -23,9 +23,9 @@ data class DisciplinesViewState(
 )
 
 class DisciplinesViewModel(
-    private val disciplineRepository: DisciplineRepository,
+    private val disciplinesRepository: DisciplinesRepository,
     private val teachersRepository: TeachersRepository,
-    private val roomRepository: RoomRepository
+    private val roomsRepository: RoomsRepository
 ) : ViewModel(), ContainerHost<DisciplinesViewState, Unit> {
 
     override val container = container<DisciplinesViewState, Unit>(DisciplinesViewState())
@@ -34,9 +34,9 @@ class DisciplinesViewModel(
     init {
         viewModelScope.launch {
             combine(
-                disciplineRepository.allDisciplines.map { it.getOrNull() }.filterNotNull(),
+                disciplinesRepository.allDisciplines.map { it.getOrNull() }.filterNotNull(),
                 teachersRepository.allTeachers.map { it.getOrNull() }.filterNotNull(),
-                roomRepository.allRooms.map { it.getOrNull() }.filterNotNull()
+                roomsRepository.allRooms.map { it.getOrNull() }.filterNotNull()
             ) { disciplines, teachers, rooms ->
                 DisciplinesViewState(
                     disciplines = disciplines,
@@ -52,7 +52,7 @@ class DisciplinesViewModel(
 
 
     fun create(name: String, teachers: List<Teacher>, rooms: List<Room>) = intent {
-        disciplineRepository.addDiscipline(name = name, teachers = teachers, rooms = rooms)
+        disciplinesRepository.addDiscipline(name = name, teachers = teachers, rooms = rooms)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { teacher ->
@@ -65,7 +65,7 @@ class DisciplinesViewModel(
     }
 
     fun update(discipline: Discipline) = intent {
-        disciplineRepository.updateDiscipline(discipline)
+        disciplinesRepository.updateDiscipline(discipline)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { newRoom ->
@@ -77,7 +77,7 @@ class DisciplinesViewModel(
     }
 
     fun delete(discipline: Discipline) = intent {
-        disciplineRepository.deleteDiscipline(discipline.id)
+        disciplinesRepository.deleteDiscipline(discipline.id)
             .flowOn(Dispatchers.IO)
             .first()
             .onSuccess { deletedRoom ->

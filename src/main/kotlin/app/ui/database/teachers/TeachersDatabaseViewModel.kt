@@ -3,8 +3,8 @@ package app.ui.database.teachers
 import common.extensions.container
 import common.logger.Logger
 import common.view_model.ViewModel
-import data.repository.teacher.TeachersRepository
-import domain.model.Teacher
+import app.data.repository.teacher.TeachersRepository
+import app.domain.model.Teacher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

@@ -17,6 +17,9 @@ class ViewModelStore : KoinComponent {
 
     private val viewModels = mutableMapOf<KClass<*>, ViewModel>()
 
+    val viewModelKeys: Set<KClass<*>>
+        get() = viewModels.keys
+
     fun <T : ViewModel> getViewModel(clazz: KClass<T>): T {
         println("$this getViewModel $clazz ")
         val vm = viewModels.getOrPut(clazz) { getKoin().get(clazz) }

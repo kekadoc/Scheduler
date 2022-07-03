@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import app.ui.common.SimpleItemComponent
 import common.extensions.collectState
 import common.view_model.viewModel
-import domain.model.Discipline
-import domain.model.Discipline.Companion.isEmpty
+import app.domain.model.Discipline
+import app.domain.model.Discipline.Companion.isEmpty
 
 @Composable
 fun DisciplinesDatabaseScreen() {

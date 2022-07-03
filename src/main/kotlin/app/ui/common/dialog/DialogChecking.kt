@@ -21,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.rememberDialogState
 import common.extensions.emptyString
 import common.extensions.onEmpty
-import domain.model.Model
+import app.domain.model.Model
 
 @Composable
 fun <T : Model> DialogChecking(

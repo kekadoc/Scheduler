@@ -41,17 +41,17 @@ private enum class MainMenuItem : SimpleMenuItem {
 }
 
 @Composable
-fun MainScreen(modifier: Modifier) {
+fun MainScreen() {
     val viewModel = viewModel<ApplicationViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
     var currentScreen: MainMenuItem by remember { mutableStateOf(MainMenuItem.DATABASE) }
     Logger.log("MainScreen $currentScreen")
-    Row(modifier = modifier.fillMaxSize()) {
+    Row(modifier = Modifier.fillMaxSize()) {
         Card {
             Column {
                 MenuHeader(
-                    title = state.spaceName.orEmpty(),
-                    onLogout = { viewModel.setSpaceName(null) }
+                    title = state.space.name,
+                    onLogout = { viewModel.logout() }
                 )
                 SimpleMenuItemLayout(
                     modifier = Modifier.width(300.dp).fillMaxHeight(),

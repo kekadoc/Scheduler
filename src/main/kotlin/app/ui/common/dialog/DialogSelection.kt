@@ -20,7 +20,7 @@ import androidx.compose.ui.window.rememberDialogState
 import app.ui.common.OutlinedTextField
 import common.extensions.emptyString
 import common.extensions.onEmpty
-import domain.model.Model
+import app.domain.model.Model
 
 @Composable
 fun <T : Model> DialogSelection(

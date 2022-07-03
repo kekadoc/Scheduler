@@ -1,6 +1,6 @@
 package app.ui.database.teachers
 
-import domain.model.Teacher
+import app.domain.model.Teacher
 
 data class TeachersDatabaseState(
     val teachers: List<Teacher> = emptyList(),

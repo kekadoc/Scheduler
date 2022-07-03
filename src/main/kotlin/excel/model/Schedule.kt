@@ -1,8 +1,8 @@
 package excel.model
 
+import app.domain.model.WeekType
+import app.schedule.builder.ScheduleBuilder
 import common.extensions.requireNotNull
-import domain.model.WeekType
-import schedule.builder.ScheduleBuilder
 
 typealias DayOfWeek = String
 
@@ -15,7 +15,7 @@ data class Schedule(
 )
 
 fun ScheduleBuilder.buildExcelModel(): Schedule {
-    val dayOfWeeks2: List<domain.model.DayOfWeek> = domain.model.DayOfWeek.values().toList()
+    val dayOfWeeks2: List<app.domain.model.DayOfWeek> = app.domain.model.DayOfWeek.values().toList()
 
     val lessonsTime: List<LessonTime> = listOf(
         "8:30-10:00",
@@ -27,11 +27,11 @@ fun ScheduleBuilder.buildExcelModel(): Schedule {
     )
     val groups: Set<Group> = this.groups.map { Group(it.name) }.toSet()
     val lessons: Map<DayOfWeek, List<Map<Group, LessonCell>>> = dayOfWeeks2.associateWith { dayOfWeek ->
-        val groupSchedules: Map<domain.model.Group, ScheduleBuilder.GroupSchedule> = this.groups.associateWith { getGroup(it) }
+        val groupSchedules: Map<app.domain.model.Group, ScheduleBuilder.GroupSchedule> = this.groups.associateWith { getGroup(it) }
         List(maxLessonsInDay) { lessonNumber ->
             groupSchedules.mapValues { (_, groupSchedule) ->
-                val first: domain.model.Lesson? = groupSchedule.getWeek(WeekType.FIRST).getDay(dayOfWeek).get(lessonNumber)
-                val second: domain.model.Lesson? = groupSchedule.getWeek(WeekType.SECOND).getDay(dayOfWeek).get(lessonNumber)
+                val first: app.domain.model.Lesson? = groupSchedule.getWeek(WeekType.FIRST).getDay(dayOfWeek).get(lessonNumber)
+                val second: app.domain.model.Lesson? = groupSchedule.getWeek(WeekType.SECOND).getDay(dayOfWeek).get(lessonNumber)
                 LessonCell(
                     lessonsTime[lessonNumber],
                     first?.let {

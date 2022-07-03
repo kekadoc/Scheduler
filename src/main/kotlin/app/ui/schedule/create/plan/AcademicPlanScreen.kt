@@ -15,16 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
+import app.domain.model.Discipline
+import app.domain.model.Group
+import app.schedule.plan.DisciplinePlan
+import app.schedule.plan.GroupPlan
 import app.ui.common.SimpleItemComponent
 import app.ui.common.dialog.AppDialog
 import app.ui.common.dialog.DialogSelection
 import common.extensions.collectState
 import common.logger.Logger
 import common.view_model.viewModel
-import domain.model.Discipline
-import domain.model.Group
-import schedule.plan.DisciplinePlan
-import schedule.plan.GroupPlan
 
 private val GroupPlansLocal = compositionLocalOf { emptyList<GroupPlan>() }
 

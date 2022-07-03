@@ -2,20 +2,20 @@ package app.ui.schedule.create
 
 import common.extensions.container
 import common.view_model.ViewModel
-import domain.model.DayOfWeek
-import domain.model.Group
+import app.domain.model.DayOfWeek
+import app.domain.model.Group
 import excel.CreateScheduleXLSX
 import excel.model.buildExcelModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
-import schedule.builder.BuilderUtils
-import schedule.builder.ScheduleBuilder
-import schedule.plan.AcademicPlan
-import schedule.plan.GroupPlan
-import schedule.rule.Rules
-import schedule.rule.room.RoomRule
-import schedule.rule.student.StudentGroupRule
-import schedule.rule.teacher.TeacherRule
+import app.schedule.builder.BuilderUtils
+import app.schedule.builder.ScheduleBuilder
+import app.schedule.plan.AcademicPlan
+import app.schedule.plan.GroupPlan
+import app.schedule.rule.Rules
+import app.schedule.rule.room.RoomRule
+import app.schedule.rule.student.StudentGroupRule
+import app.schedule.rule.teacher.TeacherRule
 
 class ScheduleCreatingState
 

@@ -1,63 +1,75 @@
 package app
 
-import app.model.mvi.AppSideEffect
+import app.data.repository.space.SpacesRepository
+import app.domain.model.Space
 import app.model.mvi.AppState
+import common.extensions.container
+import common.extensions.orElse
 import common.view_model.ViewModel
-import data.repository.discipline.DisciplineRepository
-import data.repository.group.GroupRepository
-import data.repository.room.RoomRepository
-import data.repository.space.SpaceRepository
-import data.repository.teacher.TeachersRepository
-import injector.Inject
+import common.view_model.ViewModelStore
+import injector.DataInjection
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.internal.RealContainer
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 class ApplicationViewModel(
-    private val spaceRepository: SpaceRepository,
-    private val teachersRepository: TeachersRepository,
-    private val groupRepository: GroupRepository,
-    private val roomRepository: RoomRepository,
-    private val disciplineRepository: DisciplineRepository,
-    private val injector: Inject
-) : ViewModel(), ContainerHost<AppState, AppSideEffect> {
+    private val viewModelStore: ViewModelStore,
+    private val spacesRepository: SpacesRepository,
+    private val injection: DataInjection
+) : ViewModel(), ContainerHost<AppState, Unit> {
 
-    override val container: Container<AppState, AppSideEffect> = RealContainer(AppState(), viewModelScope, Container.Settings())
-
-    init {
-        viewModelScope.launch {
-            teachersRepository.clear().collect()
-            groupRepository.clear().collect()
-            roomRepository.clear().collect()
-            disciplineRepository.clear().collect()
-            injector.injectTeachers()
-            injector.injectRooms()
-            injector.injectDisciplines()
-            injector.injectGroups()
-            injector.injectPlan()
-        }
+    override val container: Container<AppState, Unit> = container(
+        initialState = AppState(isLoading = true)
+    ) {
+        start()
     }
 
-    fun setSpaceName(spaceName: String?) = intent {
+
+    fun authorize(spaceName: String) = intent {
+        reduce { state.copy(isAuthorizationProcess = true) }
+        val spaces = spacesRepository.getAllSpaces().first().getOrElse { emptyList() }
+        val space: Space = spaces.find { it.name == spaceName }.orElse {
+            spacesRepository.addSpace(spaceName).first().getOrThrow() // TODO: 02.07.2022 Handle error
+        }
+        spacesRepository.setActive(space).first().getOrThrow() // TODO: 02.07.2022 Handle error
+        SpaceDatabaseLoader.loadSpaceDatabase(space)
         reduce {
-            state.copy(spaceName = spaceName)
+            state.copy(
+                isAuthorizationProcess = false,
+                space = space
+            )
         }
     }
 
-    fun init() = intent {
-        val activeSpace = spaceRepository.getActiveSpace().first()
+    fun logout() = intent {
+        spacesRepository.deleteActive().collect()
+        releaseViewModels()
+        reduce { state.copy(space = Space.Empty) }
+    }
+
+
+    private fun start() = intent {
+        reduce { state.copy(isLoading = true) }
+        injection.inject()
+        //spacesRepository.clear().collect()
+        spacesRepository.getActive()
+            .first()
             .onSuccess { space ->
-                postSideEffect(AppSideEffect.Authorized(space))
+                SpaceDatabaseLoader.loadSpaceDatabase(space)
+                reduce { state.copy(space = space, isLoading = false) }
             }
             .onFailure {
-                postSideEffect(AppSideEffect.Unauthorized)
+                reduce { state.copy(space = Space.Empty, isLoading = false) }
             }
+    }
+
+    private fun releaseViewModels() {
+        viewModelStore.viewModelKeys
+            .filter { it != ApplicationViewModel::class }
+            .forEach { viewModelStore.clear(it) }
     }
 
 }

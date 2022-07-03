@@ -16,10 +16,13 @@ abstract class AbstractDataSource<Key, Data> : DataSource<Key, Data> {
     protected suspend fun onCreate(key: Key, data: Data) {
         listeners.forEach { it.onCreate(key, data) }
     }
-    protected suspend fun onUpdate(key: Key, old: Data, new: Data) {
-        listeners.forEach { it.onUpdate(key, old, new) }
+    protected suspend fun onUpdate(key: Key, data: Data) {
+        listeners.forEach { it.onUpdate(key, data) }
     }
     protected suspend fun onDelete(key: Key, data: Data) {
         listeners.forEach { it.onDelete(key, data) }
+    }
+    protected suspend fun onClear() {
+        listeners.forEach { it.onClear() }
     }
 }

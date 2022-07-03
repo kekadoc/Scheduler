@@ -16,7 +16,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
 import app.ui.common.onEscape
-import domain.model.Group
+import app.domain.model.Group
 
 @Composable
 fun DialogGroup(
