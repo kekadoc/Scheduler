@@ -14,12 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import app.ui.common.ImageThemed
-import app.ui.menu.SimpleMenuItem
-import app.ui.menu.SimpleMenuItemLayout
 import app.ui.schedule.create.plan.ScheduleCreatingPlanScreen
 import app.ui.schedule.create.result.ScheduleCreatingResultScreen
 import app.ui.schedule.create.rules.ScheduleCreatingRulesScreen
+import common.ui.ImageThemed
+import common.ui.menu.SimpleMenuItem
+import common.ui.menu.SimpleMenuItemLayout
 import common.view_model.viewModel
 
 private enum class ScheduleCreatingItem : SimpleMenuItem {

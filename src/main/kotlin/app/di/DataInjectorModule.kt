@@ -1,10 +1,10 @@
 package app.di
 
-import injector.DataInjection
-import injector.DataInjectionImpl
-import injector.DataInjector
-import injector.DataRepository
-import injector.impl.BasePnipuInjector
+import app.data.injector.DataInjection
+import app.data.injector.DataInjectionImpl
+import app.data.injector.DataInjector
+import app.data.injector.DataRepository
+import app.data.injector.impl.BasePnipuInjector
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 

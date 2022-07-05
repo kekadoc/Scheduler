@@ -17,9 +17,9 @@ import app.schedule.plan.DisciplinePlan
 import app.schedule.plan.DisciplinePlan.Companion.isEmpty
 import app.schedule.plan.GroupPlan
 import app.schedule.plan.GroupPlan.Companion.isEmpty
-import app.ui.common.SimpleItemComponent
-import app.ui.common.dialog.AppDialog
-import app.ui.common.dialog.DialogSelection
+import common.ui.SimpleItemComponent
+import common.ui.dialog.AppDialog
+import common.ui.dialog.DialogSelection
 
 /**
  * Диалог для добавления/изменения учебного плана для группы

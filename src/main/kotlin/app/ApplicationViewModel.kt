@@ -2,12 +2,12 @@ package app
 
 import app.data.repository.space.SpacesRepository
 import app.domain.model.Space
-import app.model.mvi.AppState
 import common.extensions.container
 import common.extensions.orElse
 import common.view_model.ViewModel
 import common.view_model.ViewModelStore
-import injector.DataInjection
+import app.data.injector.DataInjection
+import app.di.SpaceDatabaseLoader
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.Container

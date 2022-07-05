@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.schedule.plan.AcademicPlan
 import app.schedule.plan.AcademicPlan.Companion.isEmpty
-import app.ui.common.LazyColumnWithScrollbar
-import app.ui.common.SimpleItemComponent
+import common.ui.LazyColumnWithScrollbar
+import common.ui.SimpleItemComponent
 import common.extensions.collectState
 import common.view_model.viewModel
 

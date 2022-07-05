@@ -1,4 +1,4 @@
-package app.model.mvi
+package app
 
 import app.domain.model.Space
 import app.domain.model.Space.Companion.isEmpty

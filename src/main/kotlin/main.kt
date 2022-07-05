@@ -12,11 +12,6 @@ import app.di.viewModelsModule
 import org.koin.core.context.startKoin
 
 fun main() = application {
-    //Database.connect("jdbc:sqlite:app.data.db", "org.sqlite.JDBC")
-
-    /*GlobalScope.launch {
-        newSuspendedTransaction { SchemaUtils.createDatabase() }
-    }*/
     startKoin {
         printLogger() 
         modules(

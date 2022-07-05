@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.domain.model.Room
 import app.domain.model.isEmpty
-import app.ui.common.SimpleItemComponent
+import common.ui.SimpleItemComponent
 import app.ui.database.rooms.dialog.DialogRooms
 import common.extensions.collectState
 import common.view_model.viewModel

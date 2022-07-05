@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package app.ui.common.dialog
+package common.ui.dialog
 
 import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
@@ -19,9 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.rememberDialogState
+import app.domain.model.Model
 import common.extensions.emptyString
 import common.extensions.onEmpty
-import app.domain.model.Model
 
 @Composable
 fun <T : Model> DialogChecking(
@@ -46,7 +46,7 @@ fun <T : Model> DialogChecking(
             Column(
                 modifier = Modifier.fillMaxSize().padding(4.dp)
             ) {
-                app.ui.common.OutlinedTextField(
+                common.ui.OutlinedTextField(
                     label = { Text("Поиск") },
                     modifier = Modifier.fillMaxWidth().height(48.dp),
                     value = query,

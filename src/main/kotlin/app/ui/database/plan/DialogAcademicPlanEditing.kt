@@ -20,8 +20,8 @@ import app.schedule.plan.AcademicPlan
 import app.schedule.plan.AcademicPlan.Companion.isEmpty
 import app.schedule.plan.GroupPlan
 import app.schedule.plan.GroupPlan.Companion.isEmpty
-import app.ui.common.SimpleItemComponent
-import app.ui.common.dialog.AppDialog
+import common.ui.SimpleItemComponent
+import common.ui.dialog.AppDialog
 
 @Composable
 fun DialogAcademicPlanEditing(

@@ -1,4 +1,4 @@
-package app.ui.common
+package common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -9,9 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import app.ui.common.dialog.DialogSelection
-import app.ui.common.dialog.DialogStyle
-import app.ui.common.dialog.Long
+import common.ui.dialog.DialogSelection
+import common.ui.dialog.DialogStyle
+import common.ui.dialog.Long
 import app.domain.model.Room
 import app.domain.model.Teacher
 import app.domain.model.fullName

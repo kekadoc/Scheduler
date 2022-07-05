@@ -1,4 +1,4 @@
-package injector.impl
+package app.data.injector.impl
 
 import app.data.repository.discipline.DisciplinesRepository
 import app.data.repository.group.GroupsRepository
@@ -10,8 +10,8 @@ import app.domain.model.*
 import app.schedule.plan.DisciplinePlan
 import app.schedule.plan.GroupPlan
 import common.logger.Logger
-import injector.DataInjector
-import injector.DataRepository
+import app.data.injector.DataInjector
+import app.data.injector.DataRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first

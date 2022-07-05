@@ -30,41 +30,4 @@ data class GroupPlan(
             get() = this == Empty
     }
 
-/*    class Builder(
-        val group: Group,
-        items: Map<Discipline, DisciplinePlan.Builder>
-    ) {
-
-        var weekCount = 18 // TODO: 03.07.2022
-            private set
-        val items: List<DisciplinePlan.Builder>
-            get() = data.values.toList()
-
-        private val data: MutableMap<Discipline, DisciplinePlan.Builder> = items.toMutableMap()
-
-        fun set(
-            discipline: Discipline,
-            workType: WorkType,
-            hours: AcademicHour,
-            fillingType: PlanFillingType = PlanFillingType.Evenly
-        ) {
-            val plan = data.getOrPut(discipline) { DisciplinePlan.Builder(discipline = discipline) }
-            val new = plan.copy(
-                discipline = discipline,
-                works = plan.works.toMutableMap().apply { put(workType, hours) },
-                fillingType = fillingType
-            )
-            data[discipline] = new
-        }
-
-        fun setWeekCount(count: Int) = apply {
-            this.weekCount = count
-        }
-
-        fun addDiscipline(discipline: DisciplinePlan.Builder) = apply {
-            this.data[discipline.discipline] = discipline
-        }
-
-    }*/
-
 }

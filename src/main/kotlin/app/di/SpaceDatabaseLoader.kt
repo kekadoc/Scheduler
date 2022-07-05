@@ -1,7 +1,5 @@
-package app
+package app.di
 
-import app.di.localDataSourceModule
-import app.di.repositoriesModule
 import app.domain.model.Space
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -16,7 +14,7 @@ object SpaceDatabaseLoader : KoinComponent {
         unloadKoinModules(listOf(localDataSourceModule, repositoriesModule))
         val dbName = "${space.id}"
         Database.connect("jdbc:sqlite:$dbName.db", "org.sqlite.JDBC")
-        newSuspendedTransaction { SchemaUtils.createDatabase("$dbName") }
+        newSuspendedTransaction { SchemaUtils.createDatabase(dbName) }
         loadKoinModules(listOf(localDataSourceModule, repositoriesModule))
     }
 

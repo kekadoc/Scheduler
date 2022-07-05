@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import app.domain.model.Teacher
 import app.domain.model.fullName
 import app.domain.model.isEmpty
-import app.ui.common.SimpleItemComponent
+import common.ui.SimpleItemComponent
 import app.ui.database.teachers.dialog.DialogTeacher
 import common.extensions.collectState
 import common.view_model.viewModel

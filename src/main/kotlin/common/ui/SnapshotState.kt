@@ -1,4 +1,4 @@
-package app.ui.common
+package common.ui
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap

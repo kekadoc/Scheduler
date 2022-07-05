@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package app.ui.common.dialog
+package common.ui.dialog
 
 import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.VerticalScrollbar
@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
 import app.domain.model.Model
-import app.ui.common.OutlinedTextField
+import common.ui.OutlinedTextField
 import common.extensions.emptyString
 import common.extensions.onEmpty
 

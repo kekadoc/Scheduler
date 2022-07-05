@@ -8,9 +8,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.model.mvi.isAuthorized
 import app.ui.AuthorizationScreen
 import app.ui.MainScreen
+import app.ui.appColors
 import common.extensions.collectState
 import common.extensions.viewModel
 import common.view_model.LocalViewModelStore

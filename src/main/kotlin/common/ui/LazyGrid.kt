@@ -1,4 +1,4 @@
-package app.ui.common
+package common.ui
 
 import androidx.compose.foundation.HorizontalScrollbar
 import androidx.compose.foundation.ScrollbarAdapter

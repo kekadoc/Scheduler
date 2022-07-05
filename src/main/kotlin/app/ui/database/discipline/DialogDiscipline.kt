@@ -14,15 +14,15 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
-import app.ui.common.LazyColumnWithScrollbar
-import app.ui.common.SimpleItemComponent
-import app.ui.common.dialog.AppDialog
-import app.ui.common.dialog.DialogSelection
-import app.ui.common.onEscape
-import common.extensions.collectState
-import common.view_model.viewModel
 import app.domain.model.Discipline
 import app.domain.model.fullName
+import common.extensions.collectState
+import common.ui.LazyColumnWithScrollbar
+import common.ui.SimpleItemComponent
+import common.ui.dialog.AppDialog
+import common.ui.dialog.DialogSelection
+import common.ui.onEscape
+import common.view_model.viewModel
 
 @Composable
 fun DialogDiscipline(discipline: Discipline, onCloseRequest: () -> Unit, onUpdate: (Discipline) -> Unit) {

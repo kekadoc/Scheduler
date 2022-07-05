@@ -1,4 +1,4 @@
-package app.ui.common
+package common.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.material.LocalContentAlpha

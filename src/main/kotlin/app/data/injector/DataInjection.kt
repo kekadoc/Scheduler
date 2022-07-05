@@ -1,4 +1,4 @@
-package injector
+package app.data.injector
 
 interface DataInjection {
 

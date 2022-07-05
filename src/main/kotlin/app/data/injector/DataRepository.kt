@@ -1,4 +1,4 @@
-package injector
+package app.data.injector
 
 import app.data.repository.discipline.DisciplinesRepository
 import app.data.repository.group.GroupsRepository

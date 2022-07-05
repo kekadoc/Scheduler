@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package app.ui.menu
+package common.ui.menu
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

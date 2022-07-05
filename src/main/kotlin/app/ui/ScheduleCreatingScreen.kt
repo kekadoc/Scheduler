@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.rememberDialogState
-import app.mock.Mock
-import app.ui.common.CardBox
-import app.ui.common.dialog.DialogChecking
 import app.domain.model.AcademicHour
 import app.domain.model.Discipline
 import app.domain.model.Group
+import app.mock.Mock
+import common.ui.CardBox
+import common.ui.dialog.DialogChecking
 
 private enum class ItemType {
     GROUP,
@@ -258,7 +258,7 @@ fun AddingAcademicSubject(
     var selection: Boolean by remember { mutableStateOf(false) }
 
     if (selection) {
-        app.ui.common.dialog.DialogSelection(
+        common.ui.dialog.DialogSelection(
             title ="Выбор предмета", // TODO: 05.06.2022 Text
             list = availableSubjects,
             getText = { it.name },

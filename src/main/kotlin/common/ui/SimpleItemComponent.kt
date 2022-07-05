@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package app.ui.common
+package common.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card

@@ -1,6 +1,6 @@
-package injector
+package app.data.injector
 
-import app.SpaceDatabaseLoader
+import app.di.SpaceDatabaseLoader
 import app.data.repository.space.SpacesRepository
 import app.domain.model.Space
 import app.domain.model.Space.Companion.isEmpty

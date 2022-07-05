@@ -11,9 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.ui.common.ImageThemed
+import common.ui.ImageThemed
 
 @Composable
+// TODO: 06.07.2022 Auth Loading
 fun AuthorizationScreen(onEnter: (String) -> Unit, isAuthLoading: Boolean) {
     var spaceName by remember { mutableStateOf("ПНИПУ") }
     Row(

@@ -13,14 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.ApplicationViewModel
-import app.ui.common.ImageThemed
 import app.ui.database.discipline.DisciplinesDatabaseScreen
 import app.ui.database.group.GroupsDatabaseScreen
 import app.ui.database.plan.AcademicPlanDatabaseScreen
 import app.ui.database.rooms.RoomsDatabaseScreen
 import app.ui.database.teachers.TeachersDatabaseScreen
-import app.ui.menu.SimpleMenuItem
-import app.ui.menu.SimpleMenuItemLayout
+import common.ui.ImageThemed
+import common.ui.menu.SimpleMenuItem
+import common.ui.menu.SimpleMenuItemLayout
 import common.view_model.viewModel
 
 private enum class DatabaseItem : SimpleMenuItem {

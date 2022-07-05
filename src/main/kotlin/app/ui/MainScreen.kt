@@ -15,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import app.ApplicationViewModel
-import app.ui.common.ImageThemed
 import app.ui.database.DatabaseScreen
-import app.ui.menu.SimpleMenuItem
-import app.ui.menu.SimpleMenuItemLayout
 import app.ui.schedule.create.ScheduleCreatingScreen
+import common.ui.ImageThemed
+import common.ui.menu.SimpleMenuItem
+import common.ui.menu.SimpleMenuItemLayout
 import common.view_model.viewModel
 
 private enum class MainMenuItem : SimpleMenuItem {

@@ -9,10 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import app.schedule.plan.AcademicPlan
 import app.schedule.plan.AcademicPlan.Companion.isEmpty
-import app.ui.common.SimpleItemComponent
-import app.ui.common.dialog.DialogSelection
 import app.ui.schedule.create.ScheduleCreatingViewModel
 import common.extensions.collectState
+import common.ui.SimpleItemComponent
+import common.ui.dialog.DialogSelection
 import common.view_model.viewModel
 
 @Composable
