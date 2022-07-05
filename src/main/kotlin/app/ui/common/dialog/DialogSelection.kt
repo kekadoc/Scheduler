@@ -17,10 +17,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
+import app.domain.model.Model
 import app.ui.common.OutlinedTextField
 import common.extensions.emptyString
 import common.extensions.onEmpty
-import app.domain.model.Model
 
 @Composable
 fun <T : Model> DialogSelection(
@@ -91,19 +91,26 @@ private fun SelectionItem(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.height(44.dp).fillMaxWidth(),
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth(),
         onClick = onClick,
         enabled = isEnabled,
-        elevation = 4.dp,
-        //backgroundColor = MaterialTheme.colors.surface.copy(ContentAlpha.disabled),
+        elevation = 4.dp
     ) {
         val color = if (isEnabled) Color.Transparent else MaterialTheme.colors.onSurface.copy(ContentAlpha.disabled)
         Box(
-            modifier = Modifier.fillMaxSize().background(color),
+            modifier = Modifier
+                .heightIn(min = 44.dp)
+                .background(color),
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .align(Alignment.Center),
                 text = text,
                 style = MaterialTheme.typography.body1,
             )

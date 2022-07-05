@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import app.ui.common.ImageThemed
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
-import app.ui.schedule.create.plan.ScheduleCreatingAcademicPlanScreen
+import app.ui.schedule.create.plan.ScheduleCreatingPlanScreen
 import app.ui.schedule.create.result.ScheduleCreatingResultScreen
 import app.ui.schedule.create.rules.ScheduleCreatingRulesScreen
 import common.view_model.viewModel
@@ -95,7 +95,7 @@ fun ScheduleCreatingScreen() {
             contentAlignment = Alignment.Center
         ) {
             when (currentScreen) {
-                ScheduleCreatingItem.PLAN -> ScheduleCreatingAcademicPlanScreen()
+                ScheduleCreatingItem.PLAN -> ScheduleCreatingPlanScreen()
                 ScheduleCreatingItem.RULES -> ScheduleCreatingRulesScreen()
                 ScheduleCreatingItem.FINAL -> ScheduleCreatingResultScreen()
             }

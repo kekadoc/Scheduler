@@ -2,23 +2,27 @@ package injector.impl
 
 import app.data.repository.discipline.DisciplinesRepository
 import app.data.repository.group.GroupsRepository
+import app.data.repository.plan.AcademicPlanRepository
 import app.data.repository.room.RoomsRepository
 import app.data.repository.space.SpacesRepository
 import app.data.repository.teacher.TeachersRepository
 import app.domain.model.*
-import app.schedule.plan.AcademicPlan
+import app.schedule.plan.DisciplinePlan
 import app.schedule.plan.GroupPlan
 import common.logger.Logger
 import injector.DataInjector
 import injector.DataRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 
 class BasePnipuInjector : DataInjector {
 
     override val id: Long = 777L
 
-    override val type: DataInjector.Type = DataInjector.Type.EVERY_LAUNCH
+    override val type: DataInjector.Type = DataInjector.Type.ONLY_ONCE
 
 
     override suspend fun getSpace(spaces: SpacesRepository): Space {
@@ -32,17 +36,17 @@ class BasePnipuInjector : DataInjector {
         disciplines.clear().collect()
         groups.clear().collect()
 
-        Logger.log("inject")
         injectRooms(rooms)
-        Logger.log("injectRooms")
         injectTeachers(teachers)
-        Logger.log("injectTeachers")
         injectGroups(groups)
-        Logger.log("injectGroups")
         injectDisciplines(disciplines, teachers, rooms)
-        Logger.log("injectDisciplines")
-        injectPlan(academicPlan = academicPlan.plan, groupsRepository = groups, disciplinesRepository = disciplines)
-        Logger.log("injectPlan")
+        with(academicPlan) {
+            with(groups) {
+                with(disciplines) {
+                    injectPlan()
+                }
+            }
+        }
     }
 
 
@@ -395,314 +399,402 @@ class BasePnipuInjector : DataInjector {
 
     }
 
-    suspend fun injectPlan(
-        academicPlan: AcademicPlan,
-        groupsRepository: GroupsRepository,
-        disciplinesRepository: DisciplinesRepository
-    ) {
-        Logger.log("injectPlan START $academicPlan")
-        with(academicPlan) {
-            with(groupsRepository) {
-                with(disciplinesRepository) {
-                    coroutineScope {
-                        var i = 0
-                        listOf(
-                            addToAcademicPlan(
-                                groupName = "АСУ-21-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
-                                    teaching(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
-                                    teaching(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                    teaching(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", lecture = 12),
-                                    teaching(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", laboratory = 12)
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АТПП-21-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                    teaching(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
-                                    teaching(disciplineName = "ИНЖЕНЕРНАЯ ГЕОМЕТРИЯ и КОМПЬЮТЕРНАЯ ГРАФИКА", laboratory = 12)
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "ПГС-21-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ТЕОРЕТИЧЕКАЯ МЕХАНИКА", practice = 12),
-                                    teaching(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                    teaching(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АСУ-20-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                    teaching(disciplineName = "МЕТОДЫ СТАТИСТИЧЕСКОГО АНАЛИЗА ДАННЫХ", laboratory = 12),
-                                    teaching(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
-                                    teaching(disciplineName = "ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОГРАММИРОВАНИЕ", lecture = 12, laboratory = 12, practice = 12),
-                                    teaching(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = 12),
-                                    teaching(disciplineName = "ДИСКРЕТНАЯ МАТЕМАТИКА и МАТЕМАТИЧЕСКАЯ ЛОГИКА", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ", lecture = 12, laboratory = 12),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "ПГС-20-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
-                                    teaching(disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ с ОСНОВАМИ ЭЛЕКТРОТЕХНИКИ", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ОСНОВЫ ИНЖЕНЕРНОЙ ГЕОЛОГИИ и МЕХАНИКА ГРУНТОВ", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
-                                    teaching(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ОСНОВЫ ОРГАНИЗАЦИИ и УПРАВЛЕНИЯ в СТРОИТЕЛЬСТВЕ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ТЕХНОЛОГИЧЕСКИЕ ПРОЦЕССЫ в СТРОИТЕЛЬСТВЕ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АТПП-20-1б-ЧФ",
-                                plan = listOf(
-                                    teaching("ЭКОНОМИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
-                                    teaching(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
-                                    teaching(disciplineName = "ТЕОРЕТИЧЕСКИЕ ОСНОВЫ ЭЛЕКТРОТЕХНИКИ", lecture = 12, laboratory = 12, practice = 12),
-                                    teaching(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ВЫЧИСЛИТЕЛЬНЫЕ МАШИНЫ, КОМПЛЕКСЫ, СИСТЕМЫ и СЕТИ", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ПРОГРАММИРОВАНИЕ и АЛГОРИТМИЗАЦИЯ", lecture = 12, laboratory = 12),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "ЭС-20-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
-                                    teaching(
-                                        disciplineName = "ТЕОРЕТИЧЕСКИЕ ОСНОВЫ ЭЛЕКТРОТЕХНИКИ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
-                                        lecture = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(
-                                        disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
-                                        lecture = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "ТЕХНИКА ВЫСОКИХ НАПРЯЖЕНИЙ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АСУ-19-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(disciplineName = "ЗАЩИТА ИНФОРМАЦИИ", lecture = 12, laboratory = 12),
-                                    teaching(
-                                        disciplineName = "МОДЕЛИРОВАНИЕ СИСТЕМ",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "АДМИНИСТРИРОВНИЕ ОПЕРАЦИОННЫХ СИСТЕМ",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "ПРОГРАММИРОВАНИЕ ИНТЕРНЕТ-ПРИЛОЖЕНИЙ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(disciplineName = "СЕТИ и ТЕЛЕКОММУНИКАЦИИ", lecture = 12, laboratory = 12),
-                                    teaching(
-                                        disciplineName = "УПРАВЛЕНИЕ ПРОЕКТАМИ АВТОМАТИЗИРОВАННЫХ СИСТЕМ УПРАВЛЕНИЯ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АТПП-19-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(
-                                        disciplineName = "ТЕОРИЯ АВТОМАТИЧЕСКОГО УПРАВЛЕНИЯ",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД", lecture = 12, practice = 12),
-                                    teaching(
-                                        disciplineName = "МИКРОПРОЦЕССОРНЫЕ СРЕДСТВА АВТОМАТИЗАЦИИ и УПРАВЛЕНИЯ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "ПРЕОБРАЗОВАТЕЛЬНЫЕ УСТРОЙСТВА",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "ЭС-19-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                                    teaching(
-                                        disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД",
-                                        lecture = 12,
-                                        practice = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ", lecture = 12, practice = 12),
-                                    teaching(
-                                        disciplineName = "СИЛОВАЯ ЭЛЕКТРОНИКА",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "ЭЛЕКТРИЧЕСКИЕ СТАНЦИИ и ПОДСТАНЦИИ",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АСУ-18-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(
-                                        disciplineName = "АДМИНИСТРИРОВАНИЕ БАЗ ДАННЫХ\n(на примере Oracle)",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "МЕТРОЛОГИЯ, СТАНДАРТИЗАЦИЯ и СЕРТИФИКАЦИЯ",
-                                        lecture = 12,
-                                        laboratory = 12,
-                                        practice = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                        lecture = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(
-                                        disciplineName = "ПРОЕКТИРОВАНИЕ АВТОМАТИЗИРОВАННЫХ СИСТЕМ ОБРАБОТКИ ИНФОРМАЦИИ и УПРАВЛЕНИЯ",
-                                        lecture = 12,
-                                        practice = 12,
-                                        laboratory = 12
-                                    ),
-                                    teaching(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "АТПП-18-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "АВТОМАТИЗАЦИЯ ТЕХНОЛОГИЧЕСКИХ ПРОЦЕССОВ и ПРОИЗВОДСТВ", lecture = 12, practice = 12, laboratory = 12),
-                                    teaching(disciplineName = "ДИАГНОСТИКА и НАДЕЖНОСТЬ АВТОМАТИЗИРОВАННЫХ СИСТЕМ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                    teaching(disciplineName = "ОРГАНИЗАЦИЯ и ПЛАНИРОВАНИЕ АВТОМАТИЗИРОВАННЫХ ПРОИЗОДСТВ", lecture = 12, practice = 12),
-                                    teaching(disciplineName = "ЭНЕРГОСБЕРЕЖЕНИЕ и ЭНЕРГОАУДИТ", lecture = 12, practice = 12, laboratory = 12),
-                                    teaching(disciplineName = "МОДЕЛИРОВАНИЕ СИСТЕМ и ПРОЦЕССОВ", lecture = 12, practice = 12),
-                                )
-                            ),
-                            addToAcademicPlan(
-                                groupName = "ЭС-18-1б-ЧФ",
-                                plan = listOf(
-                                    teaching(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                                    teaching(disciplineName = "УПРАВЛЕНИЕ КАЧЕСТВОМ", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "РЕЛЕЙНАЯ ЗАЩИТА и АВТОМАТИЗАЦИЯ ЭЛЕКТРОЭНЕРГЕТИЧЕСКИХ СИСТЕМ", lecture = 12, laboratory = 12, practice = 12),
-                                    teaching(disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ", lecture = 12, laboratory = 12),
-                                    teaching(disciplineName = "ОРГАНИЗАЦИЯ и ПЛАНИРОВАНИЕ ПРОИЗВОДСТВ в ЭЛЕТРОЭНЕРГЕТИКЕ и ЭЛЕКТРОТЕХНИКЕ", lecture = 12, practice = 12),
-                                )
+    context(AcademicPlanRepository, GroupsRepository, DisciplinesRepository)
+    suspend fun injectPlan() {
+        coroutineScope {
+            val a = launch { allPlans.collect { Logger.log("injectPlan $it") } }
+            addPlan(
+                name = "2021",
+                plans = listOf(
+                    groupPlan(
+                        groupName = "АСУ-21-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", lecture = 12),
+                            disciplinePlan(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", laboratory = 12)
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АТПП-21-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
+                            disciplinePlan(
+                                disciplineName = "ИНЖЕНЕРНАЯ ГЕОМЕТРИЯ и КОМПЬЮТЕРНАЯ ГРАФИКА",
+                                laboratory = 12
                             )
-                        ).apply { Logger.log("COUNT=${count()}") }.merge().onEach { Logger.log("Each $i") }.collect { Logger.log("COLLECT ${i++}") }
-                        Logger.log("COMPLETE")
-                    }
-                }
-            }
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "ПГС-21-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ТЕОРЕТИЧЕКАЯ МЕХАНИКА", practice = 12),
+                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АСУ-20-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "МЕТОДЫ СТАТИСТИЧЕСКОГО АНАЛИЗА ДАННЫХ", laboratory = 12),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(
+                                disciplineName = "ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОГРАММИРОВАНИЕ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = 12),
+                            disciplinePlan(
+                                disciplineName = "ДИСКРЕТНАЯ МАТЕМАТИКА и МАТЕМАТИЧЕСКАЯ ЛОГИКА",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "ПГС-20-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(
+                                disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ с ОСНОВАМИ ЭЛЕКТРОТЕХНИКИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ОСНОВЫ ИНЖЕНЕРНОЙ ГЕОЛОГИИ и МЕХАНИКА ГРУНТОВ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ОСНОВЫ ОРГАНИЗАЦИИ и УПРАВЛЕНИЯ в СТРОИТЕЛЬСТВЕ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ТЕХНОЛОГИЧЕСКИЕ ПРОЦЕССЫ в СТРОИТЕЛЬСТВЕ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АТПП-20-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan("ЭКОНОМИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "ТЕОРЕТИЧЕСКИЕ ОСНОВЫ ЭЛЕКТРОТЕХНИКИ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ВЫЧИСЛИТЕЛЬНЫЕ МАШИНЫ, КОМПЛЕКСЫ, СИСТЕМЫ и СЕТИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ПРОГРАММИРОВАНИЕ и АЛГОРИТМИЗАЦИЯ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "ЭС-20-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(
+                                disciplineName = "ТЕОРЕТИЧЕСКИЕ ОСНОВЫ ЭЛЕКТРОТЕХНИКИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ТЕХНИКА ВЫСОКИХ НАПРЯЖЕНИЙ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АСУ-19-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ЗАЩИТА ИНФОРМАЦИИ", lecture = 12, laboratory = 12),
+                            disciplinePlan(
+                                disciplineName = "МОДЕЛИРОВАНИЕ СИСТЕМ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "АДМИНИСТРИРОВНИЕ ОПЕРАЦИОННЫХ СИСТЕМ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ПРОГРАММИРОВАНИЕ ИНТЕРНЕТ-ПРИЛОЖЕНИЙ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(disciplineName = "СЕТИ и ТЕЛЕКОММУНИКАЦИИ", lecture = 12, laboratory = 12),
+                            disciplinePlan(
+                                disciplineName = "УПРАВЛЕНИЕ ПРОЕКТАМИ АВТОМАТИЗИРОВАННЫХ СИСТЕМ УПРАВЛЕНИЯ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АТПП-19-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "ТЕОРИЯ АВТОМАТИЧЕСКОГО УПРАВЛЕНИЯ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД", lecture = 12, practice = 12),
+                            disciplinePlan(
+                                disciplineName = "МИКРОПРОЦЕССОРНЫЕ СРЕДСТВА АВТОМАТИЗАЦИИ и УПРАВЛЕНИЯ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ПРЕОБРАЗОВАТЕЛЬНЫЕ УСТРОЙСТВА",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "ЭС-19-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД",
+                                lecture = 12,
+                                practice = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ", lecture = 12, practice = 12),
+                            disciplinePlan(
+                                disciplineName = "СИЛОВАЯ ЭЛЕКТРОНИКА",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ЭЛЕКТРИЧЕСКИЕ СТАНЦИИ и ПОДСТАНЦИИ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АСУ-18-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(
+                                disciplineName = "АДМИНИСТРИРОВАНИЕ БАЗ ДАННЫХ\n(на примере Oracle)",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "МЕТРОЛОГИЯ, СТАНДАРТИЗАЦИЯ и СЕРТИФИКАЦИЯ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ПРОЕКТИРОВАНИЕ АВТОМАТИЗИРОВАННЫХ СИСТЕМ ОБРАБОТКИ ИНФОРМАЦИИ и УПРАВЛЕНИЯ",
+                                lecture = 12,
+                                practice = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "АТПП-18-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(
+                                disciplineName = "АВТОМАТИЗАЦИЯ ТЕХНОЛОГИЧЕСКИХ ПРОЦЕССОВ и ПРОИЗВОДСТВ",
+                                lecture = 12,
+                                practice = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ДИАГНОСТИКА и НАДЕЖНОСТЬ АВТОМАТИЗИРОВАННЫХ СИСТЕМ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(
+                                disciplineName = "ОРГАНИЗАЦИЯ и ПЛАНИРОВАНИЕ АВТОМАТИЗИРОВАННЫХ ПРОИЗОДСТВ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ЭНЕРГОСБЕРЕЖЕНИЕ и ЭНЕРГОАУДИТ",
+                                lecture = 12,
+                                practice = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "МОДЕЛИРОВАНИЕ СИСТЕМ и ПРОЦЕССОВ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                        )
+                    ),
+                    groupPlan(
+                        groupName = "ЭС-18-1б-ЧФ",
+                        disciplines = listOf(
+                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "УПРАВЛЕНИЕ КАЧЕСТВОМ", lecture = 12, laboratory = 12),
+                            disciplinePlan(
+                                disciplineName = "РЕЛЕЙНАЯ ЗАЩИТА и АВТОМАТИЗАЦИЯ ЭЛЕКТРОЭНЕРГЕТИЧЕСКИХ СИСТЕМ",
+                                lecture = 12,
+                                laboratory = 12,
+                                practice = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
+                                lecture = 12,
+                                laboratory = 12
+                            ),
+                            disciplinePlan(
+                                disciplineName = "ОРГАНИЗАЦИЯ и ПЛАНИРОВАНИЕ ПРОИЗВОДСТВ в ЭЛЕТРОЭНЕРГЕТИКЕ и ЭЛЕКТРОТЕХНИКЕ",
+                                lecture = 12,
+                                practice = 12
+                            ),
+                        )
+                    )
+                ).awaitAll()
+            ).onEach {
+                Logger.log("AddPlanResult $it")
+            }.collect()
+            delay(100)
+            a.cancel()
         }
-        Logger.log("injectPlan FINISH $academicPlan ${academicPlan.getAll()}")
     }
 
-    context (GroupsRepository, AcademicPlan)
-    private fun addToAcademicPlan(groupName: String, plan: List<Deferred<Pair<Discipline, Map<WorkType, AcademicHour>>>>): Flow<Unit> {
-        return flow {
-            Logger.log("___addToAcademicPlan groupName=$groupName")
+    context (GroupsRepository, CoroutineScope)
+    private fun groupPlan(
+        groupName: String,
+        disciplines: List<Deferred<DisciplinePlan>>
+    ): Deferred<GroupPlan> {
+        return async {
+            val items = disciplines.awaitAll()
             val group = findGroupByName(groupName)
-            Logger.log("___addToAcademicPlan plan=${plan.count()}")
-            val plans = plan.awaitAll()
-            Logger.log("___addToAcademicPlan plans=${plans.count()}")
-            val groupPlan = GroupPlan(group).apply {
-                plans.forEach { (discipline, works) ->
-                    works.forEach { (workType, hours) ->
-                        this.set(discipline, workType, hours)
-                    }
-                }
-            }
-            set(group, groupPlan)
-            emit(Unit)
+            GroupPlan(group = group, items = items)
         }
     }
-
 
     context (DisciplinesRepository, CoroutineScope)
-    private fun teaching(
+    private fun disciplinePlan(
         disciplineName: String,
         lecture: AcademicHour = 0,
         practice: AcademicHour = 0,
         laboratory: AcademicHour = 0
-    ): Deferred<Pair<Discipline, Map<WorkType, AcademicHour>>> {
+    ): Deferred<DisciplinePlan> {
         return async {
-            Logger.log("teaching 0 $disciplineName")
             val works = mapOf(
                 WorkType.LECTURE to lecture,
                 WorkType.PRACTICE to practice,
                 WorkType.LABORATORY to laboratory,
             )
             val discipline = findDisciplineByName(disciplineName)
-            Logger.log("teaching 1 $disciplineName")
-            discipline to works
+            DisciplinePlan(discipline = discipline, works = works)
         }
     }
 
@@ -718,9 +810,5 @@ private suspend fun GroupsRepository.findGroupByName(name: String): Group {
     return allGroups.first().getOrThrow().first { it.name == name }
 }
 private suspend fun DisciplinesRepository.findDisciplineByName(name: String): Discipline {
-    Logger.log("findDisciplineByName $name")
-    return allDisciplines.first()
-        .onSuccess { Logger.log("findDisciplineByName success $it") }
-        .onFailure { Logger.log("findDisciplineByName failed $it") }
-        .getOrThrow().first { it.name == name }
+    return allDisciplines.first().getOrThrow().first { it.name == name }
 }

@@ -44,11 +44,8 @@ val repositoriesModule = module {
         )
     }
 
-}
-
-val academicPlanRepositoryModule = module {
-
     single<AcademicPlanRepository> {
-        AcademicPlanRepositoryImpl()
+        AcademicPlanRepositoryImpl(localDataSource = get())
     }
+
 }

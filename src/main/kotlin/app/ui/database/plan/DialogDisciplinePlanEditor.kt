@@ -1,4 +1,4 @@
-package app.ui.schedule.create.plan
+package app.ui.database.plan
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -6,20 +6,15 @@ import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.rememberDialogState
-import app.mock.Mock
+import app.domain.model.*
+import app.schedule.plan.DisciplinePlan
 import app.ui.common.SimpleItemComponent
 import app.ui.common.dialog.AppDialog
 import app.ui.common.dialog.DialogSelection
 import common.extensions.orElse
-import app.domain.model.Discipline
-import app.domain.model.WorkType
-import app.domain.model.fullName
-import app.schedule.plan.DisciplinePlan
 
 /**
  * Диалог для добавления/изменения плана дисциплины
@@ -27,11 +22,14 @@ import app.schedule.plan.DisciplinePlan
 @Composable
 fun DialogDisciplinePlanEditor(
     plan: DisciplinePlan,
+    availableTeachers: List<Teacher>,
+    availableDisciplines: List<Discipline>,
+    availableRooms: List<Room>,
     onCommit: (DisciplinePlan) -> Unit,
     onCancel: () -> Unit
 ) {
     val isCreating = remember { plan.discipline == Discipline.Empty }
-    var mutablePlan: DisciplinePlan by remember { mutableStateOf(plan.copy()) }
+    var mutablePlan: DisciplinePlan by remember { mutableStateOf(plan) }
 
     val (discipline, teacher, room, works, fillingType) = mutablePlan
 
@@ -43,7 +41,7 @@ fun DialogDisciplinePlanEditor(
     if (selectionDiscipline) {
         DialogSelection(
             title = "Выбор предмета",
-            list = Mock.disciplines(20),
+            list = availableDisciplines,
             getText = { it.name },
             onSelect = { mutablePlan = mutablePlan.copy(discipline = it); selectionDiscipline = false },
             onCancel = { selectionDiscipline = false }
@@ -52,7 +50,7 @@ fun DialogDisciplinePlanEditor(
     if (selectionTeacher) {
         DialogSelection(
             title = "Выбор предмета",
-            list = Mock.teachers(20), // TODO: 28.06.2022  Mock
+            list = availableTeachers,
             getText = { it.fullName },
             onSelect = { mutablePlan = mutablePlan.copy(teacher = it); selectionTeacher = false },
             onCancel = { selectionTeacher = false }
@@ -61,7 +59,7 @@ fun DialogDisciplinePlanEditor(
     if (selectionRoom) {
         DialogSelection(
             title = "Выбор предмета",
-            list = Mock.rooms(20), // TODO: 28.06.2022  Mock
+            list = availableRooms,
             getText = { it.name },
             onSelect = { mutablePlan = mutablePlan.copy(room = it); selectionRoom = false },
             onCancel = { selectionRoom = false }
@@ -89,8 +87,6 @@ fun DialogDisciplinePlanEditor(
                     )
                 }
             } else {
-                //Spacer(modifier = Modifier.height(8.dp))
-                //todo Возможно выбирать предмет можно только при создании плана, а не редактивровании
                 item {
                     SimpleItemComponent(
                         modifier = Modifier.height(56.dp),

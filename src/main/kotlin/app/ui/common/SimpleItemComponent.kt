@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BaseItemComponent(
     modifier: Modifier = Modifier,
-    leftContent: (@Composable RowScope.() -> Unit)? = null,
-    rightContent: (@Composable RowScope.() -> Unit)? = null,
+    leftContent: (@Composable BoxScope.() -> Unit)? = null,
+    rightContent: (@Composable BoxScope.() -> Unit)? = null,
     label: String? = null,
     labelStyle: TextStyle = MaterialTheme.typography.caption,
     labelAlignment: Alignment.Horizontal = Alignment.Start,
@@ -41,7 +41,15 @@ fun BaseItemComponent(
                 .wrapContentHeight()
                 .padding(8.dp)
         ) {
-            leftContent?.invoke(this)
+            if (leftContent != null) {
+                Box(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .wrapContentHeight()
+                        .align(Alignment.CenterVertically),
+                    content = leftContent
+                )
+            }
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -73,7 +81,15 @@ fun BaseItemComponent(
                     )
                 }
             }
-            rightContent?.invoke(this)
+            if (rightContent != null) {
+                Box(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .wrapContentHeight()
+                        .align(Alignment.CenterVertically),
+                    content = rightContent
+                )
+            }
         }
     }
 }
@@ -102,12 +118,12 @@ fun SimpleItemComponent(
             if (leftImage != null) {
                 if (onLeftImageClick != null) {
                     Card(
-                        modifier = Modifier.align(Alignment.CenterVertically),
+                        modifier = Modifier.align(Alignment.Center),
                         elevation = 0.dp,
                         onClick = onLeftImageClick
                     ) {
                         ImageThemed(
-                            modifier = Modifier.size(44.dp).align(Alignment.CenterVertically),
+                            modifier = Modifier.size(44.dp).align(Alignment.Center),
                             imageVector = leftImage,
                             contentDescription = null,
                             alignment = Alignment.Center
@@ -115,7 +131,7 @@ fun SimpleItemComponent(
                     }
                 } else {
                     ImageThemed(
-                        modifier = Modifier.size(44.dp).align(Alignment.CenterVertically),
+                        modifier = Modifier.size(44.dp).align(Alignment.Center),
                         imageVector = leftImage,
                         contentDescription = null,
                         alignment = Alignment.Center
@@ -131,7 +147,7 @@ fun SimpleItemComponent(
                         elevation = 0.dp
                     ) {
                         ImageThemed(
-                            modifier = Modifier.size(44.dp).align(Alignment.CenterVertically),
+                            modifier = Modifier.size(44.dp).align(Alignment.Center),
                             imageVector = rightImage,
                             contentDescription = null,
                             alignment = Alignment.Center
@@ -139,7 +155,7 @@ fun SimpleItemComponent(
                     }
                 } else {
                     ImageThemed(
-                        modifier = Modifier.size(44.dp).align(Alignment.CenterVertically),
+                        modifier = Modifier.size(44.dp).align(Alignment.Center),
                         imageVector = rightImage,
                         contentDescription = null,
                         alignment = Alignment.Center

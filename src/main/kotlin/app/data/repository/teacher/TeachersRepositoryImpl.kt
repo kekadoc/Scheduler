@@ -1,12 +1,12 @@
 package app.data.repository.teacher
 
-import common.data.all
-import common.extensions.catchResult
-import common.extensions.flowOf
 import app.data.converter.DataConverter
 import app.data.data_source.local.unit.teacher.TeacherLocalDataSource
 import app.data.data_source.local.unit.teacher.dao.TeacherEntity
 import app.domain.model.Teacher
+import common.data.all
+import common.extensions.catchResult
+import common.extensions.flowOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -20,13 +20,13 @@ class TeachersRepositoryImpl(
         .catchResult()
         .map { resultList ->
             resultList.mapCatching { list ->
-                list.map { entity -> entity.convert().getOrThrow() }
+                list.map { entity -> entity.convert() }
             }
         }
 
 
     override fun getTeacher(id: Long): Flow<Result<Teacher>> {
-        return flowOf { localDataSource.get(id).mapCatching { it.convert().getOrThrow() } }
+        return flowOf { localDataSource.get(id).mapCatching { it.convert() } }
     }
 
     override fun addTeacher(
@@ -41,12 +41,12 @@ class TeachersRepositoryImpl(
                 firstName = firstName,
                 middleName = middleName,
                 speciality = speciality,
-            ).mapCatching { it.convert().getOrThrow() }
+            ).mapCatching { it.convert() }
         }
     }
 
     override fun deleteTeacher(id: Long): Flow<Result<Teacher>> {
-        return flowOf { localDataSource.delete(id).mapCatching { it.convert().getOrThrow() } }
+        return flowOf { localDataSource.delete(id).mapCatching { it.convert() } }
     }
 
     override fun updateTeacher(teacher: Teacher): Flow<Result<Teacher>> {
@@ -56,7 +56,7 @@ class TeachersRepositoryImpl(
                 this.firstName = teacher.firstName
                 this.middleName = teacher.middleName
                 this.speciality = teacher.speciality
-            }.mapCatching { it.convert().getOrThrow() }
+            }.mapCatching { it.convert() }
         }
     }
 
@@ -65,7 +65,7 @@ class TeachersRepositoryImpl(
     }
 
 
-    private suspend fun TeacherEntity.convert(): Result<Teacher> {
+    private suspend fun TeacherEntity.convert(): Teacher {
         return converter.run {
             this@convert.convert()
         }

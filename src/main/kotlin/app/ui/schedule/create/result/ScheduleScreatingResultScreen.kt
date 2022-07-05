@@ -6,21 +6,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import app.schedule.plan.AcademicPlan.Companion.isEmpty
 import app.ui.schedule.create.ScheduleCreatingViewModel
-import app.ui.schedule.create.plan.AcademicPlanViewModel
 import common.view_model.viewModel
 
 @Composable
 fun ScheduleCreatingResultScreen() {
     val viewModel: ScheduleCreatingViewModel = viewModel()
-    val planViewModel: AcademicPlanViewModel = viewModel()
-    val state by planViewModel.container.stateFlow.collectAsState()
+    val state by viewModel.container.stateFlow.collectAsState()
 
     Box {
         Button(
-            onClick = {
-                viewModel.buildSchedule(plan = state.plan.associateBy { it.group })
-            }
+            onClick = { viewModel.buildSchedule() },
+            enabled = !state.selectedPlan.isEmpty
         ) {
             Text("Построить расписание")
         }

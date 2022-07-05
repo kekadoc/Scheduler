@@ -21,6 +21,10 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation(compose.desktop.currentOs)
+
+    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.2.0-alpha01-dev731")
+
+
     implementation("org.jetbrains.exposed:exposed-core:0.38.2")
     implementation("org.jetbrains.exposed:exposed-dao:0.38.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.38.2")

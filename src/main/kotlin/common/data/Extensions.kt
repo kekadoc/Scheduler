@@ -9,21 +9,22 @@ val <Key, Data> DataSource<Key, Data>.all: Flow<List<Data>>
         val flow = MutableStateFlow<List<Data>>(emptyList())
         var initialized = false
         addListener(object : DataListener<Key, Data> {
-            override suspend fun onUpdate(key: Key, oldData: Data, newData: Data) {
-                getAll().getOrNull()?.apply { flow.value = this }
-            }
             override suspend fun onCreate(key: Key, data: Data) {
                 getAll().getOrNull()?.apply { flow.value = this }
             }
             override suspend fun onDelete(key: Key, data: Data) {
                 getAll().getOrNull()?.apply { flow.value = this }
             }
+            override suspend fun onUpdate(key: Key, data: Data) {
+                getAll().getOrNull()?.apply { flow.value = this }
+            }
+            override suspend fun onClear() {
+                flow.value = emptyList()
+            }
         })
         return flow.onEach { data ->
-            //Logger.log("DS $data")
              if (data.isEmpty() && !initialized) {
                  getAll().onSuccess { allData ->
-                     //Logger.log("DS all $allData")
                      flow.value = allData
                      initialized = true
                  }

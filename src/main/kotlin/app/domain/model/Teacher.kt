@@ -2,6 +2,7 @@ package app.domain.model
 
 import common.extensions.emptyString
 
+@kotlinx.serialization.Serializable
 data class Teacher(
     override val id: Long,
     val lastName: String,

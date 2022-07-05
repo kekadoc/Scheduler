@@ -45,7 +45,7 @@ private fun SimpleMenuItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(36.dp).padding(8.dp),
                 imageVector = image,
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(LocalContentColor.current.copy(alpha = LocalContentAlpha.current))

@@ -14,11 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.domain.model.Discipline
+import app.domain.model.Discipline.Companion.isEmpty
 import app.ui.common.SimpleItemComponent
 import common.extensions.collectState
 import common.view_model.viewModel
-import app.domain.model.Discipline
-import app.domain.model.Discipline.Companion.isEmpty
 
 @Composable
 fun DisciplinesDatabaseScreen() {
@@ -48,7 +48,7 @@ fun DisciplinesDatabaseScreen() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize(),
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -66,6 +66,7 @@ fun DisciplinesDatabaseScreen() {
                 }
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
         Card(
             modifier = Modifier.height(56.dp).fillMaxWidth(),
             onClick = {

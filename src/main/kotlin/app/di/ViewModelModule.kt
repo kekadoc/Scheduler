@@ -3,10 +3,10 @@ package app.di
 import app.ApplicationViewModel
 import app.ui.database.discipline.DisciplinesViewModel
 import app.ui.database.group.GroupsDatabaseViewModel
+import app.ui.database.plan.AcademicPlanViewModel
 import app.ui.database.rooms.RoomsDatabaseViewModel
 import app.ui.database.teachers.TeachersDatabaseViewModel
 import app.ui.schedule.create.ScheduleCreatingViewModel
-import app.ui.schedule.create.plan.AcademicPlanViewModel
 import common.view_model.ViewModelStore
 import org.koin.dsl.module
 
@@ -40,10 +40,16 @@ val viewModelsModule = module {
 
     //Schedule creating ViewModels
     factory {
-        ScheduleCreatingViewModel()
+        ScheduleCreatingViewModel(planRepository = get())
     }
     factory {
-        AcademicPlanViewModel(groupsRepository = get(), academicPlanRepository = get())
+        AcademicPlanViewModel(
+            groupsRepository = get(),
+            academicPlanRepository = get(),
+            teachersRepository = get(),
+            roomsRepository = get(),
+            disciplinesRepository = get()
+        )
     }
 
 }

@@ -6,8 +6,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DesignServices
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,24 +20,18 @@ import app.ui.database.DatabaseScreen
 import app.ui.menu.SimpleMenuItem
 import app.ui.menu.SimpleMenuItemLayout
 import app.ui.schedule.create.ScheduleCreatingScreen
-import common.logger.Logger
 import common.view_model.viewModel
 
 private enum class MainMenuItem : SimpleMenuItem {
-    SCHEDULE {
-        override val id: Long = 1L
-        override val text: String = "Schedule"
-        override val image: ImageVector = Icons.Default.Add
-    },
     SCHEDULE_CREATING {
         override val id: Long = 2L
-        override val text: String = "Create"
-        override val image: ImageVector = Icons.Default.Add
+        override val text: String = "Создать"
+        override val image: ImageVector = Icons.Default.DesignServices
     },
     DATABASE {
         override val id: Long = 3L
-        override val text: String = "Database"
-        override val image: ImageVector = Icons.Default.Add
+        override val text: String = "База данных"
+        override val image: ImageVector = Icons.Default.Folder
     },
 }
 
@@ -45,7 +40,7 @@ fun MainScreen() {
     val viewModel = viewModel<ApplicationViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
     var currentScreen: MainMenuItem by remember { mutableStateOf(MainMenuItem.DATABASE) }
-    Logger.log("MainScreen $currentScreen")
+
     Row(modifier = Modifier.fillMaxSize()) {
         Card {
             Column {
@@ -54,7 +49,7 @@ fun MainScreen() {
                     onLogout = { viewModel.logout() }
                 )
                 SimpleMenuItemLayout(
-                    modifier = Modifier.width(300.dp).fillMaxHeight(),
+                    modifier = Modifier.width(250.dp).fillMaxHeight(),
                     items = MainMenuItem.values().toList(),
                     selected = currentScreen,
                     header = {},
@@ -69,7 +64,7 @@ fun MainScreen() {
         ) {
             currentScreen.apply {
                 when(this) {
-                    MainMenuItem.SCHEDULE -> ScheduleSelectionScreen()
+                    //MainMenuItem.SCHEDULE -> ScheduleSelectionScreen()
                     MainMenuItem.SCHEDULE_CREATING -> ScheduleCreatingScreen()
                     MainMenuItem.DATABASE -> DatabaseScreen()
                 }

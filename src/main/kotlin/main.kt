@@ -5,7 +5,10 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.Application
-import app.di.*
+import app.di.dataConverterModule
+import app.di.dataInjectorModule
+import app.di.spacesModule
+import app.di.viewModelsModule
 import org.koin.core.context.startKoin
 
 fun main() = application {
@@ -21,7 +24,6 @@ fun main() = application {
             dataConverterModule,
             viewModelsModule,
             dataInjectorModule,
-            academicPlanRepositoryModule,
             //localDataSourceModule,
             //repositoriesModule,
         )

@@ -1,12 +1,12 @@
 package app.data.repository.group
 
-import common.data.all
-import common.extensions.catchResult
-import common.extensions.flowOf
 import app.data.converter.DataConverter
 import app.data.data_source.local.unit.group.GroupLocalDataSource
 import app.data.data_source.local.unit.group.dao.GroupEntity
 import app.domain.model.Group
+import common.data.all
+import common.extensions.catchResult
+import common.extensions.flowOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -20,32 +20,32 @@ class GroupsRepositoryImpl(
         .catchResult()
         .map { resultList ->
             resultList.mapCatching { list ->
-                list.map { entity -> entity.convert().getOrThrow() }
+                list.map { entity -> entity.convert() }
             }
         }
 
 
     override fun getGroup(id: Long): Flow<Result<Group>> {
-        return flowOf { localDataSource.get(id).mapCatching { it.convert().getOrThrow() } }
+        return flowOf { localDataSource.get(id).mapCatching { it.convert() } }
     }
 
     override fun addGroup(name: String): Flow<Result<Group>> {
         return flowOf {
             localDataSource.add(
                 name = name
-            ).mapCatching { it.convert().getOrThrow() }
+            ).mapCatching { it.convert() }
         }
     }
 
     override fun deleteGroup(id: Long): Flow<Result<Group>> {
-        return flowOf { localDataSource.delete(id).mapCatching { it.convert().getOrThrow() } }
+        return flowOf { localDataSource.delete(id).mapCatching { it.convert() } }
     }
 
     override fun updateGroup(group: Group): Flow<Result<Group>> {
         return flowOf {
             localDataSource.update(group.id) {
                 this.name = group.name
-            }.mapCatching { it.convert().getOrThrow() }
+            }.mapCatching { it.convert() }
         }
     }
 
@@ -54,7 +54,7 @@ class GroupsRepositoryImpl(
     }
 
 
-    private suspend fun GroupEntity.convert(): Result<Group> {
+    private suspend fun GroupEntity.convert(): Group {
         return converter.run {
             this@convert.convert()
         }

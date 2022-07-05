@@ -1,8 +1,7 @@
 package app.schedule.builder
 
-import common.extensions.requireNotNull
-import common.logger.Logger
 import app.domain.model.*
+import common.extensions.requireNotNull
 
 class ScheduleBuilder(
     val maxLessonsInDay: Int,
@@ -12,7 +11,6 @@ class ScheduleBuilder(
     private val schedules: Map<Group, GroupSchedule> = groups.associateWith { GroupSchedule() }
 
     fun getGroup(group: Group): GroupSchedule {
-        Logger.log("group=$group; groups=${schedules.keys}")
         return schedules[group].requireNotNull()
     }
 

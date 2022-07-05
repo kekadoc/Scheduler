@@ -1,8 +1,9 @@
-package app.data.data_source.local.unit.plan.academic
+package app.data.data_source.local.unit.plan
 
 import app.data.data_source.local.common.builder.tableLongIdDatabase
-import app.data.data_source.local.unit.plan.academic.dao.AcademicPlanEntity
-import app.data.data_source.local.unit.plan.academic.dao.AcademicPlanTable
+import app.data.data_source.local.unit.plan.dao.AcademicPlanEntity
+import app.data.data_source.local.unit.plan.dao.AcademicPlanTable
+import app.schedule.plan.GroupPlan
 import common.data.AbstractDataSource
 
 class AcademicPlanLocalDataSourceImpl : AbstractDataSource<Long, AcademicPlanEntity>(), AcademicPlanLocalDataSource {
@@ -10,10 +11,10 @@ class AcademicPlanLocalDataSourceImpl : AbstractDataSource<Long, AcademicPlanEnt
     private val tableDatabase = tableLongIdDatabase(AcademicPlanTable, AcademicPlanEntity)
 
 
-    override suspend fun add(name: String, groupPlanIds: List<Long>): Result<AcademicPlanEntity> {
+    override suspend fun add(name: String, groupPlans: List<GroupPlan>): Result<AcademicPlanEntity> {
         return tableDatabase.create {
             this.name = name
-            this.groupPlanIds = groupPlanIds
+            this.data = groupPlans
         }.onSuccess { onCreate(it.id.value, it) }
     }
 

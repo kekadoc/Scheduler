@@ -14,13 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.domain.model.Teacher
+import app.domain.model.fullName
+import app.domain.model.isEmpty
 import app.ui.common.SimpleItemComponent
 import app.ui.database.teachers.dialog.DialogTeacher
 import common.extensions.collectState
 import common.view_model.viewModel
-import app.domain.model.Teacher
-import app.domain.model.fullName
-import app.domain.model.isEmpty
 
 @Composable
 fun TeachersDatabaseScreen() {
@@ -51,7 +51,7 @@ fun TeachersDatabaseScreen() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -70,6 +70,7 @@ fun TeachersDatabaseScreen() {
                 }
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
         Card(
             modifier = Modifier.height(56.dp).fillMaxWidth(),
             onClick = {

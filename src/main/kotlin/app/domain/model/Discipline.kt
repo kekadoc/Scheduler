@@ -6,6 +6,7 @@ import common.extensions.emptyString
 /**
  * Академический предмет
  */
+@kotlinx.serialization.Serializable
 data class Discipline(
     override val id: Long,
     val name: String,

@@ -2,13 +2,12 @@
 
 package app
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import app.model.mvi.isAuthorized
 import app.ui.AuthorizationScreen
 import app.ui.MainScreen
@@ -52,11 +51,22 @@ class Application : KoinComponent {
                                     MainScreen()
                                 }
                             }
-                            Switch(
-                                modifier = Modifier,
-                                checked = darkTheme,
-                                onCheckedChange = { darkTheme = it },
-                            )
+                            Card(
+                                modifier = Modifier.fillMaxHeight(),
+                                elevation = 6.dp
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(8.dp)
+                                ) {
+                                    Switch(
+                                        modifier = Modifier,
+                                        checked = darkTheme,
+                                        onCheckedChange = { darkTheme = it },
+                                    )
+                                }
+
+                            }
+
                         }
                     }
                 }

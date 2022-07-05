@@ -6,10 +6,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +16,7 @@ import app.ApplicationViewModel
 import app.ui.common.ImageThemed
 import app.ui.database.discipline.DisciplinesDatabaseScreen
 import app.ui.database.group.GroupsDatabaseScreen
+import app.ui.database.plan.AcademicPlanDatabaseScreen
 import app.ui.database.rooms.RoomsDatabaseScreen
 import app.ui.database.teachers.TeachersDatabaseScreen
 import app.ui.menu.SimpleMenuItem
@@ -34,17 +32,22 @@ private enum class DatabaseItem : SimpleMenuItem {
     ROOMS {
         override val id: Long = 2L
         override val text: String = "Кабинеты"
-        override val image: ImageVector = Icons.Default.Place
+        override val image: ImageVector = Icons.Default.MeetingRoom
     },
     DISCIPLINES {
         override val id: Long = 3L
         override val text: String = "Предметы"
-        override val image: ImageVector = Icons.Default.Phone
+        override val image: ImageVector = Icons.Default.School
     },
     GROUPS {
         override val id: Long = 4L
         override val text: String = "Группы"
-        override val image: ImageVector = Icons.Default.Person
+        override val image: ImageVector = Icons.Default.Groups
+    },
+    PLANS {
+        override val id: Long = 5L
+        override val text: String = "Планы"
+        override val image: ImageVector = Icons.Default.ListAlt
     }
 }
 
@@ -63,7 +66,7 @@ fun DatabaseScreen() {
                     onLogout = {  }
                 )
                 SimpleMenuItemLayout(
-                    modifier = Modifier.width(300.dp).fillMaxHeight(),
+                    modifier = Modifier.width(250.dp).fillMaxHeight(),
                     items = DatabaseItem.values().toList(),
                     selected = currentScreen,
                     header = {},
@@ -73,7 +76,7 @@ fun DatabaseScreen() {
             }
         }
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             when (currentScreen) {
@@ -81,6 +84,7 @@ fun DatabaseScreen() {
                 DatabaseItem.ROOMS -> RoomsDatabaseScreen()
                 DatabaseItem.DISCIPLINES -> DisciplinesDatabaseScreen()
                 DatabaseItem.GROUPS -> GroupsDatabaseScreen()
+                DatabaseItem.PLANS -> AcademicPlanDatabaseScreen()
             }
         }
     }

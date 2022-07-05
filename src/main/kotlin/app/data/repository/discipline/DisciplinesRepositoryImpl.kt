@@ -26,12 +26,12 @@ class DisciplinesRepositoryImpl(
         .catchResult()
         .map { resultList ->
             resultList.mapCatching { list ->
-                list.map { entity -> entity.convert().getOrThrow() }
+                list.map { entity -> entity.convert() }
             }
         }
 
     override fun getDiscipline(id: Long): Flow<Result<Discipline>> {
-        return flowOf { localDataSource.get(id).mapCatching { it.convert().getOrThrow() } }
+        return flowOf { localDataSource.get(id).mapCatching { it.convert() } }
     }
 
     override fun addDiscipline(name: String, teachers: List<Teacher>, rooms: List<Room>): Flow<Result<Discipline>> {
@@ -40,12 +40,12 @@ class DisciplinesRepositoryImpl(
                 name = name,
                 teachers = teachers.map { it.id },
                 rooms = rooms.map { it.id }
-            ).mapCatching { it.convert().getOrThrow() }
+            ).mapCatching { it.convert() }
         }
     }
 
     override fun deleteDiscipline(id: Long): Flow<Result<Discipline>> {
-        return flowOf { localDataSource.delete(id).mapCatching { it.convert().getOrThrow() } }
+        return flowOf { localDataSource.delete(id).mapCatching { it.convert() } }
     }
 
     override fun updateDiscipline(discipline: Discipline): Flow<Result<Discipline>> {
@@ -54,7 +54,7 @@ class DisciplinesRepositoryImpl(
                 this.name = discipline.name
                 this.rooms = discipline.rooms.map { it.id }
                 this.teachers = discipline.teachers.map { it.id }
-            }.mapCatching { it.convert().getOrThrow() }
+            }.mapCatching { it.convert() }
         }
     }
 
@@ -63,7 +63,7 @@ class DisciplinesRepositoryImpl(
     }
 
 
-    private suspend fun DisciplineEntity.convert(): Result<Discipline> {
+    private suspend fun DisciplineEntity.convert(): Discipline {
         return converter.run {
             this@convert.convert(teacherLocalDataSource, roomsLocalDataSource)
         }

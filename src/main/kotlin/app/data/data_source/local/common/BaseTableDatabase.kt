@@ -2,7 +2,6 @@ package app.data.data_source.local.common
 
 import common.data.CRUD
 import common.extensions.requireNotNull
-import common.logger.Logger
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -81,10 +80,6 @@ constructor(
             newSuspendedTransaction {
                 table.deleteAll()
             }
-        }.onSuccess {
-            Logger.log("CLEAR success")
-        }.onFailure {
-            Logger.log("CLEAR fail $it")
         }
     }
 

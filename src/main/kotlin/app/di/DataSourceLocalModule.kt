@@ -1,9 +1,11 @@
 package app.di
 
-import app.data.data_source.local.unit.plan.academic.AcademicPlanLocalDataSource
-import app.data.data_source.local.unit.plan.academic.AcademicPlanLocalDataSourceImpl
+import app.data.data_source.local.unit.discipline.DisciplineLocalDataSource
+import app.data.data_source.local.unit.discipline.DisciplinesLocalDataSourceImpl
 import app.data.data_source.local.unit.group.GroupLocalDataSource
 import app.data.data_source.local.unit.group.GroupLocalDataSourceImpl
+import app.data.data_source.local.unit.plan.AcademicPlanLocalDataSource
+import app.data.data_source.local.unit.plan.AcademicPlanLocalDataSourceImpl
 import app.data.data_source.local.unit.room.RoomsLocalDataSource
 import app.data.data_source.local.unit.room.RoomsLocalDataSourceImpl
 import app.data.data_source.local.unit.teacher.TeacherLocalDataSource
@@ -26,5 +28,9 @@ val localDataSourceModule = module {
 
     single<RoomsLocalDataSource> {
         RoomsLocalDataSourceImpl()
+    }
+
+    single<DisciplineLocalDataSource> {
+        DisciplinesLocalDataSourceImpl()
     }
 }

@@ -11,7 +11,7 @@ interface AcademicPlanRepository {
 
     fun getPlan(id: Long): Flow<Result<AcademicPlan>>
 
-    fun addPlan(name: String, plans: List<GroupPlan.Builder>): Flow<Result<AcademicPlan>>
+    fun addPlan(name: String, plans: List<GroupPlan>): Flow<Result<AcademicPlan>>
 
     fun deletePlan(id: Long): Flow<Result<AcademicPlan>>
 

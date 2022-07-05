@@ -1,21 +1,24 @@
-package app.data.data_source.local.unit.plan.academic.dao
+package app.data.data_source.local.unit.plan.dao
 
+import app.schedule.plan.GroupPlan
+import common.serialization.deserialize
+import common.serialization.serialize
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
 
 object AcademicPlanTable : LongIdTable() {
-    val name = varchar("name", Int.MAX_VALUE)
-    val groups = text("groups")
+    val name = text("name")
+    val data = text("data")
 }
 
 class AcademicPlanEntity(id: EntityID<Long>) : LongEntity(id) {
 
     var name by AcademicPlanTable.name
-    var groupPlanIds: List<Long> by AcademicPlanTable.groups.transform(
-        toColumn = { list -> list.joinToString(separator = "; ") },
-        toReal = { column -> column.split("; ").mapNotNull { it.toLongOrNull() } }
+    var data: List<GroupPlan> by AcademicPlanTable.data.transform(
+        toColumn = { plan -> plan.serialize() },
+        toReal = { text -> text.deserialize() }
     )
 
     companion object : LongEntityClass<AcademicPlanEntity>(AcademicPlanTable)

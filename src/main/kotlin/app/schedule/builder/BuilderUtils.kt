@@ -1,9 +1,9 @@
 package app.schedule.builder
 
-import common.extensions.same
 import app.domain.model.*
 import app.schedule.plan.AcademicPlan
 import app.schedule.rule.Rules
+import common.extensions.same
 import kotlin.random.Random
 
 object BuilderUtils {
@@ -13,12 +13,12 @@ object BuilderUtils {
         builder: ScheduleBuilder,
         rules: Rules
     ) {
-        plan.getAll().forEach { (group, groupPlan) ->
-            groupPlan.getAll().forEach { (discipline, disciplinePlan) ->
+        plan.plans.forEach { groupPlan ->
+            groupPlan.items.forEach { disciplinePlan ->
                 val room = disciplinePlan.room
                 val teacher = disciplinePlan.teacher
                 if (disciplinePlan.works.values.sum() <= 0) {
-                    throw IllegalStateException("Hours in empty $group $discipline")
+                    throw IllegalStateException("Hours in empty ${groupPlan.group} ${disciplinePlan.discipline}")
                 }
                 disciplinePlan.works.filter { it.value > 0 }.forEach { (work, hours) ->
 
@@ -45,13 +45,13 @@ object BuilderUtils {
                             id = Random.nextLong(),
                             teaching = Teaching(
                                 id = Random.nextLong(),
-                                discipline = discipline,
+                                discipline = disciplinePlan.discipline,
                                 teacher = teacher,
                                 room = room, type = work),
                             teacher = teacher,
                             room = room
                         )
-                        builder.getGroup(group).getWeek(time.weekType).getDay(time.dayOfWeek).set(time.lessonNumber, lesson)
+                        builder.getGroup(groupPlan.group).getWeek(time.weekType).getDay(time.dayOfWeek).set(time.lessonNumber, lesson)
                     }
                 }
             }
