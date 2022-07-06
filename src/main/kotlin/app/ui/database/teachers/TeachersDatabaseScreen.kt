@@ -5,10 +5,10 @@ package app.ui.database.teachers
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import app.domain.model.Teacher
 import app.domain.model.fullName
 import app.domain.model.isEmpty
-import common.ui.SimpleItemComponent
 import app.ui.database.teachers.dialog.DialogTeacher
 import common.extensions.collectState
+import common.ui.ImageThemed
+import common.ui.SimpleItemComponent
 import common.view_model.viewModel
 
 @Composable
@@ -71,19 +72,16 @@ fun TeachersDatabaseScreen() {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            modifier = Modifier.height(56.dp).fillMaxWidth(),
-            onClick = {
-                selectedTeacher = Teacher.Empty
-            }
+        Button(
+            modifier = Modifier.fillMaxWidth(0.3f).align(Alignment.CenterHorizontally),
+            contentPadding = PaddingValues(4.dp),
+            onClick = { selectedTeacher = Teacher.Empty },
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Add")
-            }
+            ImageThemed(
+                modifier = Modifier.size(36.dp),
+                imageVector = Icons.Default.Add,
+                contentDescription = null
+            )
         }
     }
 

@@ -5,10 +5,10 @@ package app.ui.database.discipline
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,8 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.domain.model.Discipline
 import app.domain.model.Discipline.Companion.isEmpty
-import common.ui.SimpleItemComponent
 import common.extensions.collectState
+import common.ui.ImageThemed
+import common.ui.SimpleItemComponent
 import common.view_model.viewModel
 
 @Composable
@@ -67,19 +68,16 @@ fun DisciplinesDatabaseScreen() {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            modifier = Modifier.height(56.dp).fillMaxWidth(),
-            onClick = {
-                selectedDiscipline = Discipline.Empty
-            }
+        Button(
+            modifier = Modifier.fillMaxWidth(0.3f).align(Alignment.CenterHorizontally),
+            contentPadding = PaddingValues(4.dp),
+            onClick = { selectedDiscipline = Discipline.Empty },
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Добавить")
-            }
+            ImageThemed(
+                modifier = Modifier.size(36.dp),
+                imageVector = Icons.Default.Add,
+                contentDescription = null
+            )
         }
     }
 

@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
 
 object CreateScheduleXLSX {
 
-    fun create(schedule: Schedule) {
+    fun create(schedule: Schedule): File {
         val workbook = XSSFWorkbook().apply {
             build(schedule)
         }
@@ -24,6 +24,7 @@ object CreateScheduleXLSX {
 
         val outFile = FileOutputStream(file)
         workbook.write(outFile)
+        return file
     }
 
     

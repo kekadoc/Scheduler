@@ -10,10 +10,12 @@ import app.schedule.rule.room.RoomRule
 import app.schedule.rule.student.StudentGroupRule
 import app.schedule.rule.teacher.TeacherRule
 import common.extensions.container
+import common.logger.Logger
 import common.view_model.ViewModel
 import excel.CreateScheduleXLSX
 import excel.model.buildExcelModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
@@ -21,10 +23,14 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
+import java.awt.Desktop
+import java.io.File
 
 data class ScheduleCreatingState(
     val plans: List<AcademicPlan> = emptyList(),
-    val selectedPlan: AcademicPlan = AcademicPlan.Empty
+    val selectedPlan: AcademicPlan = AcademicPlan.Empty,
+    val isScheduleCreating: Boolean = false,
+    val file: File? = null
 )
 
 class ScheduleCreatingViewModel(
@@ -46,6 +52,8 @@ class ScheduleCreatingViewModel(
     }
 
     fun buildSchedule() = intent {
+        reduce { state.copy(isScheduleCreating = true) }
+        delay(1_000)
         val academicPlan = state.selectedPlan
         val availableGroups = academicPlan.plans.map { it.group }.toSet()
         val maxLessonsInDay = 6 // TODO: 24.06.2022 Mock
@@ -58,7 +66,28 @@ class ScheduleCreatingViewModel(
         )
         BuilderUtils.build(academicPlan, scheduleBuilder, rules)
         val scheduleExcel = scheduleBuilder.buildExcelModel()
-        CreateScheduleXLSX.create(scheduleExcel)
+        val file = CreateScheduleXLSX.create(scheduleExcel)
+        Logger.log("file = $file")
+        Logger.log("parent = ${file.parentFile.absolutePath}")
+        Logger.log("parentFile = ${file.parentFile}")
+        Logger.log("absolutePath = ${file.absolutePath}")
+        Logger.log("canonicalPath = ${file.canonicalPath}")
+        reduce { state.copy(isScheduleCreating = false, file = file) }
     }
 
+    fun openFile() = intent {
+        try {
+            Desktop.getDesktop().open(state.file)
+        } catch (e: Throwable) {
+            Logger.log("Open file error $e")
+        }
+    }
+
+    fun openFileFolder() = intent {
+        try {
+            Desktop.getDesktop().open(state.file!!.parentFile.absoluteFile)
+        } catch (e: Throwable) {
+            Logger.log("Open file error $e")
+        }
+    }
 }

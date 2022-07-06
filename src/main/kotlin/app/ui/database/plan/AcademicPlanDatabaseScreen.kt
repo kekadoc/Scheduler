@@ -3,10 +3,11 @@
 package app.ui.database.plan
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.schedule.plan.AcademicPlan
 import app.schedule.plan.AcademicPlan.Companion.isEmpty
-import common.ui.LazyColumnWithScrollbar
-import common.ui.SimpleItemComponent
 import common.extensions.collectState
+import common.ui.ImageThemed
+import common.ui.SimpleItemComponent
 import common.view_model.viewModel
 
 @Composable
@@ -45,7 +46,7 @@ fun AcademicPlanDatabaseScreen() {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumnWithScrollbar(
+        LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -65,19 +66,16 @@ fun AcademicPlanDatabaseScreen() {
             }
         }
         Spacer(Modifier.height(16.dp))
-        Card(
-            modifier = Modifier.height(56.dp).fillMaxWidth(),
-            onClick = {
-                selectedPlan = AcademicPlan.Empty
-            }
+        Button(
+            modifier = Modifier.fillMaxWidth(0.3f).align(Alignment.CenterHorizontally),
+            contentPadding = PaddingValues(4.dp),
+            onClick = { selectedPlan = AcademicPlan.Empty },
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Создать")
-            }
+            ImageThemed(
+                modifier = Modifier.size(36.dp),
+                imageVector = Icons.Default.Add,
+                contentDescription = null
+            )
         }
     }
 }

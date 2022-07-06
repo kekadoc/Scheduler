@@ -1,10 +1,7 @@
 package app.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.*
@@ -35,12 +32,24 @@ fun AuthorizationScreen(onEnter: (String) -> Unit, isAuthLoading: Boolean) {
             modifier = Modifier.size(56.dp),
             onClick = {
                 onEnter(spaceName)
-            }
+            },
         ) {
-            ImageThemed(
-                imageVector = Icons.Default.ExitToApp,
-                contentDescription = null
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isAuthLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.fillMaxSize().align(Alignment.Center),
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                } else {
+                    ImageThemed(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = null
+                    )
+                }
+            }
         }
     }
 }

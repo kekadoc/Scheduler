@@ -1,7 +1,6 @@
 package app.ui.database
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -18,7 +17,6 @@ import app.ui.database.group.GroupsDatabaseScreen
 import app.ui.database.plan.AcademicPlanDatabaseScreen
 import app.ui.database.rooms.RoomsDatabaseScreen
 import app.ui.database.teachers.TeachersDatabaseScreen
-import common.ui.ImageThemed
 import common.ui.menu.SimpleMenuItem
 import common.ui.menu.SimpleMenuItemLayout
 import common.view_model.viewModel
@@ -59,10 +57,12 @@ fun DatabaseScreen() {
     var currentScreen: DatabaseItem by remember { mutableStateOf(DatabaseItem.DISCIPLINES) }
 
     Row(modifier = Modifier.fillMaxSize()) {
-        Card {
+        Card(
+            elevation = 4.dp
+        ) {
             Column {
                 MenuHeader(
-                    title = "Database",
+                    title = "База данных",
                     onLogout = {  }
                 )
                 SimpleMenuItemLayout(
@@ -97,21 +97,9 @@ private fun MenuHeader(
     onLogout: () -> Unit
 ) {
     Row(
-        modifier = Modifier.padding(12.dp),
+        modifier = Modifier.padding(20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Button(
-            modifier = Modifier.size(44.dp),
-            onClick = { onLogout() },
-            contentPadding = PaddingValues(4.dp)
-        ) {
-            ImageThemed(
-                modifier = Modifier.fillMaxSize(),
-                imageVector = Icons.Default.ExitToApp,
-                contentDescription = null
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = title,
             style = MaterialTheme.typography.h5

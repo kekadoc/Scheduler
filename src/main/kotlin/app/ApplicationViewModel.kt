@@ -1,13 +1,14 @@
 package app
 
+import app.data.injector.DataInjection
 import app.data.repository.space.SpacesRepository
+import app.di.SpaceDatabaseLoader
 import app.domain.model.Space
 import common.extensions.container
 import common.extensions.orElse
 import common.view_model.ViewModel
 import common.view_model.ViewModelStore
-import app.data.injector.DataInjection
-import app.di.SpaceDatabaseLoader
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import org.orbitmvi.orbit.Container
@@ -30,6 +31,7 @@ class ApplicationViewModel(
 
     fun authorize(spaceName: String) = intent {
         reduce { state.copy(isAuthorizationProcess = true) }
+        delay(1_000)
         val spaces = spacesRepository.getAllSpaces().first().getOrElse { emptyList() }
         val space: Space = spaces.find { it.name == spaceName }.orElse {
             spacesRepository.addSpace(spaceName).first().getOrThrow() // TODO: 02.07.2022 Handle error

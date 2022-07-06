@@ -42,7 +42,9 @@ fun MainScreen() {
     var currentScreen: MainMenuItem by remember { mutableStateOf(MainMenuItem.DATABASE) }
 
     Row(modifier = Modifier.fillMaxSize()) {
-        Card {
+        Card(
+            elevation = 8.dp
+        ) {
             Column {
                 MenuHeader(
                     title = state.space.name,
@@ -54,7 +56,7 @@ fun MainScreen() {
                     selected = currentScreen,
                     header = {},
                     onItemSelect = { currentScreen = it },
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 )
             }
         }

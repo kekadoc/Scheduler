@@ -773,7 +773,6 @@ object BasePnipuInjector : DataInjector {
                 it.onSuccess { validatePlan(it) }
                 Logger.log("AddPlanResult $it")
             }.collect()
-            delay(100)
             a.cancel()
         }
     }
