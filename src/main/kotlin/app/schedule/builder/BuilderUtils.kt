@@ -4,6 +4,7 @@ import app.domain.model.*
 import app.schedule.plan.AcademicPlan
 import app.schedule.rule.Rules
 import common.extensions.same
+import common.logger.Logger
 import kotlin.random.Random
 
 object BuilderUtils {
@@ -14,13 +15,17 @@ object BuilderUtils {
         rules: Rules
     ) {
         plan.plans.forEach { groupPlan ->
+            Logger.log("build plan $groupPlan")
             groupPlan.items.forEach { disciplinePlan ->
+                Logger.log("build plan discipline $disciplinePlan")
                 val room = disciplinePlan.room
                 val teacher = disciplinePlan.teacher
                 if (disciplinePlan.works.values.sum() <= 0) {
                     throw IllegalStateException("Hours in empty ${groupPlan.group} ${disciplinePlan.discipline}")
                 }
                 disciplinePlan.works.filter { it.value > 0 }.forEach { (work, hours) ->
+
+                    Logger.log("build plan discipline work=$work hours=$hours")
 
                     val availableTimeRoom = builder.getAvailableTimePoints(room)
                     val availableTimeTeacher = builder.getAvailableTimePoints(teacher)
@@ -36,6 +41,7 @@ object BuilderUtils {
                         is PlanFillingType.Limitation -> filling.limitInCycle.toFloat()
                     }
                     var hoursCounter = hoursInCycle
+                    Logger.log("hoursCounter $hoursCounter")
                     while (hoursCounter > 0) {
                         hoursCounter -= 2f
                         val timeIndex = (0 until availableTime.count()).random()
