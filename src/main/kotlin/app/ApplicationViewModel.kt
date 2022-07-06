@@ -54,7 +54,6 @@ class ApplicationViewModel(
     private fun start() = intent {
         reduce { state.copy(isLoading = true) }
         injection.inject()
-        //spacesRepository.clear().collect()
         spacesRepository.getActive()
             .first()
             .onSuccess { space ->

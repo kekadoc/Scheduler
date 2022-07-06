@@ -1,5 +1,7 @@
 package app.data.injector.impl
 
+import app.data.injector.DataInjector
+import app.data.injector.DataRepository
 import app.data.repository.discipline.DisciplinesRepository
 import app.data.repository.group.GroupsRepository
 import app.data.repository.plan.AcademicPlanRepository
@@ -10,8 +12,6 @@ import app.domain.model.*
 import app.schedule.plan.DisciplinePlan
 import app.schedule.plan.GroupPlan
 import common.logger.Logger
-import app.data.injector.DataInjector
-import app.data.injector.DataRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -31,10 +31,14 @@ class BasePnipuInjector : DataInjector {
 
     override suspend fun inject(data: DataRepository) {
         val (teachers, rooms, disciplines, groups, academicPlan) = data
-        teachers.clear().collect()
-        rooms.clear().collect()
-        disciplines.clear().collect()
-        groups.clear().collect()
+
+        merge(
+            teachers.clear(),
+            rooms.clear(),
+            disciplines.clear(),
+            groups.clear(),
+            academicPlan.clear()
+        ).collect()
 
         injectRooms(rooms)
         injectTeachers(teachers)
