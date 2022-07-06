@@ -46,7 +46,7 @@ fun OutlinedTextField(
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 
     @OptIn(ExperimentalMaterialApi::class)
-    (BasicTextField(
+    BasicTextField(
         value = value,
         modifier = if (label != null) {
             modifier.padding(top = 8.dp) //OutlinedTextFieldTopPadding
@@ -85,7 +85,7 @@ fun OutlinedTextField(
                 colors = colors,
                 contentPadding = contentPaddingValues,
                 border = {
-                    TextFieldDefaults.BorderStroke(
+                    TextFieldDefaults.BorderBox(
                         enabled,
                         isError,
                         interactionSource,
@@ -95,5 +95,5 @@ fun OutlinedTextField(
                 }
             )
         }
-    ))
+    )
 }

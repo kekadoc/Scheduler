@@ -11,7 +11,7 @@ import org.koin.dsl.module
 val dataInjectorModule = module {
 
     single<Set<DataInjector>> {
-        setOf(BasePnipuInjector())
+        setOf(BasePnipuInjector)
     }
 
     single<DataInjection> {

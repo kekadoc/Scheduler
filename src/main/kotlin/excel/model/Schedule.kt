@@ -1,6 +1,7 @@
 package excel.model
 
 import app.domain.model.WeekType
+import app.domain.model.shortName
 import app.schedule.builder.ScheduleBuilder
 import common.extensions.requireNotNull
 
@@ -38,8 +39,8 @@ fun ScheduleBuilder.buildExcelModel(): Schedule {
                         Lesson(
                             name = it.name,
                             type = it.type,
-                            teacherAbout = it.teacher.lastName,
-                            teacherName = it.teacher.speciality,
+                            teacherAbout = it.teacher.speciality,
+                            teacherName = it.teacher.shortName,
                             room = it.room.name
                         )
                     },
@@ -47,8 +48,8 @@ fun ScheduleBuilder.buildExcelModel(): Schedule {
                         Lesson(
                             name = it.name,
                             type = it.type,
-                            teacherAbout = it.teacher.lastName,
-                            teacherName = it.teacher.speciality,
+                            teacherAbout = it.teacher.speciality,
+                            teacherName = it.teacher.shortName,
                             room = it.room.name
                         )
                     },

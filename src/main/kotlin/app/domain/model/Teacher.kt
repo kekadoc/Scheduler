@@ -25,6 +25,9 @@ data class Teacher(
 val Teacher.fullName: String
     get() = "$lastName $firstName $middleName"
 
+val Teacher.shortName: String
+    get() = "$lastName ${firstName.first()}. ${middleName.first()}."
+
 val Teacher.isEmpty: Boolean
     get() = this == Teacher.Empty
 

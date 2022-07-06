@@ -9,6 +9,7 @@ import app.data.repository.room.RoomsRepository
 import app.data.repository.space.SpacesRepository
 import app.data.repository.teacher.TeachersRepository
 import app.domain.model.*
+import app.schedule.plan.AcademicPlan
 import app.schedule.plan.DisciplinePlan
 import app.schedule.plan.GroupPlan
 import common.logger.Logger
@@ -18,7 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 
-class BasePnipuInjector : DataInjector {
+object BasePnipuInjector : DataInjector {
 
     override val id: Long = 777L
 
@@ -87,6 +88,7 @@ class BasePnipuInjector : DataInjector {
                 addRoom("ауд. 47"),
                 addRoom("ауд. 216"),
                 addRoom("ауд. 211"),
+                addRoom("ауд. 212"),
                 addRoom("ауд. 213"),
                 addRoom("спортзал")
             ).collect()
@@ -103,16 +105,18 @@ class BasePnipuInjector : DataInjector {
             addTeacher(lastName = "Русских", firstName = "Т.", middleName = "И.", speciality = "канд.пед.наук, доцент"),
             addTeacher(lastName = "Сухих", firstName = "И.", middleName = "И.", speciality = "старший преподаватель"),
             addTeacher(lastName = "Зайниева", firstName = "Т.", middleName = "В.", speciality = "канд.экон.наук, доцент"),
-            addTeacher(lastName = "Ковязин", firstName = "В.", middleName = "А.", speciality = "канд.техн.наук, доцент "),
-            addTeacher(lastName = "Лабутина", firstName = "Т.", middleName = "В.", speciality = "старший преподаватель "),
+            addTeacher(lastName = "Ковязин", firstName = "В.", middleName = "А.", speciality = "канд.техн.наук, доцент"),
+            addTeacher(lastName = "Ковязина", firstName = "И.", middleName = "И.", speciality = "старший преподаватель"),
+            addTeacher(lastName = "Лабутина", firstName = "Т.", middleName = "В.", speciality = "старший преподаватель"),
             addTeacher(lastName = "Шергина", firstName = "М.", middleName = "А.", speciality = " старший преподаватель"),
-            addTeacher(lastName = "Трвников", firstName = "А.", middleName = "В.", speciality = " канд.техн.наук, доцент"),
+            addTeacher(lastName = "Травников", firstName = "А.", middleName = "В.", speciality = " канд.техн.наук, доцент"),
             addTeacher(lastName = "Горяева", firstName = "И.", middleName = "А.", speciality = "канд.экон.наук, доцент"),
             addTeacher(lastName = "Баженова", firstName = "Т.", middleName = "Р.", speciality = "старший преподаватель"),
             addTeacher(lastName = "Цигвинцева", firstName = "Г.", middleName = "Л.", speciality = "канд.филос.наук, доцент"),
             addTeacher(lastName = "Куликов", firstName = "Н.", middleName = "М.", speciality = "канд.пед.наук, доцент"),
             addTeacher(lastName = "Красильников", firstName = "С.", middleName = "М.", speciality = "канд.техн.наук, доцент"),
-            addTeacher(lastName = "Горюшков", firstName = "Г.", middleName = "А.", speciality = "старший преподаватель")
+            addTeacher(lastName = "Горюшков", firstName = "Г.", middleName = "А.", speciality = "старший преподаватель"),
+            addTeacher(lastName = "Щербакова", firstName = "Е.", middleName = "В.", speciality = "канд.психол.наук, доцент")
         ).collect()
 
     }
@@ -407,274 +411,275 @@ class BasePnipuInjector : DataInjector {
     suspend fun injectPlan() {
         coroutineScope {
             val a = launch { allPlans.collect { Logger.log("injectPlan $it") } }
+            val MOCK_HOURS = 35
             addPlan(
                 name = "2021",
                 plans = listOf(
                     groupPlan(
                         groupName = "АСУ-21-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
-                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
-                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", lecture = 12),
-                            disciplinePlan(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", laboratory = 12)
+                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS, laboratory = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = MOCK_HOURS, laboratory = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", lecture = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ОСНОВЫ АЛГОРИТМИЗАЦИИ и ПРОГАРММИРОВАНИЯ", laboratory = MOCK_HOURS)
                         )
                     ),
                     groupPlan(
                         groupName = "АТПП-21-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
-                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
-                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = MOCK_HOURS, laboratory = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS, laboratory = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ИНЖЕНЕРНАЯ ГЕОМЕТРИЯ и КОМПЬЮТЕРНАЯ ГРАФИКА",
-                                laboratory = 12
+                                laboratory = MOCK_HOURS
                             )
                         )
                     ),
                     groupPlan(
                         groupName = "ПГС-21-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ТЕОРЕТИЧЕКАЯ МЕХАНИКА", practice = 12),
-                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = 12),
-                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = 12, laboratory = 12),
-                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = 12, practice = 12, laboratory = 12),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ТЕОРЕТИЧЕКАЯ МЕХАНИКА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНОСТРАННЫЙ ЯЗЫК", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА", lecture = MOCK_HOURS, laboratory = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИСТОРИЯ", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНЖЕНЕРНАЯ ГЕОДЕЗИЯ", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "МАТЕМАТИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ФИЗИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS, laboratory = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                         )
                     ),
                     groupPlan(
                         groupName = "АСУ-20-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                            disciplinePlan(disciplineName = "МЕТОДЫ СТАТИСТИЧЕСКОГО АНАЛИЗА ДАННЫХ", laboratory = 12),
-                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "МЕТОДЫ СТАТИСТИЧЕСКОГО АНАЛИЗА ДАННЫХ", laboratory = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОГРАММИРОВАНИЕ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
-                            disciplinePlan(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = 12),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ", lecture = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ДИСКРЕТНАЯ МАТЕМАТИКА и МАТЕМАТИЧЕСКАЯ ЛОГИКА",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                         )
                     ),
                     groupPlan(
                         groupName = "ПГС-20-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ с ОСНОВАМИ ЭЛЕКТРОТЕХНИКИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ОСНОВЫ ИНЖЕНЕРНОЙ ГЕОЛОГИИ и МЕХАНИКА ГРУНТОВ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ОСНОВЫ ОРГАНИЗАЦИИ и УПРАВЛЕНИЯ в СТРОИТЕЛЬСТВЕ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ТЕХНОЛОГИЧЕСКИЕ ПРОЦЕССЫ в СТРОИТЕЛЬСТВЕ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                         )
                     ),
                     groupPlan(
                         groupName = "АТПП-20-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan("ЭКОНОМИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
-                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = 12),
+                            disciplinePlan("ЭКОНОМИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА и БИЗНЕС", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ТЕОРЕТИЧЕСКИЕ ОСНОВЫ ЭЛЕКТРОТЕХНИКИ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ВЫЧИСЛИТЕЛЬНЫЕ МАШИНЫ, КОМПЛЕКСЫ, СИСТЕМЫ и СЕТИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ПРОГРАММИРОВАНИЕ и АЛГОРИТМИЗАЦИЯ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                         )
                     ),
                     groupPlan(
                         groupName = "ЭС-20-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = 12, practice = 12),
-                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = 12),
+                            disciplinePlan(disciplineName = "ЭКОНОМИКА", lecture = MOCK_HOURS, practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ЭКОЛОГИЯ", lecture = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ТЕОРЕТИЧЕСКИЕ ОСНОВЫ ЭЛЕКТРОТЕХНИКИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ИНФОРМАТИКА в ПРИЛОЖЕНИИ к ОТРАСЛИ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "УЧЕБНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ТЕХНИКА ВЫСОКИХ НАПРЯЖЕНИЙ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                         )
                     ),
                     groupPlan(
                         groupName = "АСУ-19-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
-                            disciplinePlan(disciplineName = "ЗАЩИТА ИНФОРМАЦИИ", lecture = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "ЗАЩИТА ИНФОРМАЦИИ", lecture = MOCK_HOURS, laboratory = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "МОДЕЛИРОВАНИЕ СИСТЕМ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "АДМИНИСТРИРОВНИЕ ОПЕРАЦИОННЫХ СИСТЕМ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ПРОГРАММИРОВАНИЕ ИНТЕРНЕТ-ПРИЛОЖЕНИЙ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "СЕТИ и ТЕЛЕКОММУНИКАЦИИ", lecture = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "СЕТИ и ТЕЛЕКОММУНИКАЦИИ", lecture = MOCK_HOURS, laboratory = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "УПРАВЛЕНИЕ ПРОЕКТАМИ АВТОМАТИЗИРОВАННЫХ СИСТЕМ УПРАВЛЕНИЯ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                         )
                     ),
                     groupPlan(
                         groupName = "АТПП-19-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ТЕОРИЯ АВТОМАТИЧЕСКОГО УПРАВЛЕНИЯ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД", lecture = MOCK_HOURS, practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "МИКРОПРОЦЕССОРНЫЕ СРЕДСТВА АВТОМАТИЗАЦИИ и УПРАВЛЕНИЯ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ПРЕОБРАЗОВАТЕЛЬНЫЕ УСТРОЙСТВА",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                         )
                     ),
                     groupPlan(
                         groupName = "ЭС-19-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = 12),
+                            disciplinePlan(disciplineName = "ПРИКЛАДНАЯ ФИЗИЧЕСКАЯ КУЛЬТУРА", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ЭЛЕКТРИЧЕСКИЙ ПРИВОД",
-                                lecture = 12,
-                                practice = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ", lecture = 12, practice = 12),
+                            disciplinePlan(disciplineName = "ЭЛЕКТРОСНАБЖЕНИЕ", lecture = MOCK_HOURS, practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "СИЛОВАЯ ЭЛЕКТРОНИКА",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ЭЛЕКТРИЧЕСКИЕ СТАНЦИИ и ПОДСТАНЦИИ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                         )
                     ),
@@ -683,28 +688,28 @@ class BasePnipuInjector : DataInjector {
                         disciplines = listOf(
                             disciplinePlan(
                                 disciplineName = "АДМИНИСТРИРОВАНИЕ БАЗ ДАННЫХ\n(на примере Oracle)",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "МЕТРОЛОГИЯ, СТАНДАРТИЗАЦИЯ и СЕРТИФИКАЦИЯ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ПРОЕКТИРОВАНИЕ АВТОМАТИЗИРОВАННЫХ СИСТЕМ ОБРАБОТКИ ИНФОРМАЦИИ и УПРАВЛЕНИЯ",
-                                lecture = 12,
-                                practice = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
                         )
                     ),
                     groupPlan(
@@ -712,63 +717,77 @@ class BasePnipuInjector : DataInjector {
                         disciplines = listOf(
                             disciplinePlan(
                                 disciplineName = "АВТОМАТИЗАЦИЯ ТЕХНОЛОГИЧЕСКИХ ПРОЦЕССОВ и ПРОИЗВОДСТВ",
-                                lecture = 12,
-                                practice = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ДИАГНОСТИКА и НАДЕЖНОСТЬ АВТОМАТИЗИРОВАННЫХ СИСТЕМ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
-                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
+                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "ОРГАНИЗАЦИЯ и ПЛАНИРОВАНИЕ АВТОМАТИЗИРОВАННЫХ ПРОИЗОДСТВ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ЭНЕРГОСБЕРЕЖЕНИЕ и ЭНЕРГОАУДИТ",
-                                lecture = 12,
-                                practice = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "МОДЕЛИРОВАНИЕ СИСТЕМ и ПРОЦЕССОВ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                         )
                     ),
                     groupPlan(
                         groupName = "ЭС-18-1б-ЧФ",
                         disciplines = listOf(
-                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = 12),
-                            disciplinePlan(disciplineName = "УПРАВЛЕНИЕ КАЧЕСТВОМ", lecture = 12, laboratory = 12),
+                            disciplinePlan(disciplineName = "НАУЧНО-ИССЛЕДОВАТЕЛЬСКАЯ РАБОТА", practice = MOCK_HOURS),
+                            disciplinePlan(disciplineName = "УПРАВЛЕНИЕ КАЧЕСТВОМ", lecture = MOCK_HOURS, laboratory = MOCK_HOURS),
                             disciplinePlan(
                                 disciplineName = "РЕЛЕЙНАЯ ЗАЩИТА и АВТОМАТИЗАЦИЯ ЭЛЕКТРОЭНЕРГЕТИЧЕСКИХ СИСТЕМ",
-                                lecture = 12,
-                                laboratory = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "БЕЗОПАСНОСТЬ ЖИЗНЕДЕЯТЕЛЬНОСТИ",
-                                lecture = 12,
-                                laboratory = 12
+                                lecture = MOCK_HOURS,
+                                laboratory = MOCK_HOURS
                             ),
                             disciplinePlan(
                                 disciplineName = "ОРГАНИЗАЦИЯ и ПЛАНИРОВАНИЕ ПРОИЗВОДСТВ в ЭЛЕТРОЭНЕРГЕТИКЕ и ЭЛЕКТРОТЕХНИКЕ",
-                                lecture = 12,
-                                practice = 12
+                                lecture = MOCK_HOURS,
+                                practice = MOCK_HOURS
                             ),
                         )
                     )
                 ).awaitAll()
             ).onEach {
+                it.onSuccess { validatePlan(it) }
                 Logger.log("AddPlanResult $it")
             }.collect()
             delay(100)
             a.cancel()
+        }
+    }
+
+    private fun validatePlan(academicPlan: AcademicPlan) {
+        academicPlan.plans.forEach { groupPlan ->
+            groupPlan.items.forEach { disciplinePlan ->
+                if (disciplinePlan.teacher.isEmpty) {
+                    throw IllegalStateException("Пустой учитель для $disciplinePlan")
+                }
+                if (disciplinePlan.room.isEmpty) {
+                    throw IllegalStateException("Пустой кабинет для $disciplinePlan")
+                }
+            }
         }
     }
 

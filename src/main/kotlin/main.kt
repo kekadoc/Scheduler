@@ -13,7 +13,7 @@ import org.koin.core.context.startKoin
 
 fun main() = application {
     startKoin {
-        printLogger() 
+        //printLogger()
         modules(
             spacesModule,
             dataConverterModule,

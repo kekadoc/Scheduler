@@ -190,7 +190,11 @@ object CreateScheduleXLSX {
                 wrapText = true
                 centering()
                 setAllBordersStyle(BorderStyle.MEDIUM)
-                lesson?.also { lesson -> setCellValue(createLessonText(lesson)) }
+                if (lesson == null) {
+                    setCellValue(createLessonTextEmpty())
+                } else {
+                    setCellValue(createLessonText(lesson))
+                }
             }
         }
     }
@@ -407,11 +411,28 @@ object CreateScheduleXLSX {
         val boldFont = createFont(Fonts.font_24_bold)
         val boldItalicFont = createFont(Fonts.font_24_bold_italic)
         return XSSFRichTextString {
+            appendLine()
             appendLine(lesson.name, boldFont)
             appendLine(lesson.type, boldItalicFont)
             appendLine(lesson.teacherAbout, boldFont)
             appendLine(lesson.teacherName, boldFont)
             append(lesson.room, boldFont)
+            appendLine()
+        }
+    }
+
+    context(XSSFWorkbook)
+    private fun createLessonTextEmpty(): XSSFRichTextString {
+        val boldFont = createFont(Fonts.font_24_bold)
+        val boldItalicFont = createFont(Fonts.font_24_bold_italic)
+        return XSSFRichTextString {
+            appendLine()
+            appendLine(" ", boldFont)
+            appendLine(" ", boldItalicFont)
+            appendLine(" ", boldFont)
+            appendLine(" ", boldFont)
+            append(" ", boldFont)
+            appendLine()
         }
     }
 
