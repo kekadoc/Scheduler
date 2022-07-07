@@ -1,5 +1,6 @@
 package common.data
 
+import common.logger.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
@@ -25,6 +26,7 @@ val <Key, Data> DataSource<Key, Data>.all: Flow<List<Data>>
         return flow.onEach { data ->
              if (data.isEmpty() && !initialized) {
                  getAll().onSuccess { allData ->
+                     Logger.log("ALL $allData")
                      flow.value = allData
                      initialized = true
                  }

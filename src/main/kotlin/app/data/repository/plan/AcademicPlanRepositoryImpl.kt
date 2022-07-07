@@ -25,6 +25,12 @@ class AcademicPlanRepositoryImpl(
             }
         }
 
+    override fun getAll(): Flow<Result<List<AcademicPlan>>> {
+        return flowOf { localDataSource.getAll() }.map { result ->
+            result.mapCatching { list -> list.map { it.convert() } }
+        }
+    }
+
     override fun getPlan(id: Long): Flow<Result<AcademicPlan>> {
         return flowOf { localDataSource.get(id).mapCatching { it.convert() } }
     }

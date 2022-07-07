@@ -8,6 +8,7 @@ import common.extensions.container
 import common.extensions.orElse
 import common.view_model.ViewModel
 import common.view_model.ViewModelStore
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -23,11 +24,19 @@ class ApplicationViewModel(
 ) : ViewModel(), ContainerHost<AppState, Unit> {
 
     override val container: Container<AppState, Unit> = container(
-        initialState = AppState(isLoading = true)
+        initialState = AppState(isLoading = true),
+        settings = Container.Settings(
+            exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+                intent { reduce { state.copy(error = throwable) } }
+            }
+        )
     ) {
         start()
     }
 
+    fun clearError() = intent {
+        reduce { state.copy(error = null) }
+    }
 
     fun authorize(spaceName: String) = intent {
         reduce { state.copy(isAuthorizationProcess = true) }
@@ -55,7 +64,9 @@ class ApplicationViewModel(
 
     private fun start() = intent {
         reduce { state.copy(isLoading = true) }
+
         injection.inject()
+
         spacesRepository.getActive()
             .first()
             .onSuccess { space ->

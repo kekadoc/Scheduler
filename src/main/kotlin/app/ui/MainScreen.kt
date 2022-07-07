@@ -39,7 +39,7 @@ private enum class MainMenuItem : SimpleMenuItem {
 fun MainScreen() {
     val viewModel = viewModel<ApplicationViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
-    var currentScreen: MainMenuItem by remember { mutableStateOf(MainMenuItem.DATABASE) }
+    var currentScreen: MainMenuItem by remember { mutableStateOf(MainMenuItem.SCHEDULE_CREATING) }
 
     Row(modifier = Modifier.fillMaxSize()) {
         Card(

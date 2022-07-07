@@ -1,9 +1,8 @@
 package app.data.injector
 
-import app.di.SpaceDatabaseLoader
 import app.data.repository.space.SpacesRepository
+import app.di.SpaceDatabaseLoader
 import app.domain.model.Space
-import app.domain.model.Space.Companion.isEmpty
 import common.extensions.emptyString
 import java.util.prefs.Preferences
 
@@ -41,13 +40,17 @@ class DataInjectionImpl(
         dataInjectors.forEach { injector ->
             val type = injector.type
             val id = injector.id
-            if (type == DataInjector.Type.ONLY_ONCE && isActivated(id)) return@forEach
+
             val space = injector.getSpace(spacesRepository)
-            if (space.isEmpty) return@forEach
             SpaceDatabaseLoader.loadSpaceDatabase(space)
             val dataRepo = provideData(space)
-            injector.inject(dataRepo)
-            addActivated(id)
+
+            val isNeedInject = injector.checkIsNeedInject(dataRepo)
+            val isActivatedAndOnlyOnce = type == DataInjector.Type.ONLY_ONCE && isActivated(id)
+            if (!isActivatedAndOnlyOnce || isNeedInject) {
+                injector.inject(dataRepo)
+                addActivated(id)
+            }
         }
         SpaceDatabaseLoader.closeSpaceDatabase()
     }

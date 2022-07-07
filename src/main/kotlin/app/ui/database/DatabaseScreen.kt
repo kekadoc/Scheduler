@@ -54,17 +54,14 @@ fun DatabaseScreen() {
 
     val viewModel = viewModel<ApplicationViewModel>()
     val state by viewModel.container.stateFlow.collectAsState()
-    var currentScreen: DatabaseItem by remember { mutableStateOf(DatabaseItem.DISCIPLINES) }
+    var currentScreen: DatabaseItem by remember { mutableStateOf(DatabaseItem.TEACHERS) }
 
     Row(modifier = Modifier.fillMaxSize()) {
         Card(
             elevation = 4.dp
         ) {
             Column {
-                MenuHeader(
-                    title = "База данных",
-                    onLogout = {  }
-                )
+                MenuHeader()
                 SimpleMenuItemLayout(
                     modifier = Modifier.width(250.dp).fillMaxHeight(),
                     items = DatabaseItem.values().toList(),
@@ -92,16 +89,13 @@ fun DatabaseScreen() {
 }
 
 @Composable
-private fun MenuHeader(
-    title: String,
-    onLogout: () -> Unit
-) {
+private fun MenuHeader() {
     Row(
         modifier = Modifier.padding(20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = title,
+            text = "База данных",
             style = MaterialTheme.typography.h5
         )
     }

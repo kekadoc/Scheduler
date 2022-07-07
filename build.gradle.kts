@@ -42,6 +42,7 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.2")
 
     testImplementation(kotlin("test"))
+
 }
 
 tasks.test {
@@ -61,6 +62,8 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Scheduler"
             packageVersion = "1.0.0"
+            modules("java.sql")
+            //modules("jdk.crypto.ec")
         }
     }
 }

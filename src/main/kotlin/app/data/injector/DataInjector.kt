@@ -11,6 +11,8 @@ interface DataInjector {
 
     suspend fun getSpace(spaces: SpacesRepository): Space
 
+    suspend fun checkIsNeedInject(data: DataRepository): Boolean
+
     suspend fun inject(data: DataRepository)
 
     enum class Type {

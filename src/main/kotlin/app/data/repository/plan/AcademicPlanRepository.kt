@@ -8,6 +8,7 @@ interface AcademicPlanRepository {
 
     val allPlans: Flow<Result<List<AcademicPlan>>>
 
+    fun getAll(): Flow<Result<List<AcademicPlan>>>
 
     fun getPlan(id: Long): Flow<Result<AcademicPlan>>
 

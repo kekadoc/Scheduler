@@ -30,25 +30,21 @@ fun AuthorizationScreen(onEnter: (String) -> Unit, isAuthLoading: Boolean) {
         Spacer(modifier = Modifier.width(16.dp))
         Button(
             modifier = Modifier.size(56.dp),
+            contentPadding = PaddingValues(12.dp),
             onClick = {
                 onEnter(spaceName)
             },
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                if (isAuthLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.fillMaxSize().align(Alignment.Center),
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                } else {
-                    ImageThemed(
-                        imageVector = Icons.Default.ExitToApp,
-                        contentDescription = null
-                    )
-                }
+            if (isAuthLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(44.dp),
+                    color = MaterialTheme.colors.onPrimary
+                )
+            } else {
+                ImageThemed(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = null
+                )
             }
         }
     }

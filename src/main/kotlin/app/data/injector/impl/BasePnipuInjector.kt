@@ -14,20 +14,25 @@ import app.schedule.plan.DisciplinePlan
 import app.schedule.plan.GroupPlan
 import common.logger.Logger
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 
 object BasePnipuInjector : DataInjector {
 
+    private const val SPACE_NAME = "ПНИПУ"
     override val id: Long = 777L
 
     override val type: DataInjector.Type = DataInjector.Type.ONLY_ONCE
 
 
     override suspend fun getSpace(spaces: SpacesRepository): Space {
-        return spaces.addSpace("ПНИПУ").first().getOrThrow()
+        val currentList = spaces.getAllSpaces().first().getOrNull().orEmpty()
+        val current = currentList.find { it.name == SPACE_NAME }
+        return current ?: spaces.addSpace("ПНИПУ").first().getOrThrow()
+    }
+
+    override suspend fun checkIsNeedInject(data: DataRepository): Boolean {
+        val all = data.academicPlan.getAll().firstOrNull()?.getOrNull().orEmpty()
+        return all.isEmpty()
     }
 
     override suspend fun inject(data: DataRepository) {
